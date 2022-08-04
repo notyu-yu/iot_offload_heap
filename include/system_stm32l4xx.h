@@ -34,58 +34,31 @@
  extern "C" {
 #endif
 
-/** @addtogroup STM32L4xx_System_Includes
-  * @{
-  */
+#include "stm32l4s5xx.h"
 
-/**
-  * @}
-  */
+// Hardware clock speeds
+#define HSI_VALUE ((uint32_t) 16000000)
+#define HSE_VALUE ((uint32_t) 48000000)
+#define MSI_VALUE ((uint32_t) 48000000)
 
+// PLL Values for using 48Mhz HSE clock source
+// System clock = HSE_VALUE / PLL_M * PLL_N / PLL_R
+// 120Mhz = 48 Mhz / 1 * 10 / 4
+#define PLL_M ((uint32_t) 1) // Actual bit value is this minus 1
+#define PLL_N ((uint32_t) 20)
+#define PLL_R ((uint32_t) 8) // Actual bit is PLL_R/2 - 1
 
-/** @addtogroup STM32L4xx_System_Exported_Variables
-  * @{
-  */
-  /* The SystemCoreClock variable is updated in three ways:
-      1) by calling CMSIS function SystemCoreClockUpdate()
-      2) by calling HAL API function HAL_RCC_GetSysClockFreq()
-      3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency
-         Note: If you use this function to configure the system clock; then there
-               is no need to call the 2 first functions listed above, since SystemCoreClock
-               variable is updated automatically.
-  */
 extern uint32_t SystemCoreClock;            /*!< System Clock Frequency (Core Clock) */
 
 extern const uint8_t  AHBPrescTable[16];    /*!< AHB prescalers table values */
 extern const uint8_t  APBPrescTable[8];     /*!< APB prescalers table values */
 extern const uint32_t MSIRangeTable[12];    /*!< MSI ranges table values     */
 
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Exported_Constants
-  * @{
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Exported_Macros
-  * @{
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Exported_Functions
-  * @{
-  */
 
 extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
+void set_sysclk_to_120(void);
+
 /**
   * @}
   */
@@ -95,12 +68,3 @@ extern void SystemCoreClockUpdate(void);
 #endif
 
 #endif /*__SYSTEM_STM32L4XX_H */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-

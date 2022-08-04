@@ -18,3 +18,13 @@ void var_print(char * str) {
 	}
 }
 
+// Hardfault Handler - Send exit signal
+void HardFault_Handler(void) {
+	// Force reset stack pointer in case of overflow
+	void * sp_reset = (void *)0x20005000;
+	asm volatile ("mov sp, %0" : "+r" (sp_reset));
+
+	char err[] = "Hard Fault";
+	var_print(err);
+	loop();
+}

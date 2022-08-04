@@ -106,8 +106,8 @@ static void uart_enable(void) {
 
 void uart_init(void)
 {
-    /* set system clock to 100 Mhz */
-    set_sysclk_to_100();
+    /* Update system clock */
+	SystemCoreClockUpdate();
 
 	uart_pin_setup();
 	uart_enable();

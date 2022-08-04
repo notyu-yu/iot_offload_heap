@@ -20,6 +20,8 @@
 #include "config.h"
 #include "teststring.h"
 #include "mcu_syscalls.h"
+#include "memlib.h"
+#include "mcu.h"
 
 /**********************
  * Constants and macros
@@ -197,7 +199,6 @@ int main(void)
 			sprintf(msg, "and performance.\n");
 			var_print(msg);
 		}
-	    //mm_stats.secs = fsecs(eval_mm_speed, &speed_params);
 		end_time = sys_get_time();
 		mm_stats.secs = (end_time-start_time)/1000.0f;
 	}

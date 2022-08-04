@@ -1,5 +1,5 @@
-#include "../../include/stm32f411xe.h"
-#include "../../include/system_stm32f4xx.h"
+#include "../../include/stm32l4s5xx.h"
+#include "../../include/system_stm32l4xx.h"
 
 #include "config.h"
 

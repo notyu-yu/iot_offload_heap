@@ -41,14 +41,15 @@ size_t get_time(void) {
 *************************************************/
 void timer_init(void)
 {
-    /* set system clock to 100 Mhz */
-    set_sysclk_to_100();
+	// Set system clock
+	set_sysclk_to_120();		
 
     // enable TIM2 clock (bit0)
-    RCC->APB1ENR |= (1 << 0);
+    RCC->APB1ENR1 |= (1 << 0);
 
-	// For STM32F411: 100M/4*2 = 50M, 50M/4999+1 = 10 khz clock speed
-    TIM2->PSC = 4999;
+	// Formula: Clock speed = (sysclk/APB1_prescaler)*2/(PSC+1)
+	// For STM32L4S5: 120M/4*2 = 60M, 60M/5999+1 = 10 khz clock speed
+    TIM2->PSC = 5999;
 
 	// Set auto reload value to 100 to give 1 ms timer interrupts
     TIM2->ARR = 10;

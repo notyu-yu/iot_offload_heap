@@ -178,6 +178,7 @@ int main(void)
     mem_init(); 
 	mm_init();
 	timer_init();
+
 	start_time = get_time();
 
     /* Evaluate student's mm malloc package using the K-best scheme */

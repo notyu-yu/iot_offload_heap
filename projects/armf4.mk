@@ -1,7 +1,7 @@
 CMSIS = ../../libs/CMSIS_5
 
-SRCS += ../../include/system_stm32f4xx.c
-SRCS += ../../include/startup_stm32f411xe.s
+SRCS += ../../include/system_stm32l4xx.c
+SRCS += ../../include/startup_stm32l4s5xx.s
 
 OBJDIR = Debug
 
@@ -71,7 +71,7 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 SIZE = $(CROSS_COMPILE)size
 DBG = $(CROSS_COMPILE)gdb
 
-all: clean $(SRCS) build pc_side size
+all: clean $(SRCS) build size
 	@echo "Successfully finished..."
 
 build: $(TARGET).elf $(TARGET).bin $(TARGET).lst

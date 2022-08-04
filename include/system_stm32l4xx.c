@@ -205,6 +205,17 @@ void SystemInit(void)
 #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
   SCB->CPACR |= ((3UL << 20U)|(3UL << 22U));  /* set CP10 and CP11 Full Access */
 #endif
+
+  	// Set MSION bit
+	RCC->CR |= 1U<<0;
+
+	// Reset HSEON, CSSON, PLLON, and HSEBYP bit
+	RCC->CR &= ~((1U<<16) | (1U<<19) | (1U<<24) | (1U<<18));
+	// Reset RCC clock configuration
+	RCC->CFGR = 0x00000000;
+	RCC->PLLCFGR = 0x00001000;	
+	// Disable all clock interrupts
+	RCC->CIER = 0x00000000;
 }
 
 /**
@@ -316,17 +327,79 @@ void SystemCoreClockUpdate(void)
   SystemCoreClock >>= tmp;
 }
 
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+// Set system clock to 120 MHz and perform other initialization tasks
+void set_sysclk_to_120(void) {
+	// Actual bit values for PLL fields
+	uint32_t pllm = PLL_M-1;
+	uint32_t plln = PLL_N;
+	uint32_t pllr = PLL_R/2 - 1;
+	volatile uint32_t * cr = &(RCC->CR);
+	volatile uint32_t * bdcr = &(RCC->BDCR);
+	volatile uint32_t * pllcfgr = &(RCC->PLLCFGR);
+	volatile uint32_t * cfgr = &(RCC->CFGR);
+
+	// Disable BDCR write protection
+	PWR->CR1 |= 1U<<8;
+	// Enable LSE (for MSI PLL)
+	RCC->BDCR = 1U<<0;
+	// Wait for LSE to be ready
+	while(!(RCC->BDCR &(1U<<1)));
+
+	// Enable MSI
+	RCC->CR |= 1U<<0;
+	// Wait until MSI is ready
+	while(!(RCC->CR & (1U<<1)));
+	// Set MSI clock to 48 Mhz
+	RCC->CR |= 1U<<3; // Select CR register value
+	RCC->CR &= ~(0xFF << 4);
+	// Wait until MSI is ready
+	while(!(RCC->CR & (1U<<1)));
+	RCC->CR |= 11 << 4;
+	// Wait until MSI is ready
+	while(!(RCC->CR & (1U<<1)));
+	// Enable MSI PLL
+	RCC->CR |= 1U<<2;
+
+	// Enable power interface clock
+	RCC->APB1ENR1 |= 1U<<28;
+	// Select power range 1
+	PWR->CR1 |= 1<<9;
+	// R1MODE bit - boost mode
+	PWR->CR5 &= ~(1<<8);
+
+	// Set AHB Prescaler - 2
+	RCC->CFGR |= (4<<4);
+	// Set APB1 low speed prescaler - 4
+	RCC->CFGR |= (5<<8);
+	// Set APB2 high speed prescaler - 2
+	RCC->CFGR |= (4<<11);
+
+	// Disable PLL
+	RCC->CR &= ~(1U<<24);
+	// Wait for PLL to unlock
+	while((RCC->CR & (1U<<25)));
+	// Set PLL dividers, and source to MSI
+	RCC->PLLCFGR = (pllm <<4) | (plln<<8) | (pllr<<25) | (1 << 0);
+	// Enable main PLL
+	RCC->CR |= 1U<<24;
+	// Set R EN bit
+	RCC->PLLCFGR |= (1U << 24);
+	// Wait until PLL is ready
+	while((RCC->CR & (1 << 25)));
+
+	// Set AHB Prescaler - 1
+	RCC->CFGR |= (0<<4);
+
+	// Flash: Prefetch enable, instruction cache enable, data cache enable, latency to 5 wait states (Depends on CPU clock, refer to table 12 in RM0432)
+	FLASH->ACR = (1U << 8) | (1U << 9) | (1U << 10) | (5 << 0);
+
+	// Select main PLL as system clock source
+	RCC->CFGR |= 3U<<0;
+	// Wait until main PLL is set as clock
+	while (!((RCC->CFGR % 8) == 3));
+
+	// Update SystemCoreClock variable
+	SystemCoreClock = 120000000;
+}
