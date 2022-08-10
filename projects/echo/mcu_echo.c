@@ -41,18 +41,23 @@ int main(void) {
 	char * stripped_msg;
 	size_t received_size=0;
 
-	char test_msg[] = "hello";
-
 	uart_init();
 	led_init();
 	//uart_dma_init();
-	
+
+	/*
+	char debug[] = "hello";
+	while(1) {
+		send(&debug, 6);
+	}
+	*/
+
 	while(1) {
 		// Read received buffer size
 		led_on(LD1);
-		receive(msg_buffer, sizeof(size_t));
-		received_size = READSIZE(msg_buffer) + PADDINGSIZE;
-		memset(msg_buffer, 0, sizeof(size_t));
+		receive(msg_buffer, sizeof(uint32_t));
+		received_size = READSIZE(msg_buffer);
+		memset(msg_buffer, 0, sizeof(uint32_t));
 		led_off(LD1);
 
 		// Send back buffer content
@@ -65,7 +70,7 @@ int main(void) {
 			receive(msg_buffer, received_size);
 
 			// Echo message
-			stripped_msg = msg_offset(msg_buffer);
+			stripped_msg = msg_buffer;
 			send(stripped_msg, strlen(stripped_msg));
 			memset(msg_buffer, 0, received_size);
 		}

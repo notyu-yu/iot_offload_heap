@@ -6,6 +6,7 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include "config.h"
 
@@ -36,7 +37,7 @@ int main(int argc, char ** argv) {
 	char line_buffer[BUFFERSIZE] = {0};
 	char receive_buffer[BUFFERSIZE*2] = {0};
 	char echo_buffer[BUFFERSIZE*2] = {0};
-	size_t msg_size = 0;
+	uint32_t msg_size = 0;
 	size_t bytes_read = 0;
 	size_t chunk_read = 0;
 
@@ -58,12 +59,25 @@ int main(int argc, char ** argv) {
 	// Send message to UART usb device and print return message
 	if (VERBOSE) {
 		printf("Sending message: %s\n", send_buffer);
-		printf("Message size: %zu bytes\n", msg_size);
+		printf("Message size: %u bytes\n", msg_size);
 	}
 
 	// Send character for auto buad generation
 	char baud_char = 0x55;
 	assert(write(fd, &baud_char, 1));
+
+	/*
+	while (1) {
+		chunk_read = read(fd, receive_buffer, 1);
+		puts(receive_buffer);
+		memset(receive_buffer, 0, BUFFERSIZE*2);
+	}
+	*/
+	
+	// Send message size
+	assert(write(fd, &msg_size, sizeof(uint32_t)) == sizeof(uint32_t));
+	tcdrain(fd);
+	tcflush(fd, TCIOFLUSH); // Clear IO buffer
 
 	// Send message content
 	assert(write(fd, send_buffer, msg_size) == msg_size);
