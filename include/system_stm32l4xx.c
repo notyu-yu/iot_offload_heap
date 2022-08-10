@@ -1,3 +1,4 @@
+#include <assert.h>
 /**
   ******************************************************************************
   * @file    system_stm32l4xx.c
@@ -339,11 +340,21 @@ void set_sysclk_to_120(void) {
 	volatile uint32_t * bdcr = &(RCC->BDCR);
 	volatile uint32_t * pllcfgr = &(RCC->PLLCFGR);
 	volatile uint32_t * cfgr = &(RCC->CFGR);
+	volatile uint32_t * pwrcr = &(PWR->CR1);
+
+	// Enable power interface clock
+	RCC->APB1ENR1 |= 1U<<28;
+	// Select power range 1
+	PWR->CR1 |= 1<<9;
+	// R1MODE bit - boost mode
+	PWR->CR5 &= ~(1<<8);
 
 	// Disable BDCR write protection
 	PWR->CR1 |= 1U<<8;
+	// Unreset BDCR
+	// RCC->BDCR &= ~(1U<<16);
 	// Enable LSE (for MSI PLL)
-	RCC->BDCR = 1U<<0;
+	RCC->BDCR |= 1U<<0;
 	// Wait for LSE to be ready
 	while(!(RCC->BDCR &(1U<<1)));
 
@@ -362,19 +373,12 @@ void set_sysclk_to_120(void) {
 	// Enable MSI PLL
 	RCC->CR |= 1U<<2;
 
-	// Enable power interface clock
-	RCC->APB1ENR1 |= 1U<<28;
-	// Select power range 1
-	PWR->CR1 |= 1<<9;
-	// R1MODE bit - boost mode
-	PWR->CR5 &= ~(1<<8);
-
-	// Set AHB Prescaler - 2
-	RCC->CFGR |= (4<<4);
-	// Set APB1 low speed prescaler - 2
-	RCC->CFGR |= (4<<8);
-	// Set APB2 high speed prescaler - 2
-	RCC->CFGR |= (4<<11);
+	// Set AHB Prescaler - 8
+	RCC->CFGR |= (0<<4);
+	// Set APB1 low speed prescaler - 1
+	RCC->CFGR |= (0<<8);
+	// Set APB2 high speed prescaler - 1
+	RCC->CFGR |= (0<<11);
 
 	// Disable PLL
 	RCC->CR &= ~(1U<<24);

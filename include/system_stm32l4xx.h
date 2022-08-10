@@ -43,7 +43,7 @@
 
 // PLL Values for using 48Mhz HSE clock source
 // System clock = HSE_VALUE / PLL_M * PLL_N / PLL_R
-// 120Mhz = 48 Mhz / 1 * 10 / 4
+// 120Mhz = 48 Mhz / 1 * 20 / 8
 #define PLL_M ((uint32_t) 1) // Actual bit value is this minus 1
 #define PLL_N ((uint32_t) 20)
 #define PLL_R ((uint32_t) 8) // Actual bit is PLL_R/2 - 1

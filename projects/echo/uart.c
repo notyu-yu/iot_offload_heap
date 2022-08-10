@@ -53,7 +53,7 @@ static void uart_enable(void) {
     RCC->APB1ENR1 |= (1 << 19);
 
 	// Select Sysclk as UART4 Source
-	RCC->CCIPR |= (1U << 6);
+	// RCC->CCIPR |= (1U << 6);
 
     // Disable uart4 - UE, bit 0
     UART4->CR1 &= ~(1 << 0);
