@@ -8,9 +8,6 @@ char msg_buffer[BUFFERSIZE] = {0};
 
 // Send content of pointer through uart
 void uart_send(void * data, size_t size) {
-    // UART4 TX enable, TE bit 3
-    UART4->CR1 |= (1 << 3);
-
 	for (size_t i=0; i<size; i++){
 		// Wait until TXE bit is set
 		while(!(UART4->ISR & (1 << 7)));
@@ -19,25 +16,16 @@ void uart_send(void * data, size_t size) {
 	}
 	// Wait for character transmit complete - TC bit
 	while(!(UART4->ISR & (1 << 6))) {};
-
-    // UART4 TX disable, TE bit 3
-    UART4->CR1 &= ~(1 << 3);
 }
 
 // Receive size bytes of content from uart and write it to buffer
 void uart_receive(void * buffer, size_t size)  {
-    // UART4 RX enable, RE bit 2
-    UART4->CR1 |= (1 << 2);
-
 	for (size_t i=0; i < size; i++) {
 		// Wait until RXNE bit is set
 		while(!(UART4->ISR & (1 << 5)));
 		// Receive character
 		((char *)buffer)[i] = UART4->RDR;
 	}
-
-    // UART4 RX Disable, RE bit 2
-    UART4->CR1 &= ~(1 << 2);
 
 }
 
@@ -96,6 +84,12 @@ static void uart_enable(void) {
 	// Enable Auto Baud detection
 	UART4->CR2 |= (1<<20);
 
+    // UART4 TX enable, TE bit 3
+    UART4->CR1 |= (1 << 3);
+
+    // UART4 RX enable, RE bit 2
+    UART4->CR1 |= (1 << 2);
+
     // Enable uart4 - UE, bit 0
     UART4->CR1 |= (1 << 0);
 }	
@@ -104,12 +98,14 @@ void uart_baud_gen(void) {
 	char temp[8] = {0};
 	volatile uint32_t * brr = &(UART4->BRR);
 	uart_receive(temp, 1);
+	// Wait for auto baud generation to complete- ABRF bit
+	while(!(UART4->ISR & (1 << 15))) {};
 }
 
 void uart_init(void)
 {
-    /* Update system clock */
-	SystemCoreClockUpdate();
+	// Set system clock
+	set_sysclk_to_120();
 
 	uart_pin_setup();
 	uart_enable();
