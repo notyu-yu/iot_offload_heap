@@ -17,10 +17,8 @@ void uart_receive(void * buffer, size_t size); // Receive size bytes of data and
 void uart_wait_receive(void * buffer, size_t size); // Same as receive but stall until message is sent
 
 typedef enum {
-	GREEN=12,
-	ORANGE,
-	RED,
-	BLUE
+	LD1,
+	LD2
 } led;
 
 // LED functions

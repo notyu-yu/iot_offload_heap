@@ -371,8 +371,8 @@ void set_sysclk_to_120(void) {
 
 	// Set AHB Prescaler - 2
 	RCC->CFGR |= (4<<4);
-	// Set APB1 low speed prescaler - 4
-	RCC->CFGR |= (5<<8);
+	// Set APB1 low speed prescaler - 2
+	RCC->CFGR |= (4<<8);
 	// Set APB2 high speed prescaler - 2
 	RCC->CFGR |= (4<<11);
 
@@ -388,9 +388,6 @@ void set_sysclk_to_120(void) {
 	RCC->PLLCFGR |= (1U << 24);
 	// Wait until PLL is ready
 	while((RCC->CR & (1 << 25)));
-
-	// Set AHB Prescaler - 1
-	RCC->CFGR |= (0<<4);
 
 	// Flash: Prefetch enable, instruction cache enable, data cache enable, latency to 5 wait states (Depends on CPU clock, refer to table 12 in RM0432)
 	FLASH->ACR = (1U << 8) | (1U << 9) | (1U << 10) | (5 << 0);

@@ -8,101 +8,98 @@ char msg_buffer[BUFFERSIZE] = {0};
 
 // Send content of pointer through uart
 void uart_send(void * data, size_t size) {
+    // UART4 TX enable, TE bit 3
+    UART4->CR1 |= (1 << 3);
+
 	for (size_t i=0; i<size; i++){
+		// Wait until TXE bit is set
+		while(!(UART4->ISR & (1 << 7)));
 		// Send character
-		USART2->DR = ((char *)data)[i];
-		// Wait for transmit complete
-		while(!(USART2->SR & (1 << 6)));
+		UART4->TDR = ((char *)data)[i];
 	}
+	// Wait for character transmit complete - TC bit
+	while(!(UART4->ISR & (1 << 6)));
 }
 
 // Receive size bytes of content from uart and write it to buffer
 void uart_receive(void * buffer, size_t size)  {
-	// USART CR2 configure stop bit count, default 1
-	// USART2->CR2 &= ~(0x3U << 12);
-	// USART2->CR2 != (0x0U << 12);
+    // UART4 RX enable, RE bit 2
+    UART4->CR1 |= (1 << 2);
 	for (size_t i=0; i < size; i++) {
 		// Wait until RXNE bit is set
-		while (!(USART2->SR & (0x1U << 5))){};
+		while(!(UART4->ISR & (1 << 5)));
 		// Receive character
-		((char *)buffer)[i] = USART2->DR;
+		((char *)buffer)[i] = UART4->RDR;
 	}
+    // UART4 RX Disable, RE bit 2
+    UART4->CR1 &= ~(1 << 2);
+
 }
 
 // Setup GPIO A2 and A3 pins for UART
 static void uart_pin_setup(void) {
-    // Enable GPIOA clock, bit 0 on AHB1ENR
-    RCC->AHB1ENR |= (1 << 0);
+    // Enable GPIOA clock, bit 0 on AHB2ENR
+    RCC->AHB2ENR |= (1 << 0);
 
-    // Set pin modes as alternate mode 7 (pins 2 and 3)
-    // USART2 TX and RX pins are PA2 and PA3 respectively
-    GPIOA->MODER &= ~(0xFU << 4); // Reset bits 4:5 for PA2 and 6:7 for PA3
-    GPIOA->MODER |=  (0xAU << 4); // Set   bits 4:5 for PA2 and 6:7 for PA3 to alternate mode (10)
+    // Set pin modes as alternate mode 7 (PA0 and PA1)
+    // UART4 TX and RX pins are PA0 (D1) and PA1(D0) respectively 
+    GPIOA->MODER &= ~(0xFU << 0);
+    GPIOA->MODER |=  (0xAU << 0);
 
     // Set pin modes as high speed
-    GPIOA->OSPEEDR |= 0x000000A0; // Set pin 2/3 to high speed mode (0b10)
+    GPIOA->OSPEEDR |= 0x0000000F;
 
-    // Choose AF7 for USART2 in Alternate Function registers
-    GPIOA->AFR[0] |= (0x7 << 8); // for pin A2
-    GPIOA->AFR[0] |= (0x7 << 12); // for pin A3
+    // Choose AF8 for UART4 in Alternate Function registers
+    GPIOA->AFR[0] |= (0x8U << 0); // for pin A0
+    GPIOA->AFR[0] |= (0x8U << 4); // for pin A1
 }
 
-// Turn on LED
-void led_on(led l) {
-	GPIOD->ODR |= (1U<<l);
-}
-
-// Turn off LED
-void led_off(led l) {
-	GPIOD->ODR &= ~(1U<<l);
-}
-
-// Toggle LED
-void led_toggle(led l) {
-	GPIOD->ODR ^= (1U<<l);
-}
-
-// Setup LED GPIO
-void led_init(void) {
-	// Enable GPIOD clock
-	RCC->AHB1ENR |= 0x00000008;
-
-	// Turn on output mode
-	GPIOD->MODER &= 0x00FFFFFF;
-	GPIOD->MODER |= 0x55000000;
-
-	// Turn off LEDs
-	GPIOD->ODR &= 0x0FFF;
-}
-
-// Initialize UART 2
+// Initialize UART 4
 static void uart_enable(void) {
-    // enable USART2 clock, bit 17 on APB1ENR
-    RCC->APB1ENR |= (1 << 17);
+    // enable UART4 clock
+    RCC->APB1ENR1 |= (1 << 19);
 
-    // USART2 word length M, bit 12
-    // USART2->CR1 |= (0 << 12); // 0 - 1,8,n
+	// Select Sysclk as UART4 Source
+	RCC->CCIPR |= (1U << 6);
 
-    // USART2 parity control, bit 9
-    // USART2->CR1 |= (0 << 9); // 0 - no parity
+    // Disable uart4 - UE, bit 0
+    UART4->CR1 &= ~(1 << 0);
 
-    // USART2 RX enable, RE bit 2
-    USART2->CR1 |= (1 << 2);
-    // USART2 TX enable, TE bit 3
-    USART2->CR1 |= (1 << 3);
+	// Disable FIFO mode
+	UART4->CR1 &= ~(1<<20);
 
-    // Enable usart2 - UE, bit 13
-    USART2->CR1 |= (1 << 13);
+	// Set word size to 8
+	UART4->CR1 &= ~(1U<<12 | 1U<<28);
 
-    // baud rate = fCK / (8 * (2 - OVER8) * USARTDIV)
-	// For STM32F411: fCK = 25 Mhz (Sysclk/4), Baudrate = 115200, OVER8 = 0
-	// USARTDIV = fCK / baud / 8 * (2-OVER8)
-	// USARTDIV = 25Mhz / 115200 / 16 = 13.5633
-	// Fraction: 0.5633*16 = 9
-	// Mantissa: 13
-    USART2->BRR |= (13 << 4); // Mantissa
-    USART2->BRR |= 9; // Fraction
+	// OVER8 = 0
+	UART4->CR1 &= ~(1<<15);
+
+	// For STM32L4S5: Sysclk = 120 Mhz (Sysclk/2), Baudrate = 115200, OVER8 = 0
+	// USARTDIV = (1+OVER8) * fCK / baud
+	// USARTDIV = 120Mhz / 115200 = 1041.67 ~ 1042
+    UART4->BRR = 1042U;
+
+	// Set stop bits to 1
+	UART4->CR2 &= ~(0xF << 12);
+
+	// Disable parity
+	UART4->CR1 &= ~(1<<10);
+
+	// Set Auto Baud detection to 0x55 frame detection
+	UART4->CR2 |= (3U<<21);
+	
+	// Enable Auto Baud detection
+	UART4->CR2 |= (1<<20);
+
+    // Enable uart4 - UE, bit 0
+    UART4->CR1 |= (1 << 0);
 }	
+
+void uart_baud_gen(void) {
+	char temp[8] = {0};
+	volatile uint32_t * brr = &(UART4->BRR);
+	uart_receive(temp, 1);
+}
 
 void uart_init(void)
 {
@@ -111,4 +108,65 @@ void uart_init(void)
 
 	uart_pin_setup();
 	uart_enable();
+	uart_baud_gen();
 }
+
+// Turn on LED
+void led_on(led l) {
+	switch (l) {
+		case LD1:
+			GPIOA->ODR |= (1U<<5);
+			break;
+		case LD2:
+			GPIOB->ODR |= (1U<<14);
+			break;
+		default:
+			break;
+	}
+}
+
+// Turn off LED
+void led_off(led l) {
+	switch (l) {
+		case LD1:
+			GPIOA->ODR &= ~(1U<<5);
+			break;
+		case LD2:
+			GPIOB->ODR &= ~(1U<<14);
+			break;
+		default:
+			break;
+	}
+}
+
+// Toggle LED
+void led_toggle(led l) {
+	switch (l) {
+		case LD1:
+			GPIOA->ODR ^= (1U<<5);
+			break;
+		case LD2:
+			GPIOB->ODR ^= (1U<<14);
+			break;
+		default:
+			break;
+	}
+}
+
+// Setup LED GPIO
+void led_init(void) {
+	// Enable GPIOA and GPIOB clock
+	RCC->AHB2ENR |= (1U << 0);
+	RCC->AHB2ENR |= (1U << 1);
+
+	// Turn on output mode on A5 and B14
+	GPIOA->MODER &= ~(0xFU << 10);
+	GPIOA->MODER |= (1U << 10);
+	GPIOB->MODER &= ~(0xFU << 28);
+	GPIOB->MODER |= (1U << 28);
+
+	// Turn off LEDs
+	GPIOA->ODR &= ~(1U<<5);
+	GPIOB->ODR &= ~(1U<<14);
+}
+

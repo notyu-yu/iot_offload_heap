@@ -18,11 +18,12 @@ static void serial_setup(int fd) {
 	cfsetispeed(&serial_settings, BAUDRATE);
 	cfsetospeed(&serial_settings, BAUDRATE);
 
+	// Set raw mode (no special processing)
+	cfmakeraw(&serial_settings);
+	
 	serial_settings.c_cflag &= ~CRTSCTS; // Hardware based flow control off
 	serial_settings.c_cflag |= CREAD | CLOCAL; // Turn on receiver
-	serial_settings.c_iflag &= ~(IXON | IXOFF | IXANY); // Software based flow control off, no parity marking
-	serial_settings.c_lflag &= ~(ICANON | ECHO | ISIG); // Set operation mode, canonical, enable input echo and receiving signals
-	serial_settings.c_oflag &= ~(ONLCR | OFILL); // Don't turn /n to /n/r, don't send fill characters
+
 	// Read for 0.5 seconds at max
 	// serial_settings.c_cc[VTIME] = 5;
 	tcflush(fd, TCIOFLUSH); // Clear IO buffer
@@ -60,10 +61,9 @@ int main(int argc, char ** argv) {
 		printf("Message size: %zu bytes\n", msg_size);
 	}
 
-	// Send message size
-	assert(write(fd, &msg_size, sizeof(size_t)) == sizeof(size_t));
-	tcdrain(fd);
-	tcflush(fd, TCIOFLUSH); // Clear IO buffer
+	// Send character for auto buad generation
+	char baud_char = 0x55;
+	assert(write(fd, &baud_char, 1));
 
 	// Send message content
 	assert(write(fd, send_buffer, msg_size) == msg_size);
