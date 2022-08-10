@@ -40,19 +40,21 @@ int main(void) {
 	char debug_msg[BUFFERSIZE] = {0};
 	char * stripped_msg;
 	size_t received_size=0;
+	int discard_cali = 0; // Discard baud calibration character after first communication
 
 	uart_init();
 	led_init();
 	//uart_dma_init();
 
-	/*
-	char debug[] = "hello";
 	while(1) {
-		send(&debug, 6);
-	}
-	*/
+		if (discard_cali) {
+			// Discard Auto Baud calibration character
+			receive(msg_buffer, 1);
+			memset(msg_buffer, 0, 1);
+		} else {
+			discard_cali = 1;
+		}
 
-	while(1) {
 		// Read received buffer size
 		led_on(LD1);
 		receive(msg_buffer, sizeof(uint32_t));
