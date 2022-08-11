@@ -14,26 +14,22 @@ static char * msg_offset(char * msg) {
 
 // Send size bytes at data pointer, using method defined by USE_DMA macro
 static void send(void * data, size_t size) {
-	/*
 	if (USE_DMA) {
 		uart_tx_start(data, size);
 		uart_tx_wait();
 	} else {
-	*/
 		uart_send(data, size);
-	//}
+	}
 }
 
 // Receive size bytes at buffer pointer, using method defined by USE_DMA macro
 static void receive(void * buffer, size_t size) {
-	/*
 	if (USE_DMA) {
 		uart_rx_start(buffer, size);
 		uart_rx_wait();
 	} else {
-	*/
 		uart_receive(buffer, size);
-	//}
+	}
 }
 
 int main(void) {
@@ -42,9 +38,10 @@ int main(void) {
 	size_t received_size=0;
 	int discard_cali = 0; // Discard baud calibration character after first communication
 
-	uart_init();
 	led_init();
-	//uart_dma_init();
+	led_on(LD1);
+	uart_init();
+	uart_dma_init();
 
 	while(1) {
 		if (discard_cali) {
@@ -56,11 +53,9 @@ int main(void) {
 		}
 
 		// Read received buffer size
-		led_on(LD1);
 		receive(msg_buffer, sizeof(uint32_t));
 		received_size = READSIZE(msg_buffer);
 		memset(msg_buffer, 0, sizeof(uint32_t));
-		led_off(LD1);
 
 		// Send back buffer content
 		if (received_size > BUFFERSIZE) {

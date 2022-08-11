@@ -1,5 +1,5 @@
 TARGET = mcu_echo
-SRCS = mcu_echo.c uart.c
+SRCS = mcu_echo.c uart.c uart_dma.c
 
 LINKER_SCRIPT = ../../flash/STM32L4S5VITx_FLASH.ld
 
