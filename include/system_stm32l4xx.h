@@ -42,11 +42,12 @@
 #define MSI_VALUE ((uint32_t) 48000000)
 
 // PLL Values for using 48Mhz HSE clock source
-// System clock = HSE_VALUE / PLL_M * PLL_N / PLL_R
-// 120Mhz = 48 Mhz / 1 * 20 / 8
-#define PLL_M ((uint32_t) 1) // Actual bit value is this minus 1
-#define PLL_N ((uint32_t) 20)
-#define PLL_R ((uint32_t) 8) // Actual bit is PLL_R/2 - 1
+// System clock = (MSI_VALUE / PLL_M) * PLL_N / PLL_R
+// MSI_VALUE/PLLM must be between 4 and 16 Mhz
+// 120Mhz = 48 Mhz / 4 * 20 / 2
+#define PLL_M ((uint32_t) 4) // Actual bit value is this minus 1. Can be 1 to 8
+#define PLL_N ((uint32_t) 20) // Can be 8 to 127
+#define PLL_R ((uint32_t) 2) // Actual bit is PLL_R/2 - 1. Can be 2,4,6,8
 
 extern uint32_t SystemCoreClock;            /*!< System Clock Frequency (Core Clock) */
 

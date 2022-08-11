@@ -341,6 +341,8 @@ void set_sysclk_to_120(void) {
 	volatile uint32_t * pllcfgr = &(RCC->PLLCFGR);
 	volatile uint32_t * cfgr = &(RCC->CFGR);
 	volatile uint32_t * pwrcr = &(PWR->CR1);
+	volatile uint32_t * icscr = &(RCC->ICSCR);
+	volatile uint32_t * flashacr = &(FLASH->ACR);
 
 	// Enable power interface clock
 	RCC->APB1ENR1 |= 1U<<28;
@@ -364,17 +366,21 @@ void set_sysclk_to_120(void) {
 	while(!(RCC->CR & (1U<<1)));
 	// Set MSI clock to 48 Mhz
 	RCC->CR |= 1U<<3; // Select CR register value
+	// Wait until MSI is ready
+	while(!(RCC->CR & (1U<<1)));
 	RCC->CR &= ~(0xFF << 4);
 	// Wait until MSI is ready
 	while(!(RCC->CR & (1U<<1)));
-	RCC->CR |= 11 << 4;
+	RCC->CR |= (11 << 4);
 	// Wait until MSI is ready
 	while(!(RCC->CR & (1U<<1)));
 	// Enable MSI PLL
 	RCC->CR |= 1U<<2;
+	// Wait until MSI is ready
+	while(!(RCC->CR & (1U<<1)));
 
-	// Set AHB Prescaler - 8
-	RCC->CFGR |= (0<<4);
+	// Set AHB Prescaler - 2
+	RCC->CFGR |= (4<<4);
 	// Set APB1 low speed prescaler - 1
 	RCC->CFGR |= (0<<8);
 	// Set APB2 high speed prescaler - 1
@@ -384,22 +390,35 @@ void set_sysclk_to_120(void) {
 	RCC->CR &= ~(1U<<24);
 	// Wait for PLL to unlock
 	while((RCC->CR & (1U<<25)));
+	// Reset PLLN bits
+	RCC->PLLCFGR = 0;
 	// Set PLL dividers, and source to MSI
-	RCC->PLLCFGR = (pllm <<4) | (plln<<8) | (pllr<<25) | (1 << 0);
+	RCC->PLLCFGR |= (pllm<<4) | (plln<<8) | (pllr<<25) | (1 << 0);
 	// Enable main PLL
 	RCC->CR |= 1U<<24;
 	// Set R EN bit
 	RCC->PLLCFGR |= (1U << 24);
 	// Wait until PLL is ready
-	while((RCC->CR & (1 << 25)));
+	while(!(RCC->CR & (1 << 25)));
 
 	// Flash: Prefetch enable, instruction cache enable, data cache enable, latency to 5 wait states (Depends on CPU clock, refer to table 12 in RM0432)
-	FLASH->ACR = (1U << 8) | (1U << 9) | (1U << 10) | (5 << 0);
+	FLASH->ACR |= (1U << 8) | (1U << 9) | (1U << 10) | (5 << 0);
 
 	// Select main PLL as system clock source
 	RCC->CFGR |= 3U<<0;
 	// Wait until main PLL is set as clock
-	while (!((RCC->CFGR % 8) == 3));
+	while (1) {
+		if((RCC->CFGR & 0xc) == 0xc) {
+			break;
+		}
+	}
+
+	/*
+	// Wait about 1us
+	for (int i=0; i<100000; i++){};
+	// Set AHB Prescaler - 1
+	RCC->CFGR |= (0<<4);
+	*/
 
 	// Update SystemCoreClock variable
 	SystemCoreClock = 120000000;
