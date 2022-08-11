@@ -413,12 +413,10 @@ void set_sysclk_to_120(void) {
 		}
 	}
 
-	/*
 	// Wait about 1us
-	for (int i=0; i<100000; i++){};
+	for (int i=0; i<100; i++){};
 	// Set AHB Prescaler - 1
 	RCC->CFGR |= (0<<4);
-	*/
 
 	// Update SystemCoreClock variable
 	SystemCoreClock = 120000000;
