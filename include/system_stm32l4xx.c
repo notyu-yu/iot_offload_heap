@@ -336,6 +336,9 @@ void set_sysclk_to_120(void) {
 	uint32_t pllm = PLL_M-1;
 	uint32_t plln = PLL_N;
 	uint32_t pllr = PLL_R/2 - 1;
+
+	/* 
+	// Debug pointers
 	volatile uint32_t * cr = &(RCC->CR);
 	volatile uint32_t * bdcr = &(RCC->BDCR);
 	volatile uint32_t * pllcfgr = &(RCC->PLLCFGR);
@@ -343,6 +346,7 @@ void set_sysclk_to_120(void) {
 	volatile uint32_t * pwrcr = &(PWR->CR1);
 	volatile uint32_t * icscr = &(RCC->ICSCR);
 	volatile uint32_t * flashacr = &(FLASH->ACR);
+	*/
 
 	// Enable power interface clock
 	RCC->APB1ENR1 |= 1U<<28;

@@ -35,23 +35,23 @@ int mm_init(void)
 {
 	void * response = 0;
 
+	mcu_init();
+	led_on(LD1);
 	mem_req_setup();
 	mpu_init();
 
 	// Receive starting singal of 1 in every field
-	led_on(BLUE);
 	req_receive(&response);
 	if (response==(void *)1) {
 		// Signal correct - sbrk start chunk
-		led_off(BLUE);
+		led_off(LD1);
 		mem_init();
 		extend_heap(4096/WSIZE);
 		timer_init();
 		return 0;
 	} else {
 		// Signal incorrect - Throw error
-		led_off(BLUE);
-		led_on(RED);
+		led_off(LD1);
 		var_print("Start signal incorrect");
 		loop();
 		return 1;

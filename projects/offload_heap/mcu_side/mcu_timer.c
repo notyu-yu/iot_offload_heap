@@ -59,29 +59,27 @@ size_t get_time(void) {
 void timer_init(void)
 {
 	// TIM2 - Keeps track of system time
-
-    // enable TIM2 clock (bit0)
-    RCC->APB1ENR |= (1 << 0);
-	// For STM32F411: 100M/4*2 = 50M, 50M/(4999+1) = 10 khz clock speed
-    TIM2->PSC = 4999;
-	// Set auto reload value to 10 to give 1ms timer interrupts
+    // Enable TIM2 clock (bit0)
+    RCC->APB1ENR1 |= (1 << 0);
+	// Formula: Clock speed = (sysclk/APB1_prescaler)*2/(PSC+1)
+	// For STM32L4S5: 120M/1*2 = 240M, 240M/(24999+1) = 10 khz clock speed
+    TIM2->PSC = 24999;
+	// Set auto reload value to 10 to give 1 ms timer interrupts
     TIM2->ARR = 10;
     // Update Interrupt Enable
     TIM2->DIER |= (1 << 0);
-    NVIC_SetPriority(TIM2_IRQn, 2);
+    NVIC_SetPriority(TIM2_IRQn, 2); // Priority level 2
     // enable TIM2 IRQ from NVIC
     NVIC_EnableIRQ(TIM2_IRQn);
-	// Set to upcounting mode
-	TIM2->CR1 &= ~(1 << 4);
-    // Enable Timer 2 module (CEN, bit0)
-    TIM2->CR1 |= (1 << 0);
+	// Enable TIM2 Module
+	TIM2->CR1 |= (1<<0);
 
 	// TIM3 - Checks for stack overflow
     
 	// Enable TIM3 clock (bit1)
-    RCC->APB1ENR |= (1 << 1);
-	// For STM32F411: 100M/4*2 = 50M, 50M/4999+1 = 10 khz clock speed
-    TIM3->PSC = 4999;
+    RCC->APB1ENR1 |= (1 << 1);
+	// For STM32L4S5: 120M/1*2 = 240M, 240M/(24999+1) = 10 khz clock speed
+    TIM3->PSC = 24999;
 	// Set auto reload value to 100 to give 10 ms timer interrupts
     TIM3->ARR = 100;
     // Update Interrupt Enable
@@ -89,8 +87,6 @@ void timer_init(void)
     NVIC_SetPriority(TIM3_IRQn, 3);
     // enable TIM3 IRQ from NVIC
     NVIC_EnableIRQ(TIM3_IRQn);
-	// Set to upcounting mode
-	TIM3->CR1 &= ~(1 << 4);
     // Enable Timer 3 module (CEN, bit0)
     TIM3->CR1 |= (1 << 0);
 }

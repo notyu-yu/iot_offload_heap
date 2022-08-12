@@ -9,71 +9,102 @@ char msg_buffer[BUFFERSIZE] = {0};
 // Send content of pointer through uart
 void uart_send(void * data, size_t size) {
 	for (size_t i=0; i<size; i++){
+		// Wait until TXE bit is set
+		while(!(UART4->ISR & (1 << 7)));
 		// Send character
-		USART1->DR = ((char *)data)[i];
-		// Wait for transmit complete
-		while(!(USART1->SR & (1 << 6)));
+		UART4->TDR = ((char *)data)[i];
 	}
+	// Wait for character transmit complete - TC bit
+	while(!(UART4->ISR & (1 << 6))) {};
 }
 
 // Receive size bytes of content from uart and write it to buffer
 void uart_receive(void * buffer, size_t size)  {
-	// USART CR2 configure stop bit count, default 1
 	for (size_t i=0; i < size; i++) {
 		// Wait until RXNE bit is set
-		while (!(USART1->SR & (0x1U << 5))){};
+		while(!(UART4->ISR & (1 << 5)));
 		// Receive character
-		((char *)buffer)[i] = USART1->DR;
+		((char *)buffer)[i] = UART4->RDR;
 	}
+
 }
 
-// Setup GPIO B6 and B7 pins for UART
+// Setup GPIO A2 and A3 pins for UART
 static void uart_pin_setup(void) {
-    // Enable GPIOB clock, bit 0 on AHB1ENR
-    RCC->AHB1ENR |= (1 << 1);
+    // Enable GPIOA clock, bit 0 on AHB2ENR
+    RCC->AHB2ENR |= (1 << 0);
 
-    // Set pin modes as alternate mode (pins 6 and 7)
-    // USART1 TX and RX pins are PB6 and PB7 respectively
-    GPIOB->MODER &= ~(0xFU << 12); // Reset bits
-    GPIOB->MODER |=  (0xAU << 12); // Set to alternate function mode
+    // Set pin modes as alternate mode 7 (PA0 and PA1)
+    // UART4 TX and RX pins are PA0 (D1) and PA1(D0) respectively 
+    GPIOA->MODER &= ~(0xFU << 0);
+    GPIOA->MODER |=  (0xAU << 0);
 
     // Set pin modes as high speed
-    GPIOB->OSPEEDR |= (0xFU << 12);
+    GPIOA->OSPEEDR |= 0x0000000F;
 
-    // Choose AF7 for USART1 in Alternate Function registers
-    GPIOB->AFR[0] |= (0x7 << 24);
-    GPIOB->AFR[0] |= (0x7 << 28);
+    // Choose AF8 for UART4 in Alternate Function registers
+    GPIOA->AFR[0] |= (0x8U << 0); // for pin A0
+    GPIOA->AFR[0] |= (0x8U << 4); // for pin A1
 }
 
-// Initialize UART 1
+// Initialize UART 4
 static void uart_enable(void) {
-	// Enable clock: bit 4 on APB2ENR
-    RCC->APB2ENR |= (1 << 4);
+    // enable UART4 clock
+    RCC->APB1ENR1 |= (1 << 19);
 
-    // USART1 RX enable, RE bit 2
-    USART1->CR1 |= (1 << 2);
-    // USART1 TX enable, TE bit 3
-    USART1->CR1 |= (1 << 3);
+	// Select Sysclk as UART4 Source
+	// RCC->CCIPR |= (1U << 6);
 
-    // Enable usart1 - UE, bit 13
-    USART1->CR1 |= (1 << 13);
+    // Disable uart4 - UE, bit 0
+    UART4->CR1 &= ~(1 << 0);
 
-	// fCK = APB2 speed, 100MHz
-    // baud rate = fCK / (8 * (2 - OVER8) * USARTDIV)
-	// For STM32F411: fCK = 100 Mhz (Sysclk/4), Baudrate = 4000000, OVER8 = 0
-	// USARTDIV = fCK / baud / 8 * (2-OVER8)
-	// USARTDIV = 100M / 4000000 / 16 = 1.5625
-	// Fraction: 0.5624*16 = 9
-	// Mantissa: 1
-    USART1->BRR |= (1 << 4); // Mantissa
-    USART1->BRR |= 9; // Fraction
+	// Disable FIFO mode
+	UART4->CR1 &= ~(1<<20);
+
+	// Set word size to 8
+	UART4->CR1 &= ~(1U<<12 | 1U<<28);
+
+	// OVER8 = 0
+	UART4->CR1 &= ~(1<<15);
+
+	// For STM32L4S5: Sysclk = 120 Mhz (Sysclk/2), Baudrate = 115200, OVER8 = 0
+	// USARTDIV = (1+OVER8) * fCK / baud
+	// USARTDIV = 120Mhz / 115200 = 1041.67 ~ 1042
+    UART4->BRR = 1042U;
+
+	// Set stop bits to 1
+	UART4->CR2 &= ~(0xF << 12);
+
+	// Disable parity
+	UART4->CR1 &= ~(1<<10);
+
+	// Set Auto Baud detection to 0x55 frame detection
+	UART4->CR2 |= (3U<<21);
+	
+	// Enable Auto Baud detection
+	UART4->CR2 |= (1<<20);
+
+    // UART4 TX enable, TE bit 3
+    UART4->CR1 |= (1 << 3);
+
+    // UART4 RX enable, RE bit 2
+    UART4->CR1 |= (1 << 2);
+
+    // Enable uart4 - UE, bit 0
+    UART4->CR1 |= (1 << 0);
+}	
+
+void uart_baud_gen(void) {
+	char temp[8] = {0};
+	volatile uint32_t * brr = &(UART4->BRR);
+	uart_receive(temp, 1);
+	// Wait for auto baud generation to complete- ABRF bit
+	while(!(UART4->ISR & (1 << 15))) {};
 }
 
 void uart_init(void)
 {
-    /* set system clock to 100 Mhz */
-    set_sysclk_to_100();
-
 	uart_pin_setup();
 	uart_enable();
+	uart_baud_gen();
 }

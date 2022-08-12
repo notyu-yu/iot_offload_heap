@@ -15,20 +15,20 @@ For help, type "help".
 Type "apropos word" to search for commands related to "word"...
 Reading symbols from ./Debug/mcu_mdriver.elf...
 loop () at mcu_side/mcu.c:12
-12		led_on(ORANGE);
-Loading section .isr_vector, size 0x198 lma 0x8000000
-Loading section .text, size 0x4b80 lma 0x80001a0
-Loading section .rodata, size 0xdb4 lma 0x8004d20
-Loading section .init_array, size 0x4 lma 0x8005ad4
-Loading section .fini_array, size 0x4 lma 0x8005ad8
-Loading section .data, size 0xc8 lma 0x8005adc
-Start address 0x08002ab4, load size 23452
-Transfer rate: 20 KB/sec, 3350 bytes/write.
+12		led_on(LD1);
+Loading section .isr_vector, size 0x1c0 lma 0x8000000
+Loading section .text, size 0x4d90 lma 0x80001c0
+Loading section .rodata, size 0xdb8 lma 0x8004f50
+Loading section .init_array, size 0x8 lma 0x8005d08
+Loading section .fini_array, size 0x8 lma 0x8005d10
+Loading section .data, size 0xc8 lma 0x8005d18
+Start address 0x08002ce4, load size 24032
+Transfer rate: 34 KB/sec, 3433 bytes/write.
 Breakpoint 1 at 0x8001fda: file mcu_side/mcu.c, line 12.
 Note: automatically using hardware breakpoints for read-only addresses.
 
 Breakpoint 1, loop () at mcu_side/mcu.c:12
-12		led_on(ORANGE);
+12		led_on(LD1);
 $1 = "Memory error", '\000' <repeats 2035 times>
 A debugging session is active.
 

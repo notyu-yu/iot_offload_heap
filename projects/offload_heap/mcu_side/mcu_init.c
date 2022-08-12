@@ -69,37 +69,69 @@ void memfault_init(void) {
 
 // Turn on LED
 void led_on(led l) {
-	GPIOD->ODR |= (1U<<l);
+	switch (l) {
+		case LD1:
+			GPIOA->ODR |= (1U<<5);
+			break;
+		case LD2:
+			GPIOB->ODR |= (1U<<14);
+			break;
+		default:
+			break;
+	}
 }
 
 // Turn off LED
 void led_off(led l) {
-	GPIOD->ODR &= ~(1U<<l);
+	switch (l) {
+		case LD1:
+			GPIOA->ODR &= ~(1U<<5);
+			break;
+		case LD2:
+			GPIOB->ODR &= ~(1U<<14);
+			break;
+		default:
+			break;
+	}
 }
 
 // Toggle LED
 void led_toggle(led l) {
-	GPIOD->ODR ^= (1U<<l);
+	switch (l) {
+		case LD1:
+			GPIOA->ODR ^= (1U<<5);
+			break;
+		case LD2:
+			GPIOB->ODR ^= (1U<<14);
+			break;
+		default:
+			break;
+	}
 }
 
 // Setup LED GPIO
 void led_init(void) {
-	// Enable GPIOD clock
-	RCC->AHB1ENR |= 0x00000008;
+	// Enable GPIOA and GPIOB clock
+	RCC->AHB2ENR |= (1U << 0);
+	RCC->AHB2ENR |= (1U << 1);
 
-	// Turn on output mode
-	GPIOD->MODER &= 0x00FFFFFF;
-	GPIOD->MODER |= 0x55000000;
+	// Turn on output mode on A5 and B14
+	GPIOA->MODER &= ~(0xFU << 10);
+	GPIOA->MODER |= (1U << 10);
+	GPIOB->MODER &= ~(0xFU << 28);
+	GPIOB->MODER |= (1U << 28);
 
 	// Turn off LEDs
-	GPIOD->ODR &= 0x0FFF;
+	GPIOA->ODR &= ~(1U<<5);
+	GPIOB->ODR &= ~(1U<<14);
 }
 
 // Set up LED and fault handlers
 void mcu_init(void) {
+	set_sysclk_to_120();
 	//wwdg_init();
 	memfault_init();
 	led_init();
-	// Make SVC call priority 3
+	// Make SVC call priority 6
 	NVIC_SetPriority(SVCall_IRQn, 6);
 }

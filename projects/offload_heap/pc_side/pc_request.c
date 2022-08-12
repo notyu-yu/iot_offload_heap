@@ -42,14 +42,6 @@ static void serial_setup(int fd) {
 	tcsetattr(fd, TCSANOW, &serial_settings); // Apply settings
 }
 
-// Setup UART file descriptor
-void uart_setup(void) {
-	fd = open(SERIALDEV, O_RDWR | O_NOCTTY);
-	assert(fd >= 0); // Error when not ran with sudo
-	serial_setup(fd);
-	assert(fd>=0);
-}
-
 // Wait for size bytes of data to be read into buffer from UART
 static void uart_read(size_t size, void * buffer) {
 	size_t bytes_read = 0;
@@ -90,3 +82,15 @@ void req_receive(mem_request * buffer) {
 void req_send(uint32_t * buffer) {
 	uart_send(sizeof(uint32_t), buffer);
 }
+
+// Setup UART file descriptor
+void uart_setup(void) {
+	char baud_char = 0x55;
+	fd = open(SERIALDEV, O_RDWR | O_NOCTTY);
+	assert(fd >= 0); // Error when not ran with sudo
+	serial_setup(fd);
+	assert(fd>=0);
+	// Send auto baud detection character
+	uart_send(1, &baud_char);
+}
+

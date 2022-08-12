@@ -9,7 +9,7 @@ size_t output_offset=0;
 void * sp_reset = (void *)0x20005000;
 
 void loop() {
-	led_on(ORANGE);
+	led_on(LD1);
 	while(1) {}
 }
 

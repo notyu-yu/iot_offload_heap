@@ -119,6 +119,6 @@ burn:
 clean:
 	@echo "Cleaning..."
 	@rm -rf $(OBJDIR)/
-	@rm -f pc_server
+#@rm -f pc_server
 
 .PHONY: all build size clean burn debug disass disass-all

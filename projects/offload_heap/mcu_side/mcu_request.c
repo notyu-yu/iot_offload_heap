@@ -30,21 +30,20 @@ static void receive(void * buffer, size_t size) {
 
 // Initialize request communication
 void mem_req_setup(void) {
-	mcu_init();
 	uart_init();
 	uart_dma_init();
 }
 
 // Send request
 void req_send(mem_request * buffer) {
-	led_on(GREEN);
+	led_on(LD2);
 	send(buffer, sizeof(mem_request));
-	led_off(GREEN);
+	led_off(LD2);
 }
 
 // Wait for response
 void req_receive(void ** buffer) {
-	led_on(GREEN);
+	led_on(LD2);
 	receive(buffer, sizeof(void *));
-	led_off(GREEN);
+	led_off(LD2);
 }

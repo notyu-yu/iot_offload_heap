@@ -1,10 +1,8 @@
 #include "mcu.h"
 
 typedef enum {
-	GREEN=12,
-	ORANGE,
-	RED,
-	BLUE
+	LD1,
+	LD2
 } led;
 
 // LED functions
