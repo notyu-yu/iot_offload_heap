@@ -36,6 +36,7 @@ int mm_init(void)
 	void * response = 0;
 
 	mcu_init();
+	timer_init();
 	led_on(LD1);
 	mem_req_setup();
 	mpu_init();
@@ -47,7 +48,6 @@ int mm_init(void)
 		led_off(LD1);
 		mem_init();
 		extend_heap(4096/WSIZE);
-		timer_init();
 		return 0;
 	} else {
 		// Signal incorrect - Throw error

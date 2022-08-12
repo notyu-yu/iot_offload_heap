@@ -385,8 +385,8 @@ void set_sysclk_to_120(void) {
 
 	// Set AHB Prescaler - 2
 	RCC->CFGR |= (4<<4);
-	// Set APB1 low speed prescaler - 1
-	RCC->CFGR |= (0<<8);
+	// Set APB1 low speed prescaler - 2
+	RCC->CFGR |= (4<<8);
 	// Set APB2 high speed prescaler - 1
 	RCC->CFGR |= (0<<11);
 
@@ -418,9 +418,9 @@ void set_sysclk_to_120(void) {
 	}
 
 	// Wait about 1us
-	for (int i=0; i<100; i++){};
+	for (int i=0; i<1000; i++){};
 	// Set AHB Prescaler - 1
-	RCC->CFGR |= (0<<4);
+	RCC->CFGR &= ~(0xFF<<4);
 
 	// Update SystemCoreClock variable
 	SystemCoreClock = 120000000;

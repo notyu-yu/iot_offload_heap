@@ -47,9 +47,10 @@ void timer_init(void)
     // enable TIM2 clock (bit0)
     RCC->APB1ENR1 |= (1 << 0);
 
-	// Formula: Clock speed = (sysclk/APB1_prescaler)*2/(PSC+1)
-	// For STM32L4S5: 120M/4*2 = 60M, 60M/5999+1 = 10 khz clock speed
-    TIM2->PSC = 5999;
+	// Formula: Clock speed = (sysclk/AHB_prescaler/APB1_prescaler)/(PSC+1)
+	// Multiply clock speed by 2 if APB_prescaler is not 1
+	// For STM32L4S5: 120M/1/2*2 = 120M, 120M/(11999+1) = 10 khz clock speed
+    TIM2->PSC = 11999;
 
 	// Set auto reload value to 100 to give 1 ms timer interrupts
     TIM2->ARR = 10;
