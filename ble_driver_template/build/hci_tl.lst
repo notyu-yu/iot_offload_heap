@@ -1,0 +1,1581 @@
+ARM GAS  /tmp/ccfFxmTE.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"hci_tl.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c"
+  20              		.section	.text.verify_packet,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	verify_packet:
+  27              	.LVL0:
+  28              	.LFB132:
+   1:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /**
+   2:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   ******************************************************************************
+   3:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @file    hci_tl.c
+   4:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @author  AMG - RF Application Team
+   5:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @brief   Contains the basic functions for managing the framework required
+   6:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *          for handling the HCI interface
+   7:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   ******************************************************************************
+   8:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @attention
+   9:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+  10:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * Copyright (c) 2018 STMicroelectronics.
+  11:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * All rights reserved.
+  12:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+  13:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * in the root directory of this software component.
+  15:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+  17:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   ******************************************************************************
+  18:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   */ 
+  19:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #include "hci_const.h"
+  20:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #include "hci.h"
+  21:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #include "hci_tl.h"
+  22:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  23:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #define HCI_LOG_ON                      0
+  24:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #define HCI_PCK_TYPE_OFFSET             0
+  25:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #define EVENT_PARAMETER_TOT_LEN_OFFSET  2
+  26:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  27:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /**
+  28:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****  * Increase this parameter to overcome possible issues due to BLE devices crowded environment 
+  29:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****  * or high number of incoming notifications from peripheral devices 
+  30:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****  */
+ARM GAS  /tmp/ccfFxmTE.s 			page 2
+
+
+  31:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #define HCI_READ_PACKET_NUM_MAX 	   (5)
+  32:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  33:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #define MIN(a,b)      ((a) < (b))? (a) : (b)
+  34:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** #define MAX(a,b)      ((a) > (b))? (a) : (b)
+  35:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  36:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** tListNode             hciReadPktPool;
+  37:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** tListNode             hciReadPktRxQueue;
+  38:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** static tHciDataPacket hciReadPacketBuffer[HCI_READ_PACKET_NUM_MAX];
+  39:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** static tHciContext    hciContext;
+  40:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  41:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /************************* Static internal functions **************************/
+  42:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  43:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /**
+  44:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @brief  Verify the packet type.
+  45:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+  46:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  hciReadPacket The HCI data packet
+  47:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @retval 0: valid packet, 1: incorrect packet, 2: wrong length (packet truncated or too long)
+  48:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   */
+  49:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** static int verify_packet(const tHciDataPacket * hciReadPacket)
+  50:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+  29              		.loc 1 50 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  51:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   const uint8_t *hci_pckt = hciReadPacket->dataBuff;
+  34              		.loc 1 51 3 view .LVU1
+  52:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+  53:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (hci_pckt[HCI_PCK_TYPE_OFFSET] != HCI_EVENT_PKT)
+  35              		.loc 1 53 3 view .LVU2
+  36              		.loc 1 53 15 is_stmt 0 view .LVU3
+  37 0000 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+  38              		.loc 1 53 6 view .LVU4
+  39 0002 042B     		cmp	r3, #4
+  40 0004 07D1     		bne	.L3
+  54:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     return 1; /* Incorrect type */
+  55:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+  56:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (hci_pckt[EVENT_PARAMETER_TOT_LEN_OFFSET] != hciReadPacket->data_len - (1+HCI_EVENT_HDR_SIZE))
+  41              		.loc 1 56 3 is_stmt 1 view .LVU5
+  42              		.loc 1 56 15 is_stmt 0 view .LVU6
+  43 0006 827A     		ldrb	r2, [r0, #10]	@ zero_extendqisi2
+  44              		.loc 1 56 64 view .LVU7
+  45 0008 90F88830 		ldrb	r3, [r0, #136]	@ zero_extendqisi2
+  46              		.loc 1 56 75 view .LVU8
+  47 000c 033B     		subs	r3, r3, #3
+  48              		.loc 1 56 6 view .LVU9
+  49 000e 9A42     		cmp	r2, r3
+  50 0010 03D1     		bne	.L4
+  57:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     return 2; /* Wrong length (packet truncated or too long) */
+  58:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+  59:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   return 0;      
+  51              		.loc 1 59 10 view .LVU10
+  52 0012 0020     		movs	r0, #0
+  53              	.LVL1:
+  54              		.loc 1 59 10 view .LVU11
+  55 0014 7047     		bx	lr
+  56              	.LVL2:
+ARM GAS  /tmp/ccfFxmTE.s 			page 3
+
+
+  57              	.L3:
+  54:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     return 1; /* Incorrect type */
+  58              		.loc 1 54 12 view .LVU12
+  59 0016 0120     		movs	r0, #1
+  60              	.LVL3:
+  54:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     return 1; /* Incorrect type */
+  61              		.loc 1 54 12 view .LVU13
+  62 0018 7047     		bx	lr
+  63              	.LVL4:
+  64              	.L4:
+  57:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     return 2; /* Wrong length (packet truncated or too long) */
+  65              		.loc 1 57 12 view .LVU14
+  66 001a 0220     		movs	r0, #2
+  67              	.LVL5:
+  60:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+  68              		.loc 1 60 1 view .LVU15
+  69 001c 7047     		bx	lr
+  70              		.cfi_endproc
+  71              	.LFE132:
+  73              		.section	.text.send_cmd,"ax",%progbits
+  74              		.align	1
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  79              	send_cmd:
+  80              	.LVL6:
+  81              	.LFB133:
+  61:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  62:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /**
+  63:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @brief  Send an HCI command.
+  64:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+  65:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  ogf The Opcode Group Field
+  66:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  ocf The Opcode Command Field
+  67:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  plen The HCI command length
+  68:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  param The HCI command parameters
+  69:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @retval None
+  70:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   */
+  71:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** static void send_cmd(uint16_t ogf, uint16_t ocf, uint8_t plen, void *param)
+  72:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+  82              		.loc 1 72 1 is_stmt 1 view -0
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 136
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		.loc 1 72 1 is_stmt 0 view .LVU17
+  87 0000 10B5     		push	{r4, lr}
+  88              	.LCFI0:
+  89              		.cfi_def_cfa_offset 8
+  90              		.cfi_offset 4, -8
+  91              		.cfi_offset 14, -4
+  92 0002 A2B0     		sub	sp, sp, #136
+  93              	.LCFI1:
+  94              		.cfi_def_cfa_offset 144
+  95 0004 1446     		mov	r4, r2
+  73:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   uint8_t payload[HCI_MAX_PAYLOAD_SIZE];  
+  96              		.loc 1 73 3 is_stmt 1 view .LVU18
+  74:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hci_command_hdr hc;
+  97              		.loc 1 74 3 view .LVU19
+ARM GAS  /tmp/ccfFxmTE.s 			page 4
+
+
+  75:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+  76:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hc.opcode = htobs(cmd_opcode_pack(ogf, ocf));
+  98              		.loc 1 76 3 view .LVU20
+  99              		.loc 1 76 15 is_stmt 0 view .LVU21
+ 100 0006 C1F3090C 		ubfx	ip, r1, #0, #10
+ 101 000a 4CEA802C 		orr	ip, ip, r0, lsl #10
+ 102              		.loc 1 76 13 view .LVU22
+ 103 000e ADF804C0 		strh	ip, [sp, #4]	@ movhi
+  77:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hc.plen = plen;
+ 104              		.loc 1 77 3 is_stmt 1 view .LVU23
+ 105              		.loc 1 77 11 is_stmt 0 view .LVU24
+ 106 0012 8DF80620 		strb	r2, [sp, #6]
+  78:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  79:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   payload[0] = HCI_COMMAND_PKT;
+ 107              		.loc 1 79 3 is_stmt 1 view .LVU25
+ 108              		.loc 1 79 14 is_stmt 0 view .LVU26
+ 109 0016 0121     		movs	r1, #1
+ 110              	.LVL7:
+ 111              		.loc 1 79 14 view .LVU27
+ 112 0018 8DF80810 		strb	r1, [sp, #8]
+  80:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   BLUENRG_memcpy(payload + 1, &hc, sizeof(hc));
+ 113              		.loc 1 80 3 is_stmt 1 view .LVU28
+ 114 001c BDF80400 		ldrh	r0, [sp, #4]	@ unaligned
+ 115              	.LVL8:
+ 116              		.loc 1 80 3 is_stmt 0 view .LVU29
+ 117 0020 D1B2     		uxtb	r1, r2
+ 118 0022 ADF80900 		strh	r0, [sp, #9]	@ unaligned
+ 119 0026 8DF80B10 		strb	r1, [sp, #11]
+  81:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   BLUENRG_memcpy(payload + HCI_HDR_SIZE + HCI_COMMAND_HDR_SIZE, param, plen);
+ 120              		.loc 1 81 3 is_stmt 1 view .LVU30
+ 121 002a 1946     		mov	r1, r3
+ 122 002c 03A8     		add	r0, sp, #12
+ 123 002e FFF7FEFF 		bl	memcpy
+ 124              	.LVL9:
+  82:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+  83:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (hciContext.io.Send)
+ 125              		.loc 1 83 3 view .LVU31
+ 126              		.loc 1 83 20 is_stmt 0 view .LVU32
+ 127 0032 044B     		ldr	r3, .L8
+ 128 0034 1B69     		ldr	r3, [r3, #16]
+ 129              		.loc 1 83 6 view .LVU33
+ 130 0036 13B1     		cbz	r3, .L5
+  84:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+  85:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     hciContext.io.Send (payload, HCI_HDR_SIZE + HCI_COMMAND_HDR_SIZE + plen);
+ 131              		.loc 1 85 5 is_stmt 1 view .LVU34
+ 132 0038 211D     		adds	r1, r4, #4
+ 133 003a 02A8     		add	r0, sp, #8
+ 134 003c 9847     		blx	r3
+ 135              	.LVL10:
+ 136              	.L5:
+  86:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+  87:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 137              		.loc 1 87 1 is_stmt 0 view .LVU35
+ 138 003e 22B0     		add	sp, sp, #136
+ 139              	.LCFI2:
+ 140              		.cfi_def_cfa_offset 8
+ 141              		@ sp needed
+ARM GAS  /tmp/ccfFxmTE.s 			page 5
+
+
+ 142 0040 10BD     		pop	{r4, pc}
+ 143              	.LVL11:
+ 144              	.L9:
+ 145              		.loc 1 87 1 view .LVU36
+ 146 0042 00BF     		.align	2
+ 147              	.L8:
+ 148 0044 00000000 		.word	hciContext
+ 149              		.cfi_endproc
+ 150              	.LFE133:
+ 152              		.section	.text.free_event_list,"ax",%progbits
+ 153              		.align	1
+ 154              		.syntax unified
+ 155              		.thumb
+ 156              		.thumb_func
+ 158              	free_event_list:
+ 159              	.LFB135:
+  88:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+  89:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /**
+  90:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @brief  Remove the tail from a source list and insert it to the head 
+  91:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *         of a destination list.
+  92:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+  93:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  dest_list
+  94:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  src_list
+  95:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @retval None
+  96:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   */
+  97:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** static void move_list(tListNode * dest_list, tListNode * src_list)
+  98:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+  99:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   pListNode tmp_node;
+ 100:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 101:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   while (!list_is_empty(src_list))
+ 102:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 103:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_tail(src_list, &tmp_node);
+ 104:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_head(dest_list, tmp_node);
+ 105:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 106:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 107:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 108:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /**
+ 109:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @brief  Free the HCI event list.
+ 110:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   *
+ 111:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @param  None
+ 112:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   * @retval None
+ 113:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   */
+ 114:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** static void free_event_list(void)
+ 115:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+ 160              		.loc 1 115 1 is_stmt 1 view -0
+ 161              		.cfi_startproc
+ 162              		@ args = 0, pretend = 0, frame = 8
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 164 0000 00B5     		push	{lr}
+ 165              	.LCFI3:
+ 166              		.cfi_def_cfa_offset 4
+ 167              		.cfi_offset 14, -4
+ 168 0002 83B0     		sub	sp, sp, #12
+ 169              	.LCFI4:
+ 170              		.cfi_def_cfa_offset 16
+ 116:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   tHciDataPacket * pckt;
+ 171              		.loc 1 116 3 view .LVU38
+ARM GAS  /tmp/ccfFxmTE.s 			page 6
+
+
+ 117:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 118:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   while(list_get_size(&hciReadPktPool) < HCI_READ_PACKET_NUM_MAX/2){
+ 172              		.loc 1 118 3 view .LVU39
+ 173              		.loc 1 118 8 is_stmt 0 view .LVU40
+ 174 0004 07E0     		b	.L11
+ 175              	.L12:
+ 119:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head(&hciReadPktRxQueue, (tListNode **)&pckt);    
+ 176              		.loc 1 119 5 is_stmt 1 view .LVU41
+ 177 0006 01A9     		add	r1, sp, #4
+ 178 0008 0748     		ldr	r0, .L14
+ 179 000a FFF7FEFF 		bl	list_remove_head
+ 180              	.LVL12:
+ 120:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_tail(&hciReadPktPool, (tListNode *)pckt);
+ 181              		.loc 1 120 5 view .LVU42
+ 182 000e 0199     		ldr	r1, [sp, #4]
+ 183 0010 0648     		ldr	r0, .L14+4
+ 184 0012 FFF7FEFF 		bl	list_insert_tail
+ 185              	.LVL13:
+ 186              	.L11:
+ 118:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head(&hciReadPktRxQueue, (tListNode **)&pckt);    
+ 187              		.loc 1 118 40 view .LVU43
+ 118:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head(&hciReadPktRxQueue, (tListNode **)&pckt);    
+ 188              		.loc 1 118 9 is_stmt 0 view .LVU44
+ 189 0016 0548     		ldr	r0, .L14+4
+ 190 0018 FFF7FEFF 		bl	list_get_size
+ 191              	.LVL14:
+ 118:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head(&hciReadPktRxQueue, (tListNode **)&pckt);    
+ 192              		.loc 1 118 40 view .LVU45
+ 193 001c 0128     		cmp	r0, #1
+ 194 001e F2DD     		ble	.L12
+ 121:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 122:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 195              		.loc 1 122 1 view .LVU46
+ 196 0020 03B0     		add	sp, sp, #12
+ 197              	.LCFI5:
+ 198              		.cfi_def_cfa_offset 4
+ 199              		@ sp needed
+ 200 0022 5DF804FB 		ldr	pc, [sp], #4
+ 201              	.L15:
+ 202 0026 00BF     		.align	2
+ 203              	.L14:
+ 204 0028 00000000 		.word	hciReadPktRxQueue
+ 205 002c 00000000 		.word	hciReadPktPool
+ 206              		.cfi_endproc
+ 207              	.LFE135:
+ 209              		.section	.text.move_list,"ax",%progbits
+ 210              		.align	1
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	move_list:
+ 216              	.LVL15:
+ 217              	.LFB134:
+  98:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   pListNode tmp_node;
+ 218              		.loc 1 98 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /tmp/ccfFxmTE.s 			page 7
+
+
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+  98:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   pListNode tmp_node;
+ 222              		.loc 1 98 1 is_stmt 0 view .LVU48
+ 223 0000 30B5     		push	{r4, r5, lr}
+ 224              	.LCFI6:
+ 225              		.cfi_def_cfa_offset 12
+ 226              		.cfi_offset 4, -12
+ 227              		.cfi_offset 5, -8
+ 228              		.cfi_offset 14, -4
+ 229 0002 83B0     		sub	sp, sp, #12
+ 230              	.LCFI7:
+ 231              		.cfi_def_cfa_offset 24
+ 232 0004 0546     		mov	r5, r0
+ 233 0006 0C46     		mov	r4, r1
+  99:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 234              		.loc 1 99 3 is_stmt 1 view .LVU49
+ 101:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 235              		.loc 1 101 3 view .LVU50
+ 101:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 236              		.loc 1 101 9 is_stmt 0 view .LVU51
+ 237 0008 07E0     		b	.L17
+ 238              	.LVL16:
+ 239              	.L18:
+ 103:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_head(dest_list, tmp_node);
+ 240              		.loc 1 103 5 is_stmt 1 view .LVU52
+ 241 000a 01A9     		add	r1, sp, #4
+ 242 000c 2046     		mov	r0, r4
+ 243 000e FFF7FEFF 		bl	list_remove_tail
+ 244              	.LVL17:
+ 104:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 245              		.loc 1 104 5 view .LVU53
+ 246 0012 0199     		ldr	r1, [sp, #4]
+ 247 0014 2846     		mov	r0, r5
+ 248 0016 FFF7FEFF 		bl	list_insert_head
+ 249              	.LVL18:
+ 250              	.L17:
+ 101:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 251              		.loc 1 101 10 view .LVU54
+ 101:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 252              		.loc 1 101 11 is_stmt 0 view .LVU55
+ 253 001a 2046     		mov	r0, r4
+ 254 001c FFF7FEFF 		bl	list_is_empty
+ 255              	.LVL19:
+ 101:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 256              		.loc 1 101 10 view .LVU56
+ 257 0020 0028     		cmp	r0, #0
+ 258 0022 F2D0     		beq	.L18
+ 106:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 259              		.loc 1 106 1 view .LVU57
+ 260 0024 03B0     		add	sp, sp, #12
+ 261              	.LCFI8:
+ 262              		.cfi_def_cfa_offset 12
+ 263              		@ sp needed
+ 264 0026 30BD     		pop	{r4, r5, pc}
+ 106:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 265              		.loc 1 106 1 view .LVU58
+ 266              		.cfi_endproc
+ARM GAS  /tmp/ccfFxmTE.s 			page 8
+
+
+ 267              	.LFE134:
+ 269              		.section	.text.hci_init,"ax",%progbits
+ 270              		.align	1
+ 271              		.global	hci_init
+ 272              		.syntax unified
+ 273              		.thumb
+ 274              		.thumb_func
+ 276              	hci_init:
+ 277              	.LVL20:
+ 278              	.LFB136:
+ 123:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 124:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** /********************** HCI Transport layer functions *****************************/
+ 125:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 126:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** void hci_init(void(* UserEvtRx)(void* pData), void* pConf)
+ 127:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+ 279              		.loc 1 127 1 is_stmt 1 view -0
+ 280              		.cfi_startproc
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+ 283              		.loc 1 127 1 is_stmt 0 view .LVU60
+ 284 0000 10B5     		push	{r4, lr}
+ 285              	.LCFI9:
+ 286              		.cfi_def_cfa_offset 8
+ 287              		.cfi_offset 4, -8
+ 288              		.cfi_offset 14, -4
+ 128:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   uint8_t index;
+ 289              		.loc 1 128 3 is_stmt 1 view .LVU61
+ 129:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 130:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if(UserEvtRx != NULL)
+ 290              		.loc 1 130 3 view .LVU62
+ 291              		.loc 1 130 5 is_stmt 0 view .LVU63
+ 292 0002 08B1     		cbz	r0, .L21
+ 131:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 132:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     hciContext.UserEvtRx = UserEvtRx;
+ 293              		.loc 1 132 5 is_stmt 1 view .LVU64
+ 294              		.loc 1 132 26 is_stmt 0 view .LVU65
+ 295 0004 104A     		ldr	r2, .L27
+ 296 0006 D061     		str	r0, [r2, #28]
+ 297              	.L21:
+ 133:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 134:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 135:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* Initialize list heads of ready and free hci data packet queues */
+ 136:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   list_init_head(&hciReadPktPool);
+ 298              		.loc 1 136 3 is_stmt 1 view .LVU66
+ 299 0008 1048     		ldr	r0, .L27+4
+ 300              	.LVL21:
+ 301              		.loc 1 136 3 is_stmt 0 view .LVU67
+ 302 000a FFF7FEFF 		bl	list_init_head
+ 303              	.LVL22:
+ 137:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   list_init_head(&hciReadPktRxQueue);
+ 304              		.loc 1 137 3 is_stmt 1 view .LVU68
+ 305 000e 1048     		ldr	r0, .L27+8
+ 306 0010 FFF7FEFF 		bl	list_init_head
+ 307              	.LVL23:
+ 138:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 139:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* Initialize TL BLE layer */
+ 140:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hci_tl_lowlevel_init();
+ARM GAS  /tmp/ccfFxmTE.s 			page 9
+
+
+ 308              		.loc 1 140 3 view .LVU69
+ 309 0014 FFF7FEFF 		bl	hci_tl_lowlevel_init
+ 310              	.LVL24:
+ 141:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 142:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* Initialize the queue of free hci data packets */
+ 143:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   for (index = 0; index < HCI_READ_PACKET_NUM_MAX; index++)
+ 311              		.loc 1 143 3 view .LVU70
+ 312              		.loc 1 143 14 is_stmt 0 view .LVU71
+ 313 0018 0024     		movs	r4, #0
+ 314              		.loc 1 143 3 view .LVU72
+ 315 001a 08E0     		b	.L22
+ 316              	.LVL25:
+ 317              	.L23:
+ 144:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 145:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_tail(&hciReadPktPool, (tListNode *)&hciReadPacketBuffer[index]);
+ 318              		.loc 1 145 5 is_stmt 1 discriminator 3 view .LVU73
+ 319 001c 8C21     		movs	r1, #140
+ 320 001e 0D4B     		ldr	r3, .L27+12
+ 321 0020 01FB0431 		mla	r1, r1, r4, r3
+ 322 0024 0948     		ldr	r0, .L27+4
+ 323 0026 FFF7FEFF 		bl	list_insert_tail
+ 324              	.LVL26:
+ 143:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 325              		.loc 1 143 57 discriminator 3 view .LVU74
+ 326 002a 0134     		adds	r4, r4, #1
+ 327              	.LVL27:
+ 143:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 328              		.loc 1 143 57 is_stmt 0 discriminator 3 view .LVU75
+ 329 002c E4B2     		uxtb	r4, r4
+ 330              	.LVL28:
+ 331              	.L22:
+ 143:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 332              		.loc 1 143 25 is_stmt 1 discriminator 1 view .LVU76
+ 333 002e 042C     		cmp	r4, #4
+ 334 0030 F4D9     		bls	.L23
+ 146:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   } 
+ 147:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 148:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* Initialize low level driver */
+ 149:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (hciContext.io.Init)  hciContext.io.Init(NULL);
+ 335              		.loc 1 149 3 view .LVU77
+ 336              		.loc 1 149 20 is_stmt 0 view .LVU78
+ 337 0032 054B     		ldr	r3, .L27
+ 338 0034 1B68     		ldr	r3, [r3]
+ 339              		.loc 1 149 6 view .LVU79
+ 340 0036 0BB1     		cbz	r3, .L24
+ 341              		.loc 1 149 28 is_stmt 1 discriminator 1 view .LVU80
+ 342 0038 0020     		movs	r0, #0
+ 343 003a 9847     		blx	r3
+ 344              	.LVL29:
+ 345              	.L24:
+ 150:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (hciContext.io.Reset) hciContext.io.Reset();
+ 346              		.loc 1 150 3 view .LVU81
+ 347              		.loc 1 150 20 is_stmt 0 view .LVU82
+ 348 003c 024B     		ldr	r3, .L27
+ 349 003e 9B68     		ldr	r3, [r3, #8]
+ 350              		.loc 1 150 6 view .LVU83
+ 351 0040 03B1     		cbz	r3, .L20
+ARM GAS  /tmp/ccfFxmTE.s 			page 10
+
+
+ 352              		.loc 1 150 28 is_stmt 1 discriminator 1 view .LVU84
+ 353 0042 9847     		blx	r3
+ 354              	.LVL30:
+ 355              	.L20:
+ 151:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 356              		.loc 1 151 1 is_stmt 0 view .LVU85
+ 357 0044 10BD     		pop	{r4, pc}
+ 358              	.LVL31:
+ 359              	.L28:
+ 360              		.loc 1 151 1 view .LVU86
+ 361 0046 00BF     		.align	2
+ 362              	.L27:
+ 363 0048 00000000 		.word	hciContext
+ 364 004c 00000000 		.word	hciReadPktPool
+ 365 0050 00000000 		.word	hciReadPktRxQueue
+ 366 0054 00000000 		.word	hciReadPacketBuffer
+ 367              		.cfi_endproc
+ 368              	.LFE136:
+ 370              		.section	.text.hci_register_io_bus,"ax",%progbits
+ 371              		.align	1
+ 372              		.global	hci_register_io_bus
+ 373              		.syntax unified
+ 374              		.thumb
+ 375              		.thumb_func
+ 377              	hci_register_io_bus:
+ 378              	.LVL32:
+ 379              	.LFB137:
+ 152:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 153:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** void hci_register_io_bus(tHciIO* fops)
+ 154:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+ 380              		.loc 1 154 1 is_stmt 1 view -0
+ 381              		.cfi_startproc
+ 382              		@ args = 0, pretend = 0, frame = 0
+ 383              		@ frame_needed = 0, uses_anonymous_args = 0
+ 384              		@ link register save eliminated.
+ 155:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* Register bus function */
+ 156:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hciContext.io.Init    = fops->Init; 
+ 385              		.loc 1 156 3 view .LVU88
+ 386              		.loc 1 156 31 is_stmt 0 view .LVU89
+ 387 0000 0268     		ldr	r2, [r0]
+ 388              		.loc 1 156 25 view .LVU90
+ 389 0002 054B     		ldr	r3, .L30
+ 390 0004 1A60     		str	r2, [r3]
+ 157:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hciContext.io.Receive = fops->Receive;  
+ 391              		.loc 1 157 3 is_stmt 1 view .LVU91
+ 392              		.loc 1 157 31 is_stmt 0 view .LVU92
+ 393 0006 C268     		ldr	r2, [r0, #12]
+ 394              		.loc 1 157 25 view .LVU93
+ 395 0008 DA60     		str	r2, [r3, #12]
+ 158:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hciContext.io.Send    = fops->Send;
+ 396              		.loc 1 158 3 is_stmt 1 view .LVU94
+ 397              		.loc 1 158 31 is_stmt 0 view .LVU95
+ 398 000a 0269     		ldr	r2, [r0, #16]
+ 399              		.loc 1 158 25 view .LVU96
+ 400 000c 1A61     		str	r2, [r3, #16]
+ 159:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hciContext.io.GetTick = fops->GetTick;
+ 401              		.loc 1 159 3 is_stmt 1 view .LVU97
+ARM GAS  /tmp/ccfFxmTE.s 			page 11
+
+
+ 402              		.loc 1 159 31 is_stmt 0 view .LVU98
+ 403 000e 8269     		ldr	r2, [r0, #24]
+ 404              		.loc 1 159 25 view .LVU99
+ 405 0010 9A61     		str	r2, [r3, #24]
+ 160:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hciContext.io.Reset   = fops->Reset;
+ 406              		.loc 1 160 3 is_stmt 1 view .LVU100
+ 407              		.loc 1 160 31 is_stmt 0 view .LVU101
+ 408 0012 8268     		ldr	r2, [r0, #8]
+ 409              		.loc 1 160 25 view .LVU102
+ 410 0014 9A60     		str	r2, [r3, #8]
+ 161:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 411              		.loc 1 161 1 view .LVU103
+ 412 0016 7047     		bx	lr
+ 413              	.L31:
+ 414              		.align	2
+ 415              	.L30:
+ 416 0018 00000000 		.word	hciContext
+ 417              		.cfi_endproc
+ 418              	.LFE137:
+ 420              		.section	.text.hci_send_req,"ax",%progbits
+ 421              		.align	1
+ 422              		.global	hci_send_req
+ 423              		.syntax unified
+ 424              		.thumb
+ 425              		.thumb_func
+ 427              	hci_send_req:
+ 428              	.LVL33:
+ 429              	.LFB138:
+ 162:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 163:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** int hci_send_req(struct hci_request* r, BOOL async)
+ 164:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+ 430              		.loc 1 164 1 is_stmt 1 view -0
+ 431              		.cfi_startproc
+ 432              		@ args = 0, pretend = 0, frame = 16
+ 433              		@ frame_needed = 0, uses_anonymous_args = 0
+ 434              		.loc 1 164 1 is_stmt 0 view .LVU105
+ 435 0000 70B5     		push	{r4, r5, r6, lr}
+ 436              	.LCFI10:
+ 437              		.cfi_def_cfa_offset 16
+ 438              		.cfi_offset 4, -16
+ 439              		.cfi_offset 5, -12
+ 440              		.cfi_offset 6, -8
+ 441              		.cfi_offset 14, -4
+ 442 0002 84B0     		sub	sp, sp, #16
+ 443              	.LCFI11:
+ 444              		.cfi_def_cfa_offset 32
+ 445 0004 0546     		mov	r5, r0
+ 446 0006 0C46     		mov	r4, r1
+ 165:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   uint8_t *ptr;
+ 447              		.loc 1 165 3 is_stmt 1 view .LVU106
+ 166:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   uint16_t opcode = htobs(cmd_opcode_pack(r->ogf, r->ocf));
+ 448              		.loc 1 166 3 view .LVU107
+ 449              		.loc 1 166 21 is_stmt 0 view .LVU108
+ 450 0008 4388     		ldrh	r3, [r0, #2]
+ 451 000a 0288     		ldrh	r2, [r0]
+ 452              		.loc 1 166 12 view .LVU109
+ 453 000c C3F30903 		ubfx	r3, r3, #0, #10
+ARM GAS  /tmp/ccfFxmTE.s 			page 12
+
+
+ 454 0010 43EA8223 		orr	r3, r3, r2, lsl #10
+ 455 0014 9EB2     		uxth	r6, r3
+ 456              	.LVL34:
+ 167:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hci_event_pckt *event_pckt;
+ 457              		.loc 1 167 3 is_stmt 1 view .LVU110
+ 168:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   hci_uart_pckt *hci_hdr;
+ 458              		.loc 1 168 3 view .LVU111
+ 169:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 170:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   tHciDataPacket * hciReadPacket = NULL;
+ 459              		.loc 1 170 3 view .LVU112
+ 460              		.loc 1 170 20 is_stmt 0 view .LVU113
+ 461 0016 0023     		movs	r3, #0
+ 462 0018 0393     		str	r3, [sp, #12]
+ 171:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   tListNode hciTempQueue;
+ 463              		.loc 1 171 3 is_stmt 1 view .LVU114
+ 172:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 173:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   list_init_head(&hciTempQueue);
+ 464              		.loc 1 173 3 view .LVU115
+ 465 001a 01A8     		add	r0, sp, #4
+ 466              	.LVL35:
+ 467              		.loc 1 173 3 is_stmt 0 view .LVU116
+ 468 001c FFF7FEFF 		bl	list_init_head
+ 469              	.LVL36:
+ 174:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 175:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   free_event_list();
+ 470              		.loc 1 175 3 is_stmt 1 view .LVU117
+ 471 0020 FFF7FEFF 		bl	free_event_list
+ 472              	.LVL37:
+ 176:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 177:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   send_cmd(r->ogf, r->ocf, r->clen, r->cparam);
+ 473              		.loc 1 177 3 view .LVU118
+ 474 0024 AB68     		ldr	r3, [r5, #8]
+ 475 0026 2A7B     		ldrb	r2, [r5, #12]	@ zero_extendqisi2
+ 476 0028 6988     		ldrh	r1, [r5, #2]
+ 477 002a 2888     		ldrh	r0, [r5]
+ 478 002c FFF7FEFF 		bl	send_cmd
+ 479              	.LVL38:
+ 178:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 179:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (async)
+ 480              		.loc 1 179 3 view .LVU119
+ 481              		.loc 1 179 6 is_stmt 0 view .LVU120
+ 482 0030 002C     		cmp	r4, #0
+ 483 0032 40F08480 		bne	.L47
+ 484              	.L34:
+ 180:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 181:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     return 0;
+ 182:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 183:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 184:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   while (1) 
+ 485              		.loc 1 184 3 is_stmt 1 view .LVU121
+ 486              	.LBB2:
+ 185:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 186:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     evt_cmd_complete  *cc;
+ 487              		.loc 1 186 5 view .LVU122
+ 187:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     evt_cmd_status    *cs;
+ 488              		.loc 1 187 5 view .LVU123
+ 188:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     evt_le_meta_event *me;
+ARM GAS  /tmp/ccfFxmTE.s 			page 13
+
+
+ 489              		.loc 1 188 5 view .LVU124
+ 189:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     uint32_t len;
+ 490              		.loc 1 189 5 view .LVU125
+ 190:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 191:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     uint32_t tickstart = HAL_GetTick();
+ 491              		.loc 1 191 5 view .LVU126
+ 492              		.loc 1 191 26 is_stmt 0 view .LVU127
+ 493 0036 FFF7FEFF 		bl	HAL_GetTick
+ 494              	.LVL39:
+ 495 003a 0446     		mov	r4, r0
+ 496              	.LVL40:
+ 497              	.L36:
+ 192:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 193:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     while (1)
+ 498              		.loc 1 193 5 is_stmt 1 view .LVU128
+ 194:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 195:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       if ((HAL_GetTick() - tickstart) > HCI_DEFAULT_TIMEOUT_MS)
+ 499              		.loc 1 195 7 view .LVU129
+ 500              		.loc 1 195 12 is_stmt 0 view .LVU130
+ 501 003c FFF7FEFF 		bl	HAL_GetTick
+ 502              	.LVL41:
+ 503              		.loc 1 195 26 view .LVU131
+ 504 0040 001B     		subs	r0, r0, r4
+ 505              		.loc 1 195 10 view .LVU132
+ 506 0042 B0F57A7F 		cmp	r0, #1000
+ 507 0046 22D8     		bhi	.L35
+ 196:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {
+ 197:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto failed;
+ 198:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 199:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 200:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       if (!list_is_empty(&hciReadPktRxQueue)) 
+ 508              		.loc 1 200 7 is_stmt 1 view .LVU133
+ 509              		.loc 1 200 12 is_stmt 0 view .LVU134
+ 510 0048 3E48     		ldr	r0, .L51
+ 511 004a FFF7FEFF 		bl	list_is_empty
+ 512              	.LVL42:
+ 513              		.loc 1 200 10 view .LVU135
+ 514 004e 0028     		cmp	r0, #0
+ 515 0050 F4D1     		bne	.L36
+ 201:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {
+ 202:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         break;
+ 203:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 204:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 205:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 206:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     /* Extract packet from HCI event queue. */
+ 207:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head(&hciReadPktRxQueue, (tListNode **)&hciReadPacket);    
+ 516              		.loc 1 207 5 is_stmt 1 view .LVU136
+ 517 0052 03A9     		add	r1, sp, #12
+ 518 0054 3B48     		ldr	r0, .L51
+ 519 0056 FFF7FEFF 		bl	list_remove_head
+ 520              	.LVL43:
+ 208:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 209:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     hci_hdr = (void *)hciReadPacket->dataBuff;
+ 521              		.loc 1 209 5 view .LVU137
+ 522              		.loc 1 209 36 is_stmt 0 view .LVU138
+ 523 005a 039B     		ldr	r3, [sp, #12]
+ 524              	.LVL44:
+ARM GAS  /tmp/ccfFxmTE.s 			page 14
+
+
+ 210:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 211:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     if (hci_hdr->type == HCI_EVENT_PKT)
+ 525              		.loc 1 211 5 is_stmt 1 view .LVU139
+ 526              		.loc 1 211 16 is_stmt 0 view .LVU140
+ 527 005c 1A7A     		ldrb	r2, [r3, #8]	@ zero_extendqisi2
+ 528              		.loc 1 211 8 view .LVU141
+ 529 005e 042A     		cmp	r2, #4
+ 530 0060 28D1     		bne	.L37
+ 212:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 213:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       event_pckt = (void *)(hci_hdr->data);
+ 531              		.loc 1 213 7 is_stmt 1 view .LVU142
+ 532              	.LVL45:
+ 214:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 215:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       ptr = hciReadPacket->dataBuff + (1 + HCI_EVENT_HDR_SIZE);
+ 533              		.loc 1 215 7 view .LVU143
+ 534              		.loc 1 215 11 is_stmt 0 view .LVU144
+ 535 0062 03F10B01 		add	r1, r3, #11
+ 536              	.LVL46:
+ 216:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       len = hciReadPacket->data_len - (1 + HCI_EVENT_HDR_SIZE);
+ 537              		.loc 1 216 7 is_stmt 1 view .LVU145
+ 538              		.loc 1 216 26 is_stmt 0 view .LVU146
+ 539 0066 93F88800 		ldrb	r0, [r3, #136]	@ zero_extendqisi2
+ 540              		.loc 1 216 37 view .LVU147
+ 541 006a C41E     		subs	r4, r0, #3
+ 542              	.LVL47:
+ 217:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 218:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       switch (event_pckt->evt) 
+ 543              		.loc 1 218 7 is_stmt 1 view .LVU148
+ 544              		.loc 1 218 25 is_stmt 0 view .LVU149
+ 545 006c 5A7A     		ldrb	r2, [r3, #9]	@ zero_extendqisi2
+ 546              		.loc 1 218 7 view .LVU150
+ 547 006e 102A     		cmp	r2, #16
+ 548 0070 0DD0     		beq	.L35
+ 549 0072 19D8     		bhi	.L38
+ 550 0074 0E2A     		cmp	r2, #14
+ 551 0076 37D0     		beq	.L39
+ 552 0078 0F2A     		cmp	r2, #15
+ 553 007a 1BD1     		bne	.L37
+ 219:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {      
+ 220:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       case EVT_CMD_STATUS:
+ 221:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         cs = (void *) ptr;
+ 554              		.loc 1 221 9 is_stmt 1 view .LVU151
+ 555              	.LVL48:
+ 222:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         
+ 223:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (cs->opcode != opcode)
+ 556              		.loc 1 223 9 view .LVU152
+ 557              		.loc 1 223 15 is_stmt 0 view .LVU153
+ 558 007c B3F80D20 		ldrh	r2, [r3, #13]	@ unaligned
+ 559              		.loc 1 223 12 view .LVU154
+ 560 0080 B242     		cmp	r2, r6
+ 561 0082 04D1     		bne	.L35
+ 224:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           goto failed;
+ 225:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         
+ 226:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (r->event != EVT_CMD_STATUS) {
+ 562              		.loc 1 226 9 is_stmt 1 view .LVU155
+ 563              		.loc 1 226 14 is_stmt 0 view .LVU156
+ 564 0084 6A68     		ldr	r2, [r5, #4]
+ARM GAS  /tmp/ccfFxmTE.s 			page 15
+
+
+ 565              		.loc 1 226 12 view .LVU157
+ 566 0086 0F2A     		cmp	r2, #15
+ 567 0088 24D0     		beq	.L42
+ 227:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           if (cs->status) {
+ 568              		.loc 1 227 11 is_stmt 1 view .LVU158
+ 569              		.loc 1 227 17 is_stmt 0 view .LVU159
+ 570 008a DB7A     		ldrb	r3, [r3, #11]	@ zero_extendqisi2
+ 571              	.LVL49:
+ 572              		.loc 1 227 14 view .LVU160
+ 573 008c 93B1     		cbz	r3, .L37
+ 574              	.LVL50:
+ 575              	.L35:
+ 576              		.loc 1 227 14 view .LVU161
+ 577              	.LBE2:
+ 228:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****             goto failed;
+ 229:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           }
+ 230:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           break;
+ 231:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         }
+ 232:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 233:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         r->rlen = MIN(len, r->rlen);
+ 234:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 235:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 236:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 237:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       case EVT_CMD_COMPLETE:
+ 238:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         cc = (void *) ptr;
+ 239:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 240:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (cc->opcode != opcode)
+ 241:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           goto failed;
+ 242:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 243:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         ptr += EVT_CMD_COMPLETE_SIZE;
+ 244:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         len -= EVT_CMD_COMPLETE_SIZE;
+ 245:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 246:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         r->rlen = MIN(len, r->rlen);
+ 247:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 248:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 249:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 250:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       case EVT_LE_META_EVENT:
+ 251:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         me = (void *) ptr;
+ 252:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 253:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (me->subevent != r->event)
+ 254:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           break;
+ 255:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 256:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         len -= 1;
+ 257:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         r->rlen = MIN(len, r->rlen);
+ 258:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, me->data, r->rlen);
+ 259:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 260:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 261:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       case EVT_HARDWARE_ERROR:            
+ 262:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto failed;
+ 263:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 264:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       default:      
+ 265:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         break;
+ 266:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 267:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 268:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 269:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     /* If there are no more packets to be processed, be sure there is at list one
+ 270:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****        packet in the pool to process the expected event.
+ARM GAS  /tmp/ccfFxmTE.s 			page 16
+
+
+ 271:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****        If no free packets are available, discard the processed event and insert it
+ 272:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****        into the pool. */
+ 273:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     if (list_is_empty(&hciReadPktPool) && list_is_empty(&hciReadPktRxQueue)) {
+ 274:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 275:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       hciReadPacket=NULL;
+ 276:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 277:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     else {
+ 278:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       /* Insert the packet in a different queue. These packets will be
+ 279:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       inserted back in the main queue just before exiting from send_req(), so that
+ 280:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       these events can be processed by the application.
+ 281:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     */
+ 282:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_tail(&hciTempQueue, (tListNode *)hciReadPacket);
+ 283:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       hciReadPacket=NULL;
+ 284:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 285:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 286:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 287:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** failed: 
+ 288:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (hciReadPacket!=NULL) {
+ 578              		.loc 1 288 3 is_stmt 1 view .LVU162
+ 579              		.loc 1 288 20 is_stmt 0 view .LVU163
+ 580 008e 0399     		ldr	r1, [sp, #12]
+ 581              		.loc 1 288 6 view .LVU164
+ 582 0090 11B1     		cbz	r1, .L46
+ 289:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_head(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 583              		.loc 1 289 5 is_stmt 1 view .LVU165
+ 584 0092 2D48     		ldr	r0, .L51+4
+ 585 0094 FFF7FEFF 		bl	list_insert_head
+ 586              	.LVL51:
+ 587              	.L46:
+ 290:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 291:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   move_list(&hciReadPktRxQueue, &hciTempQueue);
+ 588              		.loc 1 291 3 view .LVU166
+ 589 0098 01A9     		add	r1, sp, #4
+ 590 009a 2A48     		ldr	r0, .L51
+ 591 009c FFF7FEFF 		bl	move_list
+ 592              	.LVL52:
+ 292:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 293:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   return -1;
+ 593              		.loc 1 293 3 view .LVU167
+ 594              		.loc 1 293 10 is_stmt 0 view .LVU168
+ 595 00a0 4FF0FF30 		mov	r0, #-1
+ 596              	.LVL53:
+ 597              	.L32:
+ 294:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 295:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** done:
+ 296:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* Insert the packet back into the pool.*/
+ 297:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   list_insert_head(&hciReadPktPool, (tListNode *)hciReadPacket); 
+ 298:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   move_list(&hciReadPktRxQueue, &hciTempQueue);
+ 299:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 300:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   return 0;
+ 301:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 598              		.loc 1 301 1 view .LVU169
+ 599 00a4 04B0     		add	sp, sp, #16
+ 600              	.LCFI12:
+ 601              		.cfi_remember_state
+ 602              		.cfi_def_cfa_offset 16
+ 603              		@ sp needed
+ARM GAS  /tmp/ccfFxmTE.s 			page 17
+
+
+ 604 00a6 70BD     		pop	{r4, r5, r6, pc}
+ 605              	.LVL54:
+ 606              	.L38:
+ 607              	.LCFI13:
+ 608              		.cfi_restore_state
+ 609              	.LBB3:
+ 218:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {      
+ 610              		.loc 1 218 7 view .LVU170
+ 611 00a8 3E2A     		cmp	r2, #62
+ 612 00aa 03D1     		bne	.L37
+ 251:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 613              		.loc 1 251 9 is_stmt 1 view .LVU171
+ 614              	.LVL55:
+ 253:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           break;
+ 615              		.loc 1 253 9 view .LVU172
+ 253:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           break;
+ 616              		.loc 1 253 15 is_stmt 0 view .LVU173
+ 617 00ac D97A     		ldrb	r1, [r3, #11]	@ zero_extendqisi2
+ 618              	.LVL56:
+ 253:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           break;
+ 619              		.loc 1 253 30 view .LVU174
+ 620 00ae 6A68     		ldr	r2, [r5, #4]
+ 253:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           break;
+ 621              		.loc 1 253 12 view .LVU175
+ 622 00b0 9142     		cmp	r1, r2
+ 623 00b2 31D0     		beq	.L49
+ 624              	.LVL57:
+ 625              	.L37:
+ 273:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 626              		.loc 1 273 5 is_stmt 1 view .LVU176
+ 273:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 627              		.loc 1 273 9 is_stmt 0 view .LVU177
+ 628 00b4 2448     		ldr	r0, .L51+4
+ 629 00b6 FFF7FEFF 		bl	list_is_empty
+ 630              	.LVL58:
+ 273:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 631              		.loc 1 273 8 view .LVU178
+ 632 00ba 20B1     		cbz	r0, .L44
+ 273:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 633              		.loc 1 273 43 discriminator 1 view .LVU179
+ 634 00bc 2148     		ldr	r0, .L51
+ 635 00be FFF7FEFF 		bl	list_is_empty
+ 636              	.LVL59:
+ 273:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 637              		.loc 1 273 40 discriminator 1 view .LVU180
+ 638 00c2 0028     		cmp	r0, #0
+ 639 00c4 34D1     		bne	.L50
+ 640              	.L44:
+ 282:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       hciReadPacket=NULL;
+ 641              		.loc 1 282 5 is_stmt 1 view .LVU181
+ 642 00c6 0399     		ldr	r1, [sp, #12]
+ 643 00c8 01A8     		add	r0, sp, #4
+ 644 00ca FFF7FEFF 		bl	list_insert_tail
+ 645              	.LVL60:
+ 283:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 646              		.loc 1 283 7 view .LVU182
+ 283:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ARM GAS  /tmp/ccfFxmTE.s 			page 18
+
+
+ 647              		.loc 1 283 20 is_stmt 0 view .LVU183
+ 648 00ce 0023     		movs	r3, #0
+ 649 00d0 0393     		str	r3, [sp, #12]
+ 650 00d2 B0E7     		b	.L34
+ 651              	.LVL61:
+ 652              	.L42:
+ 233:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 653              		.loc 1 233 9 is_stmt 1 view .LVU184
+ 233:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 654              		.loc 1 233 19 is_stmt 0 view .LVU185
+ 655 00d4 6B69     		ldr	r3, [r5, #20]
+ 656              	.LVL62:
+ 233:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 657              		.loc 1 233 19 view .LVU186
+ 658 00d6 A342     		cmp	r3, r4
+ 659 00d8 28BF     		it	cs
+ 660 00da 2346     		movcs	r3, r4
+ 661 00dc 1A46     		mov	r2, r3
+ 233:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 662              		.loc 1 233 17 view .LVU187
+ 663 00de 6B61     		str	r3, [r5, #20]
+ 234:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 664              		.loc 1 234 9 is_stmt 1 view .LVU188
+ 665 00e0 2869     		ldr	r0, [r5, #16]
+ 666 00e2 FFF7FEFF 		bl	memcpy
+ 667              	.LVL63:
+ 235:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 668              		.loc 1 235 9 view .LVU189
+ 669 00e6 0DE0     		b	.L43
+ 670              	.LVL64:
+ 671              	.L39:
+ 238:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 672              		.loc 1 238 9 view .LVU190
+ 240:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           goto failed;
+ 673              		.loc 1 240 9 view .LVU191
+ 240:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           goto failed;
+ 674              		.loc 1 240 15 is_stmt 0 view .LVU192
+ 675 00e8 9A89     		ldrh	r2, [r3, #12]	@ unaligned
+ 240:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           goto failed;
+ 676              		.loc 1 240 12 view .LVU193
+ 677 00ea B242     		cmp	r2, r6
+ 678 00ec CFD1     		bne	.L35
+ 243:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         len -= EVT_CMD_COMPLETE_SIZE;
+ 679              		.loc 1 243 9 is_stmt 1 view .LVU194
+ 680              	.LVL65:
+ 244:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 681              		.loc 1 244 9 view .LVU195
+ 244:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 682              		.loc 1 244 13 is_stmt 0 view .LVU196
+ 683 00ee 821F     		subs	r2, r0, #6
+ 684              	.LVL66:
+ 246:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 685              		.loc 1 246 9 is_stmt 1 view .LVU197
+ 246:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 686              		.loc 1 246 19 is_stmt 0 view .LVU198
+ 687 00f0 6969     		ldr	r1, [r5, #20]
+ 688              	.LVL67:
+ARM GAS  /tmp/ccfFxmTE.s 			page 19
+
+
+ 246:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 689              		.loc 1 246 19 view .LVU199
+ 690 00f2 8A42     		cmp	r2, r1
+ 691 00f4 28BF     		it	cs
+ 692 00f6 0A46     		movcs	r2, r1
+ 693              	.LVL68:
+ 246:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, ptr, r->rlen);
+ 694              		.loc 1 246 17 view .LVU200
+ 695 00f8 6A61     		str	r2, [r5, #20]
+ 247:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 696              		.loc 1 247 9 is_stmt 1 view .LVU201
+ 697 00fa 03F10E01 		add	r1, r3, #14
+ 698              	.LVL69:
+ 247:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 699              		.loc 1 247 9 is_stmt 0 view .LVU202
+ 700 00fe 2869     		ldr	r0, [r5, #16]
+ 701              	.LVL70:
+ 247:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 702              		.loc 1 247 9 view .LVU203
+ 703 0100 FFF7FEFF 		bl	memcpy
+ 704              	.LVL71:
+ 248:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 705              		.loc 1 248 9 is_stmt 1 view .LVU204
+ 706              	.L43:
+ 248:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 707              		.loc 1 248 9 is_stmt 0 view .LVU205
+ 708              	.LBE3:
+ 297:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   move_list(&hciReadPktRxQueue, &hciTempQueue);
+ 709              		.loc 1 297 3 is_stmt 1 view .LVU206
+ 710 0104 0399     		ldr	r1, [sp, #12]
+ 711 0106 1048     		ldr	r0, .L51+4
+ 712 0108 FFF7FEFF 		bl	list_insert_head
+ 713              	.LVL72:
+ 298:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 714              		.loc 1 298 3 view .LVU207
+ 715 010c 01A9     		add	r1, sp, #4
+ 716 010e 0D48     		ldr	r0, .L51
+ 717 0110 FFF7FEFF 		bl	move_list
+ 718              	.LVL73:
+ 300:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 719              		.loc 1 300 3 view .LVU208
+ 300:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 720              		.loc 1 300 10 is_stmt 0 view .LVU209
+ 721 0114 0020     		movs	r0, #0
+ 722 0116 C5E7     		b	.L32
+ 723              	.LVL74:
+ 724              	.L49:
+ 725              	.LBB4:
+ 256:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         r->rlen = MIN(len, r->rlen);
+ 726              		.loc 1 256 9 is_stmt 1 view .LVU210
+ 256:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         r->rlen = MIN(len, r->rlen);
+ 727              		.loc 1 256 13 is_stmt 0 view .LVU211
+ 728 0118 021F     		subs	r2, r0, #4
+ 729              	.LVL75:
+ 257:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, me->data, r->rlen);
+ 730              		.loc 1 257 9 is_stmt 1 view .LVU212
+ 257:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, me->data, r->rlen);
+ARM GAS  /tmp/ccfFxmTE.s 			page 20
+
+
+ 731              		.loc 1 257 19 is_stmt 0 view .LVU213
+ 732 011a 6969     		ldr	r1, [r5, #20]
+ 733 011c 8A42     		cmp	r2, r1
+ 734 011e 28BF     		it	cs
+ 735 0120 0A46     		movcs	r2, r1
+ 736              	.LVL76:
+ 257:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         BLUENRG_memcpy(r->rparam, me->data, r->rlen);
+ 737              		.loc 1 257 17 view .LVU214
+ 738 0122 6A61     		str	r2, [r5, #20]
+ 258:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 739              		.loc 1 258 9 is_stmt 1 view .LVU215
+ 740 0124 03F10C01 		add	r1, r3, #12
+ 741 0128 2869     		ldr	r0, [r5, #16]
+ 742              	.LVL77:
+ 258:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         goto done;
+ 743              		.loc 1 258 9 is_stmt 0 view .LVU216
+ 744 012a FFF7FEFF 		bl	memcpy
+ 745              	.LVL78:
+ 259:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       
+ 746              		.loc 1 259 9 is_stmt 1 view .LVU217
+ 747 012e E9E7     		b	.L43
+ 748              	.LVL79:
+ 749              	.L50:
+ 274:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       hciReadPacket=NULL;
+ 750              		.loc 1 274 7 view .LVU218
+ 751 0130 0399     		ldr	r1, [sp, #12]
+ 752 0132 0548     		ldr	r0, .L51+4
+ 753 0134 FFF7FEFF 		bl	list_insert_tail
+ 754              	.LVL80:
+ 275:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 755              		.loc 1 275 7 view .LVU219
+ 275:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 756              		.loc 1 275 20 is_stmt 0 view .LVU220
+ 757 0138 0023     		movs	r3, #0
+ 758 013a 0393     		str	r3, [sp, #12]
+ 759 013c 7BE7     		b	.L34
+ 760              	.LVL81:
+ 761              	.L47:
+ 275:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 762              		.loc 1 275 20 view .LVU221
+ 763              	.LBE4:
+ 181:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 764              		.loc 1 181 12 view .LVU222
+ 765 013e 0020     		movs	r0, #0
+ 766 0140 B0E7     		b	.L32
+ 767              	.L52:
+ 768 0142 00BF     		.align	2
+ 769              	.L51:
+ 770 0144 00000000 		.word	hciReadPktRxQueue
+ 771 0148 00000000 		.word	hciReadPktPool
+ 772              		.cfi_endproc
+ 773              	.LFE138:
+ 775              		.section	.text.hci_user_evt_proc,"ax",%progbits
+ 776              		.align	1
+ 777              		.global	hci_user_evt_proc
+ 778              		.syntax unified
+ 779              		.thumb
+ARM GAS  /tmp/ccfFxmTE.s 			page 21
+
+
+ 780              		.thumb_func
+ 782              	hci_user_evt_proc:
+ 783              	.LFB139:
+ 302:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 303:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** void hci_user_evt_proc(void)
+ 304:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+ 784              		.loc 1 304 1 is_stmt 1 view -0
+ 785              		.cfi_startproc
+ 786              		@ args = 0, pretend = 0, frame = 8
+ 787              		@ frame_needed = 0, uses_anonymous_args = 0
+ 788 0000 00B5     		push	{lr}
+ 789              	.LCFI14:
+ 790              		.cfi_def_cfa_offset 4
+ 791              		.cfi_offset 14, -4
+ 792 0002 83B0     		sub	sp, sp, #12
+ 793              	.LCFI15:
+ 794              		.cfi_def_cfa_offset 16
+ 305:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   tHciDataPacket * hciReadPacket = NULL;
+ 795              		.loc 1 305 3 view .LVU224
+ 796              		.loc 1 305 20 is_stmt 0 view .LVU225
+ 797 0004 0023     		movs	r3, #0
+ 798 0006 0193     		str	r3, [sp, #4]
+ 306:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****      
+ 307:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   /* process any pending events read */
+ 308:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   while (list_is_empty(&hciReadPktRxQueue) == FALSE)
+ 799              		.loc 1 308 3 is_stmt 1 view .LVU226
+ 800              		.loc 1 308 9 is_stmt 0 view .LVU227
+ 801 0008 06E0     		b	.L54
+ 802              	.L59:
+ 309:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 310:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head (&hciReadPktRxQueue, (tListNode **)&hciReadPacket);
+ 311:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 312:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     if (hciContext.UserEvtRx != NULL)
+ 313:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 314:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       hciContext.UserEvtRx(hciReadPacket->dataBuff);
+ 803              		.loc 1 314 7 is_stmt 1 view .LVU228
+ 804 000a 0198     		ldr	r0, [sp, #4]
+ 805 000c 0830     		adds	r0, r0, #8
+ 806 000e 9847     		blx	r3
+ 807              	.LVL82:
+ 808              	.L55:
+ 315:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 316:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 317:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_insert_tail(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 809              		.loc 1 317 5 view .LVU229
+ 810 0010 0199     		ldr	r1, [sp, #4]
+ 811 0012 0948     		ldr	r0, .L60
+ 812 0014 FFF7FEFF 		bl	list_insert_tail
+ 813              	.LVL83:
+ 814              	.L54:
+ 308:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 815              		.loc 1 308 44 view .LVU230
+ 308:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 816              		.loc 1 308 10 is_stmt 0 view .LVU231
+ 817 0018 0848     		ldr	r0, .L60+4
+ 818 001a FFF7FEFF 		bl	list_is_empty
+ 819              	.LVL84:
+ARM GAS  /tmp/ccfFxmTE.s 			page 22
+
+
+ 308:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 820              		.loc 1 308 44 view .LVU232
+ 821 001e 40B9     		cbnz	r0, .L58
+ 310:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 822              		.loc 1 310 5 is_stmt 1 view .LVU233
+ 823 0020 01A9     		add	r1, sp, #4
+ 824 0022 0648     		ldr	r0, .L60+4
+ 825 0024 FFF7FEFF 		bl	list_remove_head
+ 826              	.LVL85:
+ 312:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 827              		.loc 1 312 5 view .LVU234
+ 312:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 828              		.loc 1 312 19 is_stmt 0 view .LVU235
+ 829 0028 054B     		ldr	r3, .L60+8
+ 830 002a DB69     		ldr	r3, [r3, #28]
+ 312:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 831              		.loc 1 312 8 view .LVU236
+ 832 002c 002B     		cmp	r3, #0
+ 833 002e ECD1     		bne	.L59
+ 834 0030 EEE7     		b	.L55
+ 835              	.L58:
+ 318:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 319:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 836              		.loc 1 319 1 view .LVU237
+ 837 0032 03B0     		add	sp, sp, #12
+ 838              	.LCFI16:
+ 839              		.cfi_def_cfa_offset 4
+ 840              		@ sp needed
+ 841 0034 5DF804FB 		ldr	pc, [sp], #4
+ 842              	.L61:
+ 843              		.align	2
+ 844              	.L60:
+ 845 0038 00000000 		.word	hciReadPktPool
+ 846 003c 00000000 		.word	hciReadPktRxQueue
+ 847 0040 00000000 		.word	hciContext
+ 848              		.cfi_endproc
+ 849              	.LFE139:
+ 851              		.section	.text.hci_notify_asynch_evt,"ax",%progbits
+ 852              		.align	1
+ 853              		.global	hci_notify_asynch_evt
+ 854              		.syntax unified
+ 855              		.thumb
+ 856              		.thumb_func
+ 858              	hci_notify_asynch_evt:
+ 859              	.LVL86:
+ 860              	.LFB140:
+ 320:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 321:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** int32_t hci_notify_asynch_evt(void* pdata)
+ 322:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** {
+ 861              		.loc 1 322 1 is_stmt 1 view -0
+ 862              		.cfi_startproc
+ 863              		@ args = 0, pretend = 0, frame = 8
+ 864              		@ frame_needed = 0, uses_anonymous_args = 0
+ 865              		.loc 1 322 1 is_stmt 0 view .LVU239
+ 866 0000 30B5     		push	{r4, r5, lr}
+ 867              	.LCFI17:
+ 868              		.cfi_def_cfa_offset 12
+ARM GAS  /tmp/ccfFxmTE.s 			page 23
+
+
+ 869              		.cfi_offset 4, -12
+ 870              		.cfi_offset 5, -8
+ 871              		.cfi_offset 14, -4
+ 872 0002 83B0     		sub	sp, sp, #12
+ 873              	.LCFI18:
+ 874              		.cfi_def_cfa_offset 24
+ 323:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   tHciDataPacket * hciReadPacket = NULL;
+ 875              		.loc 1 323 3 is_stmt 1 view .LVU240
+ 876              		.loc 1 323 20 is_stmt 0 view .LVU241
+ 877 0004 0023     		movs	r3, #0
+ 878 0006 0193     		str	r3, [sp, #4]
+ 324:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   uint8_t data_len;
+ 879              		.loc 1 324 3 is_stmt 1 view .LVU242
+ 325:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 326:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   int32_t ret = 0;
+ 880              		.loc 1 326 3 view .LVU243
+ 881              	.LVL87:
+ 327:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 328:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   if (list_is_empty (&hciReadPktPool) == FALSE)
+ 882              		.loc 1 328 3 view .LVU244
+ 883              		.loc 1 328 7 is_stmt 0 view .LVU245
+ 884 0008 1848     		ldr	r0, .L70
+ 885              	.LVL88:
+ 886              		.loc 1 328 7 view .LVU246
+ 887 000a FFF7FEFF 		bl	list_is_empty
+ 888              	.LVL89:
+ 889              		.loc 1 328 6 view .LVU247
+ 890 000e 18B1     		cbz	r0, .L69
+ 329:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 330:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     /* Queuing a packet to read */
+ 331:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     list_remove_head (&hciReadPktPool, (tListNode **)&hciReadPacket);
+ 332:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 333:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     if (hciContext.io.Receive)
+ 334:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 335:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       data_len = hciContext.io.Receive(hciReadPacket->dataBuff, HCI_READ_PACKET_SIZE);
+ 336:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       if (data_len > 0)
+ 337:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {                    
+ 338:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         hciReadPacket->data_len = data_len;
+ 339:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (verify_packet(hciReadPacket) == 0)
+ 340:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           list_insert_tail(&hciReadPktRxQueue, (tListNode *)hciReadPacket);
+ 341:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         else
+ 342:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           list_insert_head(&hciReadPktPool, (tListNode *)hciReadPacket);          
+ 343:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 344:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       else 
+ 345:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {
+ 346:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         /* Insert the packet back into the pool*/
+ 347:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         list_insert_head(&hciReadPktPool, (tListNode *)hciReadPacket);
+ 348:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 349:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     }
+ 350:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ 351:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   else 
+ 352:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   {
+ 353:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     ret = 1;
+ 891              		.loc 1 353 9 view .LVU248
+ 892 0010 0124     		movs	r4, #1
+ 893              	.L62:
+ 354:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   }
+ARM GAS  /tmp/ccfFxmTE.s 			page 24
+
+
+ 355:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   return ret;
+ 356:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 357:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** }
+ 894              		.loc 1 357 1 view .LVU249
+ 895 0012 2046     		mov	r0, r4
+ 896 0014 03B0     		add	sp, sp, #12
+ 897              	.LCFI19:
+ 898              		.cfi_remember_state
+ 899              		.cfi_def_cfa_offset 12
+ 900              		@ sp needed
+ 901 0016 30BD     		pop	{r4, r5, pc}
+ 902              	.L69:
+ 903              	.LCFI20:
+ 904              		.cfi_restore_state
+ 331:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     
+ 905              		.loc 1 331 5 is_stmt 1 view .LVU250
+ 906 0018 01A9     		add	r1, sp, #4
+ 907 001a 1448     		ldr	r0, .L70
+ 908 001c FFF7FEFF 		bl	list_remove_head
+ 909              	.LVL90:
+ 333:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 910              		.loc 1 333 5 view .LVU251
+ 333:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 911              		.loc 1 333 22 is_stmt 0 view .LVU252
+ 912 0020 134B     		ldr	r3, .L70+4
+ 913 0022 DB68     		ldr	r3, [r3, #12]
+ 333:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****     {
+ 914              		.loc 1 333 8 view .LVU253
+ 915 0024 FBB1     		cbz	r3, .L67
+ 335:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       if (data_len > 0)
+ 916              		.loc 1 335 7 is_stmt 1 view .LVU254
+ 335:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       if (data_len > 0)
+ 917              		.loc 1 335 18 is_stmt 0 view .LVU255
+ 918 0026 8021     		movs	r1, #128
+ 919 0028 0198     		ldr	r0, [sp, #4]
+ 920 002a 0830     		adds	r0, r0, #8
+ 921 002c 9847     		blx	r3
+ 922              	.LVL91:
+ 336:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {                    
+ 923              		.loc 1 336 7 is_stmt 1 view .LVU256
+ 336:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {                    
+ 924              		.loc 1 336 10 is_stmt 0 view .LVU257
+ 925 002e 10F0FF00 		ands	r0, r0, #255
+ 926              	.LVL92:
+ 336:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       {                    
+ 927              		.loc 1 336 10 view .LVU258
+ 928 0032 12D0     		beq	.L64
+ 338:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (verify_packet(hciReadPacket) == 0)
+ 929              		.loc 1 338 9 is_stmt 1 view .LVU259
+ 338:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (verify_packet(hciReadPacket) == 0)
+ 930              		.loc 1 338 22 is_stmt 0 view .LVU260
+ 931 0034 019D     		ldr	r5, [sp, #4]
+ 338:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         if (verify_packet(hciReadPacket) == 0)
+ 932              		.loc 1 338 33 view .LVU261
+ 933 0036 85F88800 		strb	r0, [r5, #136]
+ 339:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           list_insert_tail(&hciReadPktRxQueue, (tListNode *)hciReadPacket);
+ 934              		.loc 1 339 9 is_stmt 1 view .LVU262
+ARM GAS  /tmp/ccfFxmTE.s 			page 25
+
+
+ 339:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           list_insert_tail(&hciReadPktRxQueue, (tListNode *)hciReadPacket);
+ 935              		.loc 1 339 13 is_stmt 0 view .LVU263
+ 936 003a 2846     		mov	r0, r5
+ 937 003c FFF7FEFF 		bl	verify_packet
+ 938              	.LVL93:
+ 339:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****           list_insert_tail(&hciReadPktRxQueue, (tListNode *)hciReadPacket);
+ 939              		.loc 1 339 12 view .LVU264
+ 940 0040 0446     		mov	r4, r0
+ 941 0042 20B9     		cbnz	r0, .L65
+ 340:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****         else
+ 942              		.loc 1 340 11 is_stmt 1 view .LVU265
+ 943 0044 2946     		mov	r1, r5
+ 944 0046 0B48     		ldr	r0, .L70+8
+ 945 0048 FFF7FEFF 		bl	list_insert_tail
+ 946              	.LVL94:
+ 947 004c E1E7     		b	.L62
+ 948              	.L65:
+ 342:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 949              		.loc 1 342 11 view .LVU266
+ 950 004e 2946     		mov	r1, r5
+ 951 0050 0648     		ldr	r0, .L70
+ 952 0052 FFF7FEFF 		bl	list_insert_head
+ 953              	.LVL95:
+ 326:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 954              		.loc 1 326 11 is_stmt 0 view .LVU267
+ 955 0056 0024     		movs	r4, #0
+ 956 0058 DBE7     		b	.L62
+ 957              	.L64:
+ 347:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****       }
+ 958              		.loc 1 347 9 is_stmt 1 view .LVU268
+ 959 005a 0199     		ldr	r1, [sp, #4]
+ 960 005c 0348     		ldr	r0, .L70
+ 961 005e FFF7FEFF 		bl	list_insert_head
+ 962              	.LVL96:
+ 326:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 963              		.loc 1 326 11 is_stmt 0 view .LVU269
+ 964 0062 0024     		movs	r4, #0
+ 965 0064 D5E7     		b	.L62
+ 966              	.LVL97:
+ 967              	.L67:
+ 326:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c ****   
+ 968              		.loc 1 326 11 view .LVU270
+ 969 0066 0024     		movs	r4, #0
+ 355:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 970              		.loc 1 355 3 is_stmt 1 view .LVU271
+ 355:Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.c **** 
+ 971              		.loc 1 355 10 is_stmt 0 view .LVU272
+ 972 0068 D3E7     		b	.L62
+ 973              	.L71:
+ 974 006a 00BF     		.align	2
+ 975              	.L70:
+ 976 006c 00000000 		.word	hciReadPktPool
+ 977 0070 00000000 		.word	hciContext
+ 978 0074 00000000 		.word	hciReadPktRxQueue
+ 979              		.cfi_endproc
+ 980              	.LFE140:
+ 982              		.section	.bss.hciContext,"aw",%nobits
+ARM GAS  /tmp/ccfFxmTE.s 			page 26
+
+
+ 983              		.align	2
+ 986              	hciContext:
+ 987 0000 00000000 		.space	32
+ 987      00000000 
+ 987      00000000 
+ 987      00000000 
+ 987      00000000 
+ 988              		.section	.bss.hciReadPacketBuffer,"aw",%nobits
+ 989              		.align	2
+ 992              	hciReadPacketBuffer:
+ 993 0000 00000000 		.space	700
+ 993      00000000 
+ 993      00000000 
+ 993      00000000 
+ 993      00000000 
+ 994              		.comm	hciReadPktRxQueue,8,4
+ 995              		.comm	hciReadPktPool,8,4
+ 996              		.text
+ 997              	.Letext0:
+ 998              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 999              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 1000              		.file 4 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_types.h"
+ 1001              		.file 5 "/usr/lib/gcc/arm-none-eabi/12.1.0/include/stddef.h"
+ 1002              		.file 6 "Middlewares/ST/BlueNRG-MS/utils/ble_list.h"
+ 1003              		.file 7 "Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.h"
+ 1004              		.file 8 "Middlewares/ST/BlueNRG-MS/includes/hci_const.h"
+ 1005              		.file 9 "/usr/arm-none-eabi/include/string.h"
+ 1006              		.file 10 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 1007              		.file 11 "BlueNRG_MS/Target/hci_tl_interface.h"
+ 1008              		.file 12 "<built-in>"
+ARM GAS  /tmp/ccfFxmTE.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 hci_tl.c
+     /tmp/ccfFxmTE.s:21     .text.verify_packet:0000000000000000 $t
+     /tmp/ccfFxmTE.s:26     .text.verify_packet:0000000000000000 verify_packet
+     /tmp/ccfFxmTE.s:74     .text.send_cmd:0000000000000000 $t
+     /tmp/ccfFxmTE.s:79     .text.send_cmd:0000000000000000 send_cmd
+     /tmp/ccfFxmTE.s:148    .text.send_cmd:0000000000000044 $d
+     /tmp/ccfFxmTE.s:986    .bss.hciContext:0000000000000000 hciContext
+     /tmp/ccfFxmTE.s:153    .text.free_event_list:0000000000000000 $t
+     /tmp/ccfFxmTE.s:158    .text.free_event_list:0000000000000000 free_event_list
+     /tmp/ccfFxmTE.s:204    .text.free_event_list:0000000000000028 $d
+                            *COM*:0000000000000008 hciReadPktRxQueue
+                            *COM*:0000000000000008 hciReadPktPool
+     /tmp/ccfFxmTE.s:210    .text.move_list:0000000000000000 $t
+     /tmp/ccfFxmTE.s:215    .text.move_list:0000000000000000 move_list
+     /tmp/ccfFxmTE.s:270    .text.hci_init:0000000000000000 $t
+     /tmp/ccfFxmTE.s:276    .text.hci_init:0000000000000000 hci_init
+     /tmp/ccfFxmTE.s:363    .text.hci_init:0000000000000048 $d
+     /tmp/ccfFxmTE.s:992    .bss.hciReadPacketBuffer:0000000000000000 hciReadPacketBuffer
+     /tmp/ccfFxmTE.s:371    .text.hci_register_io_bus:0000000000000000 $t
+     /tmp/ccfFxmTE.s:377    .text.hci_register_io_bus:0000000000000000 hci_register_io_bus
+     /tmp/ccfFxmTE.s:416    .text.hci_register_io_bus:0000000000000018 $d
+     /tmp/ccfFxmTE.s:421    .text.hci_send_req:0000000000000000 $t
+     /tmp/ccfFxmTE.s:427    .text.hci_send_req:0000000000000000 hci_send_req
+     /tmp/ccfFxmTE.s:770    .text.hci_send_req:0000000000000144 $d
+     /tmp/ccfFxmTE.s:776    .text.hci_user_evt_proc:0000000000000000 $t
+     /tmp/ccfFxmTE.s:782    .text.hci_user_evt_proc:0000000000000000 hci_user_evt_proc
+     /tmp/ccfFxmTE.s:845    .text.hci_user_evt_proc:0000000000000038 $d
+     /tmp/ccfFxmTE.s:852    .text.hci_notify_asynch_evt:0000000000000000 $t
+     /tmp/ccfFxmTE.s:858    .text.hci_notify_asynch_evt:0000000000000000 hci_notify_asynch_evt
+     /tmp/ccfFxmTE.s:976    .text.hci_notify_asynch_evt:000000000000006c $d
+     /tmp/ccfFxmTE.s:983    .bss.hciContext:0000000000000000 $d
+     /tmp/ccfFxmTE.s:989    .bss.hciReadPacketBuffer:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+memcpy
+list_remove_head
+list_insert_tail
+list_get_size
+list_remove_tail
+list_insert_head
+list_is_empty
+list_init_head
+hci_tl_lowlevel_init
+HAL_GetTick

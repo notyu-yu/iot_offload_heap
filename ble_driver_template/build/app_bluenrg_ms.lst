@@ -1,0 +1,2492 @@
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"app_bluenrg_ms.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/app_bluenrg_ms.c"
+  20              		.section	.text.Reset_Motion_Values,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Reset_Motion_Values:
+  27              	.LFB138:
+   1:Core/Src/app_bluenrg_ms.c **** /**
+   2:Core/Src/app_bluenrg_ms.c ****   ******************************************************************************
+   3:Core/Src/app_bluenrg_ms.c ****   * @file    app_bluenrg_ms.c
+   4:Core/Src/app_bluenrg_ms.c ****   * @author  SRA Application Team
+   5:Core/Src/app_bluenrg_ms.c ****   * @brief   BlueNRG-M0 initialization and applicative code
+   6:Core/Src/app_bluenrg_ms.c ****   ******************************************************************************
+   7:Core/Src/app_bluenrg_ms.c ****   * @attention
+   8:Core/Src/app_bluenrg_ms.c ****   *
+   9:Core/Src/app_bluenrg_ms.c ****   * Copyright (c) 2022 STMicroelectronics.
+  10:Core/Src/app_bluenrg_ms.c ****   * All rights reserved.
+  11:Core/Src/app_bluenrg_ms.c ****   *
+  12:Core/Src/app_bluenrg_ms.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/app_bluenrg_ms.c ****   * in the root directory of this software component.
+  14:Core/Src/app_bluenrg_ms.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/app_bluenrg_ms.c ****   *
+  16:Core/Src/app_bluenrg_ms.c ****   ******************************************************************************
+  17:Core/Src/app_bluenrg_ms.c ****   */
+  18:Core/Src/app_bluenrg_ms.c **** 
+  19:Core/Src/app_bluenrg_ms.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/app_bluenrg_ms.c **** #include "app_bluenrg_ms.h"
+  21:Core/Src/app_bluenrg_ms.c **** 
+  22:Core/Src/app_bluenrg_ms.c **** #include "hci.h"
+  23:Core/Src/app_bluenrg_ms.c **** #include "hci_le.h"
+  24:Core/Src/app_bluenrg_ms.c **** #include "hci_tl.h"
+  25:Core/Src/app_bluenrg_ms.c **** #include "link_layer.h"
+  26:Core/Src/app_bluenrg_ms.c **** #include "sensor.h"
+  27:Core/Src/app_bluenrg_ms.c **** #include "gatt_db.h"
+  28:Core/Src/app_bluenrg_ms.c **** 
+  29:Core/Src/app_bluenrg_ms.c **** #include "compiler.h"
+  30:Core/Src/app_bluenrg_ms.c **** #include "bluenrg_utils.h"
+  31:Core/Src/app_bluenrg_ms.c **** #include "stm32l4xx_nucleo.h"
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 2
+
+
+  32:Core/Src/app_bluenrg_ms.c **** #include "bluenrg_gap.h"
+  33:Core/Src/app_bluenrg_ms.c **** #include "bluenrg_gap_aci.h"
+  34:Core/Src/app_bluenrg_ms.c **** #include "bluenrg_gatt_aci.h"
+  35:Core/Src/app_bluenrg_ms.c **** #include "bluenrg_hal_aci.h"
+  36:Core/Src/app_bluenrg_ms.c **** #include "sm.h"
+  37:Core/Src/app_bluenrg_ms.c **** #include "stm32l4xx_hal_tim.h"
+  38:Core/Src/app_bluenrg_ms.c **** 
+  39:Core/Src/app_bluenrg_ms.c **** /* USER CODE BEGIN Includes */
+  40:Core/Src/app_bluenrg_ms.c **** 
+  41:Core/Src/app_bluenrg_ms.c **** /* USER CODE END Includes */
+  42:Core/Src/app_bluenrg_ms.c **** 
+  43:Core/Src/app_bluenrg_ms.c **** /* Private defines -----------------------------------------------------------*/
+  44:Core/Src/app_bluenrg_ms.c **** /**
+  45:Core/Src/app_bluenrg_ms.c ****  * 1 to send environmental and motion data when pushing the user button
+  46:Core/Src/app_bluenrg_ms.c ****  * 0 to send environmental and motion data automatically (period = 1 sec)
+  47:Core/Src/app_bluenrg_ms.c ****  */
+  48:Core/Src/app_bluenrg_ms.c **** #define USE_BUTTON 0
+  49:Core/Src/app_bluenrg_ms.c **** 
+  50:Core/Src/app_bluenrg_ms.c **** /* Private macros ------------------------------------------------------------*/
+  51:Core/Src/app_bluenrg_ms.c **** 
+  52:Core/Src/app_bluenrg_ms.c **** /* Private variables ---------------------------------------------------------*/
+  53:Core/Src/app_bluenrg_ms.c **** extern AxesRaw_t x_axes;
+  54:Core/Src/app_bluenrg_ms.c **** extern AxesRaw_t g_axes;
+  55:Core/Src/app_bluenrg_ms.c **** extern AxesRaw_t m_axes;
+  56:Core/Src/app_bluenrg_ms.c **** extern AxesRaw_t q_axes;
+  57:Core/Src/app_bluenrg_ms.c **** 
+  58:Core/Src/app_bluenrg_ms.c **** extern volatile uint8_t set_connectable;
+  59:Core/Src/app_bluenrg_ms.c **** extern volatile int     connected;
+  60:Core/Src/app_bluenrg_ms.c **** /* at startup, suppose the X-NUCLEO-IDB04A1 is used */
+  61:Core/Src/app_bluenrg_ms.c **** uint8_t bnrg_expansion_board = IDB04A1;
+  62:Core/Src/app_bluenrg_ms.c **** uint8_t bdaddr[BDADDR_SIZE];
+  63:Core/Src/app_bluenrg_ms.c **** static volatile uint8_t user_button_init_state = 1;
+  64:Core/Src/app_bluenrg_ms.c **** static volatile uint8_t user_button_pressed = 0;
+  65:Core/Src/app_bluenrg_ms.c **** 
+  66:Core/Src/app_bluenrg_ms.c **** /* USER CODE BEGIN PV */
+  67:Core/Src/app_bluenrg_ms.c **** 
+  68:Core/Src/app_bluenrg_ms.c **** /* USER CODE END PV */
+  69:Core/Src/app_bluenrg_ms.c **** 
+  70:Core/Src/app_bluenrg_ms.c **** /* Private function prototypes -----------------------------------------------*/
+  71:Core/Src/app_bluenrg_ms.c **** static void User_Process(void);
+  72:Core/Src/app_bluenrg_ms.c **** static void User_Init(void);
+  73:Core/Src/app_bluenrg_ms.c **** static void Set_Random_Environmental_Values(float *data_t, float *data_p);
+  74:Core/Src/app_bluenrg_ms.c **** static void Set_Random_Motion_Values(uint32_t cnt);
+  75:Core/Src/app_bluenrg_ms.c **** static void Reset_Motion_Values(void);
+  76:Core/Src/app_bluenrg_ms.c **** 
+  77:Core/Src/app_bluenrg_ms.c **** /* USER CODE BEGIN PFP */
+  78:Core/Src/app_bluenrg_ms.c **** 
+  79:Core/Src/app_bluenrg_ms.c **** /* USER CODE END PFP */
+  80:Core/Src/app_bluenrg_ms.c **** 
+  81:Core/Src/app_bluenrg_ms.c **** #if PRINT_CSV_FORMAT
+  82:Core/Src/app_bluenrg_ms.c **** extern volatile uint32_t ms_counter;
+  83:Core/Src/app_bluenrg_ms.c **** /**
+  84:Core/Src/app_bluenrg_ms.c ****  * @brief  This function is a utility to print the log time
+  85:Core/Src/app_bluenrg_ms.c ****  *         in the format HH:MM:SS:MSS (DK GUI time format)
+  86:Core/Src/app_bluenrg_ms.c ****  * @param  None
+  87:Core/Src/app_bluenrg_ms.c ****  * @retval None
+  88:Core/Src/app_bluenrg_ms.c ****  */
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 3
+
+
+  89:Core/Src/app_bluenrg_ms.c **** void print_csv_time(void){
+  90:Core/Src/app_bluenrg_ms.c ****   uint32_t ms = HAL_GetTick();
+  91:Core/Src/app_bluenrg_ms.c ****   PRINT_CSV("%02ld:%02ld:%02ld.%03ld", (long)(ms/(60*60*1000)%24), (long)(ms/(60*1000)%60), (long)(
+  92:Core/Src/app_bluenrg_ms.c **** }
+  93:Core/Src/app_bluenrg_ms.c **** #endif
+  94:Core/Src/app_bluenrg_ms.c **** 
+  95:Core/Src/app_bluenrg_ms.c **** void MX_BlueNRG_MS_Init(void)
+  96:Core/Src/app_bluenrg_ms.c **** {
+  97:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN SV */
+  98:Core/Src/app_bluenrg_ms.c **** 
+  99:Core/Src/app_bluenrg_ms.c ****   /* USER CODE END SV */
+ 100:Core/Src/app_bluenrg_ms.c **** 
+ 101:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN BlueNRG_MS_Init_PreTreatment */
+ 102:Core/Src/app_bluenrg_ms.c **** 
+ 103:Core/Src/app_bluenrg_ms.c ****   /* USER CODE END BlueNRG_MS_Init_PreTreatment */
+ 104:Core/Src/app_bluenrg_ms.c **** 
+ 105:Core/Src/app_bluenrg_ms.c ****   /* Initialize the peripherals and the BLE Stack */
+ 106:Core/Src/app_bluenrg_ms.c ****   const char *name = "BlueNRG";
+ 107:Core/Src/app_bluenrg_ms.c ****   uint16_t service_handle, dev_name_char_handle, appearance_char_handle;
+ 108:Core/Src/app_bluenrg_ms.c **** 
+ 109:Core/Src/app_bluenrg_ms.c ****   uint8_t  bdaddr_len_out;
+ 110:Core/Src/app_bluenrg_ms.c ****   uint8_t  hwVersion;
+ 111:Core/Src/app_bluenrg_ms.c ****   uint16_t fwVersion;
+ 112:Core/Src/app_bluenrg_ms.c ****   int ret;
+ 113:Core/Src/app_bluenrg_ms.c **** 
+ 114:Core/Src/app_bluenrg_ms.c ****   User_Init();
+ 115:Core/Src/app_bluenrg_ms.c **** 
+ 116:Core/Src/app_bluenrg_ms.c ****   /* Get the User Button initial state */
+ 117:Core/Src/app_bluenrg_ms.c ****   user_button_init_state = BSP_PB_GetState(BUTTON_KEY);
+ 118:Core/Src/app_bluenrg_ms.c **** 
+ 119:Core/Src/app_bluenrg_ms.c ****   hci_init(user_notify, NULL);
+ 120:Core/Src/app_bluenrg_ms.c **** 
+ 121:Core/Src/app_bluenrg_ms.c ****   /* get the BlueNRG HW and FW versions */
+ 122:Core/Src/app_bluenrg_ms.c ****   getBlueNRGVersion(&hwVersion, &fwVersion);
+ 123:Core/Src/app_bluenrg_ms.c **** 
+ 124:Core/Src/app_bluenrg_ms.c ****   /*
+ 125:Core/Src/app_bluenrg_ms.c ****    * Reset BlueNRG again otherwise we won't
+ 126:Core/Src/app_bluenrg_ms.c ****    * be able to change its MAC address.
+ 127:Core/Src/app_bluenrg_ms.c ****    * aci_hal_write_config_data() must be the first
+ 128:Core/Src/app_bluenrg_ms.c ****    * command after reset otherwise it will fail.
+ 129:Core/Src/app_bluenrg_ms.c ****    */
+ 130:Core/Src/app_bluenrg_ms.c ****   hci_reset();
+ 131:Core/Src/app_bluenrg_ms.c ****   HAL_Delay(100);
+ 132:Core/Src/app_bluenrg_ms.c **** 
+ 133:Core/Src/app_bluenrg_ms.c ****   PRINTF("HWver %d\nFWver %d\n", hwVersion, fwVersion);
+ 134:Core/Src/app_bluenrg_ms.c ****   if (hwVersion > 0x30) { /* X-NUCLEO-IDB05A1 expansion board is used */
+ 135:Core/Src/app_bluenrg_ms.c ****     bnrg_expansion_board = IDB05A1;
+ 136:Core/Src/app_bluenrg_ms.c ****   }
+ 137:Core/Src/app_bluenrg_ms.c **** 
+ 138:Core/Src/app_bluenrg_ms.c ****   ret = aci_hal_read_config_data(CONFIG_DATA_RANDOM_ADDRESS, BDADDR_SIZE, &bdaddr_len_out, bdaddr);
+ 139:Core/Src/app_bluenrg_ms.c **** 
+ 140:Core/Src/app_bluenrg_ms.c ****   if (ret) {
+ 141:Core/Src/app_bluenrg_ms.c ****     PRINTF("Read Static Random address failed.\n");
+ 142:Core/Src/app_bluenrg_ms.c ****   }
+ 143:Core/Src/app_bluenrg_ms.c **** 
+ 144:Core/Src/app_bluenrg_ms.c ****   if ((bdaddr[5] & 0xC0) != 0xC0) {
+ 145:Core/Src/app_bluenrg_ms.c ****     PRINTF("Static Random address not well formed.\n");
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 4
+
+
+ 146:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 147:Core/Src/app_bluenrg_ms.c ****   }
+ 148:Core/Src/app_bluenrg_ms.c **** 
+ 149:Core/Src/app_bluenrg_ms.c ****   /* GATT Init */
+ 150:Core/Src/app_bluenrg_ms.c ****   ret = aci_gatt_init();
+ 151:Core/Src/app_bluenrg_ms.c ****   if(ret){
+ 152:Core/Src/app_bluenrg_ms.c ****     PRINTF("GATT_Init failed.\n");
+ 153:Core/Src/app_bluenrg_ms.c ****   }
+ 154:Core/Src/app_bluenrg_ms.c **** 
+ 155:Core/Src/app_bluenrg_ms.c ****   /* GAP Init */
+ 156:Core/Src/app_bluenrg_ms.c ****   if (bnrg_expansion_board == IDB05A1) {
+ 157:Core/Src/app_bluenrg_ms.c ****     ret = aci_gap_init_IDB05A1(GAP_PERIPHERAL_ROLE_IDB05A1, 0, 0x07, &service_handle, &dev_name_cha
+ 158:Core/Src/app_bluenrg_ms.c ****   }
+ 159:Core/Src/app_bluenrg_ms.c ****   else {
+ 160:Core/Src/app_bluenrg_ms.c ****     ret = aci_gap_init_IDB04A1(GAP_PERIPHERAL_ROLE_IDB04A1, &service_handle, &dev_name_char_handle,
+ 161:Core/Src/app_bluenrg_ms.c ****   }
+ 162:Core/Src/app_bluenrg_ms.c ****   if (ret != BLE_STATUS_SUCCESS) {
+ 163:Core/Src/app_bluenrg_ms.c ****     PRINTF("GAP_Init failed.\n");
+ 164:Core/Src/app_bluenrg_ms.c ****   }
+ 165:Core/Src/app_bluenrg_ms.c **** 
+ 166:Core/Src/app_bluenrg_ms.c ****   /* Update device name */
+ 167:Core/Src/app_bluenrg_ms.c ****   ret = aci_gatt_update_char_value(service_handle, dev_name_char_handle, 0,
+ 168:Core/Src/app_bluenrg_ms.c ****                                    strlen(name), (uint8_t *)name);
+ 169:Core/Src/app_bluenrg_ms.c ****   if (ret) {
+ 170:Core/Src/app_bluenrg_ms.c ****     PRINTF("aci_gatt_update_char_value failed.\n");
+ 171:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 172:Core/Src/app_bluenrg_ms.c ****   }
+ 173:Core/Src/app_bluenrg_ms.c **** 
+ 174:Core/Src/app_bluenrg_ms.c ****   ret = aci_gap_set_auth_requirement(MITM_PROTECTION_REQUIRED,
+ 175:Core/Src/app_bluenrg_ms.c ****                                      OOB_AUTH_DATA_ABSENT,
+ 176:Core/Src/app_bluenrg_ms.c ****                                      NULL,
+ 177:Core/Src/app_bluenrg_ms.c ****                                      7,
+ 178:Core/Src/app_bluenrg_ms.c ****                                      16,
+ 179:Core/Src/app_bluenrg_ms.c ****                                      USE_FIXED_PIN_FOR_PAIRING,
+ 180:Core/Src/app_bluenrg_ms.c ****                                      123456,
+ 181:Core/Src/app_bluenrg_ms.c ****                                      BONDING);
+ 182:Core/Src/app_bluenrg_ms.c ****   if (ret) {
+ 183:Core/Src/app_bluenrg_ms.c ****     PRINTF("aci_gap_set_authentication_requirement failed.\n");
+ 184:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 185:Core/Src/app_bluenrg_ms.c ****   }
+ 186:Core/Src/app_bluenrg_ms.c **** 
+ 187:Core/Src/app_bluenrg_ms.c ****   PRINTF("BLE Stack Initialized\n");
+ 188:Core/Src/app_bluenrg_ms.c **** 
+ 189:Core/Src/app_bluenrg_ms.c ****   ret = Add_HWServW2ST_Service();
+ 190:Core/Src/app_bluenrg_ms.c ****   if(ret == BLE_STATUS_SUCCESS) {
+ 191:Core/Src/app_bluenrg_ms.c ****     PRINTF("BlueMS HW service added successfully.\n");
+ 192:Core/Src/app_bluenrg_ms.c ****   } else {
+ 193:Core/Src/app_bluenrg_ms.c ****     PRINTF("Error while adding BlueMS HW service: 0x%02x\r\n", ret);
+ 194:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 195:Core/Src/app_bluenrg_ms.c ****   }
+ 196:Core/Src/app_bluenrg_ms.c **** 
+ 197:Core/Src/app_bluenrg_ms.c ****   ret = Add_SWServW2ST_Service();
+ 198:Core/Src/app_bluenrg_ms.c ****   if(ret == BLE_STATUS_SUCCESS) {
+ 199:Core/Src/app_bluenrg_ms.c ****      PRINTF("BlueMS SW service added successfully.\n");
+ 200:Core/Src/app_bluenrg_ms.c ****   } else {
+ 201:Core/Src/app_bluenrg_ms.c ****      PRINTF("Error while adding BlueMS HW service: 0x%02x\r\n", ret);
+ 202:Core/Src/app_bluenrg_ms.c ****      while(1);
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 5
+
+
+ 203:Core/Src/app_bluenrg_ms.c ****   }
+ 204:Core/Src/app_bluenrg_ms.c **** 
+ 205:Core/Src/app_bluenrg_ms.c ****   /* Set output power level */
+ 206:Core/Src/app_bluenrg_ms.c ****   ret = aci_hal_set_tx_power_level(1,4);
+ 207:Core/Src/app_bluenrg_ms.c **** 
+ 208:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN BlueNRG_MS_Init_PostTreatment */
+ 209:Core/Src/app_bluenrg_ms.c **** 
+ 210:Core/Src/app_bluenrg_ms.c ****   /* USER CODE END BlueNRG_MS_Init_PostTreatment */
+ 211:Core/Src/app_bluenrg_ms.c **** }
+ 212:Core/Src/app_bluenrg_ms.c **** 
+ 213:Core/Src/app_bluenrg_ms.c **** /*
+ 214:Core/Src/app_bluenrg_ms.c ****  * BlueNRG-MS background task
+ 215:Core/Src/app_bluenrg_ms.c ****  */
+ 216:Core/Src/app_bluenrg_ms.c **** void MX_BlueNRG_MS_Process(void)
+ 217:Core/Src/app_bluenrg_ms.c **** {
+ 218:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN BlueNRG_MS_Process_PreTreatment */
+ 219:Core/Src/app_bluenrg_ms.c **** 
+ 220:Core/Src/app_bluenrg_ms.c ****   /* USER CODE END BlueNRG_MS_Process_PreTreatment */
+ 221:Core/Src/app_bluenrg_ms.c **** 
+ 222:Core/Src/app_bluenrg_ms.c ****   User_Process();
+ 223:Core/Src/app_bluenrg_ms.c ****   hci_user_evt_proc();
+ 224:Core/Src/app_bluenrg_ms.c **** 
+ 225:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN BlueNRG_MS_Process_PostTreatment */
+ 226:Core/Src/app_bluenrg_ms.c **** 
+ 227:Core/Src/app_bluenrg_ms.c ****   /* USER CODE END BlueNRG_MS_Process_PostTreatment */
+ 228:Core/Src/app_bluenrg_ms.c **** }
+ 229:Core/Src/app_bluenrg_ms.c **** 
+ 230:Core/Src/app_bluenrg_ms.c **** /**
+ 231:Core/Src/app_bluenrg_ms.c ****  * @brief  Initialize User process.
+ 232:Core/Src/app_bluenrg_ms.c ****  *
+ 233:Core/Src/app_bluenrg_ms.c ****  * @param  None
+ 234:Core/Src/app_bluenrg_ms.c ****  * @retval None
+ 235:Core/Src/app_bluenrg_ms.c ****  */
+ 236:Core/Src/app_bluenrg_ms.c **** static void User_Init(void)
+ 237:Core/Src/app_bluenrg_ms.c **** {
+ 238:Core/Src/app_bluenrg_ms.c ****   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
+ 239:Core/Src/app_bluenrg_ms.c ****   BSP_LED_Init(LED2);
+ 240:Core/Src/app_bluenrg_ms.c **** 
+ 241:Core/Src/app_bluenrg_ms.c ****   BSP_COM_Init(COM1);
+ 242:Core/Src/app_bluenrg_ms.c **** }
+ 243:Core/Src/app_bluenrg_ms.c **** 
+ 244:Core/Src/app_bluenrg_ms.c **** /**
+ 245:Core/Src/app_bluenrg_ms.c ****  * @brief  Process user input (i.e. pressing the USER button on Nucleo board)
+ 246:Core/Src/app_bluenrg_ms.c ****  *         and send the updated acceleration data to the remote client.
+ 247:Core/Src/app_bluenrg_ms.c ****  *
+ 248:Core/Src/app_bluenrg_ms.c ****  * @param  None
+ 249:Core/Src/app_bluenrg_ms.c ****  * @retval None
+ 250:Core/Src/app_bluenrg_ms.c ****  */
+ 251:Core/Src/app_bluenrg_ms.c **** static void User_Process(void)
+ 252:Core/Src/app_bluenrg_ms.c **** {
+ 253:Core/Src/app_bluenrg_ms.c ****   float data_t;
+ 254:Core/Src/app_bluenrg_ms.c ****   float data_p;
+ 255:Core/Src/app_bluenrg_ms.c ****   static uint32_t counter = 0;
+ 256:Core/Src/app_bluenrg_ms.c **** 
+ 257:Core/Src/app_bluenrg_ms.c ****   if (set_connectable)
+ 258:Core/Src/app_bluenrg_ms.c ****   {
+ 259:Core/Src/app_bluenrg_ms.c ****     Set_DeviceConnectable();
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 6
+
+
+ 260:Core/Src/app_bluenrg_ms.c ****     set_connectable = FALSE;
+ 261:Core/Src/app_bluenrg_ms.c ****   }
+ 262:Core/Src/app_bluenrg_ms.c **** 
+ 263:Core/Src/app_bluenrg_ms.c **** #if USE_BUTTON
+ 264:Core/Src/app_bluenrg_ms.c ****   /* Check if the user has pushed the button */
+ 265:Core/Src/app_bluenrg_ms.c ****   if (user_button_pressed)
+ 266:Core/Src/app_bluenrg_ms.c ****   {
+ 267:Core/Src/app_bluenrg_ms.c ****     /* Debouncing */
+ 268:Core/Src/app_bluenrg_ms.c ****     HAL_Delay(50);
+ 269:Core/Src/app_bluenrg_ms.c **** 
+ 270:Core/Src/app_bluenrg_ms.c ****     /* Wait until the User Button is released */
+ 271:Core/Src/app_bluenrg_ms.c ****     while (BSP_PB_GetState(BUTTON_KEY) == !user_button_init_state);
+ 272:Core/Src/app_bluenrg_ms.c **** 
+ 273:Core/Src/app_bluenrg_ms.c ****     /* Debouncing */
+ 274:Core/Src/app_bluenrg_ms.c ****     HAL_Delay(50);
+ 275:Core/Src/app_bluenrg_ms.c **** #endif
+ 276:Core/Src/app_bluenrg_ms.c ****     BSP_LED_Toggle(LED2);
+ 277:Core/Src/app_bluenrg_ms.c **** 
+ 278:Core/Src/app_bluenrg_ms.c ****     if (connected)
+ 279:Core/Src/app_bluenrg_ms.c ****     {
+ 280:Core/Src/app_bluenrg_ms.c ****       /* Set a random seed */
+ 281:Core/Src/app_bluenrg_ms.c ****       srand(HAL_GetTick());
+ 282:Core/Src/app_bluenrg_ms.c **** 
+ 283:Core/Src/app_bluenrg_ms.c ****       /* Update emulated Environmental data */
+ 284:Core/Src/app_bluenrg_ms.c ****       Set_Random_Environmental_Values(&data_t, &data_p);
+ 285:Core/Src/app_bluenrg_ms.c ****       BlueMS_Environmental_Update((int32_t)(data_p *100), (int16_t)(data_t * 10));
+ 286:Core/Src/app_bluenrg_ms.c **** 
+ 287:Core/Src/app_bluenrg_ms.c ****       /* Update emulated Acceleration, Gyroscope and Sensor Fusion data */
+ 288:Core/Src/app_bluenrg_ms.c ****       Set_Random_Motion_Values(counter);
+ 289:Core/Src/app_bluenrg_ms.c ****       Acc_Update(&x_axes, &g_axes, &m_axes);
+ 290:Core/Src/app_bluenrg_ms.c ****       Quat_Update(&q_axes);
+ 291:Core/Src/app_bluenrg_ms.c **** 
+ 292:Core/Src/app_bluenrg_ms.c ****       counter ++;
+ 293:Core/Src/app_bluenrg_ms.c ****       if (counter == 40) {
+ 294:Core/Src/app_bluenrg_ms.c ****         counter = 0;
+ 295:Core/Src/app_bluenrg_ms.c ****         Reset_Motion_Values();
+ 296:Core/Src/app_bluenrg_ms.c ****       }
+ 297:Core/Src/app_bluenrg_ms.c **** #if !USE_BUTTON
+ 298:Core/Src/app_bluenrg_ms.c ****       HAL_Delay(1000); /* wait 1 sec before sending new data */
+ 299:Core/Src/app_bluenrg_ms.c **** #endif
+ 300:Core/Src/app_bluenrg_ms.c ****     }
+ 301:Core/Src/app_bluenrg_ms.c **** #if USE_BUTTON
+ 302:Core/Src/app_bluenrg_ms.c ****     /* Reset the User Button flag */
+ 303:Core/Src/app_bluenrg_ms.c ****     user_button_pressed = 0;
+ 304:Core/Src/app_bluenrg_ms.c ****   }
+ 305:Core/Src/app_bluenrg_ms.c **** #endif
+ 306:Core/Src/app_bluenrg_ms.c **** }
+ 307:Core/Src/app_bluenrg_ms.c **** 
+ 308:Core/Src/app_bluenrg_ms.c **** /**
+ 309:Core/Src/app_bluenrg_ms.c ****  * @brief  Set random values for all environmental sensor data
+ 310:Core/Src/app_bluenrg_ms.c ****  * @param  float pointer to temperature data
+ 311:Core/Src/app_bluenrg_ms.c ****  * @param  float pointer to pressure data
+ 312:Core/Src/app_bluenrg_ms.c ****  * @retval None
+ 313:Core/Src/app_bluenrg_ms.c ****  */
+ 314:Core/Src/app_bluenrg_ms.c **** static void Set_Random_Environmental_Values(float *data_t, float *data_p)
+ 315:Core/Src/app_bluenrg_ms.c **** {
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_t = 27.0 + ((uint64_t)rand()*5)/RAND_MAX;     /* T sensor emulation */
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 7
+
+
+ 317:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 318:Core/Src/app_bluenrg_ms.c **** }
+ 319:Core/Src/app_bluenrg_ms.c **** 
+ 320:Core/Src/app_bluenrg_ms.c **** /**
+ 321:Core/Src/app_bluenrg_ms.c ****  * @brief  Set random values for all motion sensor data
+ 322:Core/Src/app_bluenrg_ms.c ****  * @param  uint32_t counter for changing the rotation direction
+ 323:Core/Src/app_bluenrg_ms.c ****  * @retval None
+ 324:Core/Src/app_bluenrg_ms.c ****  */
+ 325:Core/Src/app_bluenrg_ms.c **** static void Set_Random_Motion_Values(uint32_t cnt)
+ 326:Core/Src/app_bluenrg_ms.c **** {
+ 327:Core/Src/app_bluenrg_ms.c ****   /* Update Acceleration, Gyroscope and Sensor Fusion data */
+ 328:Core/Src/app_bluenrg_ms.c ****   if (cnt < 20) {
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_X +=  (10  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 331:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 334:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 337:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 338:Core/Src/app_bluenrg_ms.c **** 
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_X -= (100  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 341:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 342:Core/Src/app_bluenrg_ms.c ****   }
+ 343:Core/Src/app_bluenrg_ms.c ****   else {
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_X += -(10  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 346:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 349:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 352:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 353:Core/Src/app_bluenrg_ms.c **** 
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_X += (200 + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 356:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 357:Core/Src/app_bluenrg_ms.c ****   }
+ 358:Core/Src/app_bluenrg_ms.c **** 
+ 359:Core/Src/app_bluenrg_ms.c **** }
+ 360:Core/Src/app_bluenrg_ms.c **** 
+ 361:Core/Src/app_bluenrg_ms.c **** /**
+ 362:Core/Src/app_bluenrg_ms.c ****  * @brief  Reset values for all motion sensor data
+ 363:Core/Src/app_bluenrg_ms.c ****  * @param  None
+ 364:Core/Src/app_bluenrg_ms.c ****  * @retval None
+ 365:Core/Src/app_bluenrg_ms.c ****  */
+ 366:Core/Src/app_bluenrg_ms.c **** static void Reset_Motion_Values(void)
+ 367:Core/Src/app_bluenrg_ms.c **** {
+  28              		.loc 1 367 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 368:Core/Src/app_bluenrg_ms.c ****   x_axes.AXIS_X = (x_axes.AXIS_X)%2000 == 0 ? -x_axes.AXIS_X : 10;
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 8
+
+
+  33              		.loc 1 368 3 view .LVU1
+  34              		.loc 1 368 26 is_stmt 0 view .LVU2
+  35 0000 5A4B     		ldr	r3, .L20
+  36 0002 1B68     		ldr	r3, [r3]
+  37              		.loc 1 368 34 view .LVU3
+  38 0004 5A49     		ldr	r1, .L20+4
+  39 0006 81FB0321 		smull	r2, r1, r1, r3
+  40 000a DA17     		asrs	r2, r3, #31
+  41 000c C2EBE112 		rsb	r2, r2, r1, asr #7
+  42 0010 4FF4FA61 		mov	r1, #2000
+  43 0014 01FB1232 		mls	r2, r1, r2, r3
+  44              		.loc 1 368 62 view .LVU4
+  45 0018 002A     		cmp	r2, #0
+  46 001a 40F09280 		bne	.L11
+  47              		.loc 1 368 62 discriminator 1 view .LVU5
+  48 001e 5B42     		rsbs	r3, r3, #0
+  49              	.L2:
+  50              		.loc 1 368 17 discriminator 4 view .LVU6
+  51 0020 524A     		ldr	r2, .L20
+  52 0022 1360     		str	r3, [r2]
+ 369:Core/Src/app_bluenrg_ms.c ****   x_axes.AXIS_Y = (x_axes.AXIS_Y)%2000 == 0 ? -x_axes.AXIS_Y : -10;
+  53              		.loc 1 369 3 is_stmt 1 discriminator 4 view .LVU7
+  54              		.loc 1 369 26 is_stmt 0 discriminator 4 view .LVU8
+  55 0024 5368     		ldr	r3, [r2, #4]
+  56              		.loc 1 369 34 discriminator 4 view .LVU9
+  57 0026 5249     		ldr	r1, .L20+4
+  58 0028 81FB0321 		smull	r2, r1, r1, r3
+  59 002c DA17     		asrs	r2, r3, #31
+  60 002e C2EBE112 		rsb	r2, r2, r1, asr #7
+  61 0032 4FF4FA61 		mov	r1, #2000
+  62 0036 01FB1232 		mls	r2, r1, r2, r3
+  63              		.loc 1 369 62 discriminator 4 view .LVU10
+  64 003a 002A     		cmp	r2, #0
+  65 003c 40F08380 		bne	.L12
+  66              		.loc 1 369 62 discriminator 1 view .LVU11
+  67 0040 5B42     		rsbs	r3, r3, #0
+  68              	.L3:
+  69              		.loc 1 369 17 discriminator 4 view .LVU12
+  70 0042 4A4A     		ldr	r2, .L20
+  71 0044 5360     		str	r3, [r2, #4]
+ 370:Core/Src/app_bluenrg_ms.c ****   x_axes.AXIS_Z = (x_axes.AXIS_Z)%2000 == 0 ? -x_axes.AXIS_Z : 10;
+  72              		.loc 1 370 3 is_stmt 1 discriminator 4 view .LVU13
+  73              		.loc 1 370 26 is_stmt 0 discriminator 4 view .LVU14
+  74 0046 9368     		ldr	r3, [r2, #8]
+  75              		.loc 1 370 34 discriminator 4 view .LVU15
+  76 0048 4949     		ldr	r1, .L20+4
+  77 004a 81FB0321 		smull	r2, r1, r1, r3
+  78 004e DA17     		asrs	r2, r3, #31
+  79 0050 C2EBE112 		rsb	r2, r2, r1, asr #7
+  80 0054 4FF4FA61 		mov	r1, #2000
+  81 0058 01FB1232 		mls	r2, r1, r2, r3
+  82              		.loc 1 370 62 discriminator 4 view .LVU16
+  83 005c 002A     		cmp	r2, #0
+  84 005e 75D1     		bne	.L13
+  85              		.loc 1 370 62 discriminator 1 view .LVU17
+  86 0060 5B42     		rsbs	r3, r3, #0
+  87              	.L4:
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 9
+
+
+  88              		.loc 1 370 17 discriminator 4 view .LVU18
+  89 0062 424A     		ldr	r2, .L20
+  90 0064 9360     		str	r3, [r2, #8]
+ 371:Core/Src/app_bluenrg_ms.c ****   g_axes.AXIS_X = (g_axes.AXIS_X)%2000 == 0 ? -g_axes.AXIS_X : 100;
+  91              		.loc 1 371 3 is_stmt 1 discriminator 4 view .LVU19
+  92              		.loc 1 371 26 is_stmt 0 discriminator 4 view .LVU20
+  93 0066 434B     		ldr	r3, .L20+8
+  94 0068 1968     		ldr	r1, [r3]
+  95              		.loc 1 371 34 discriminator 4 view .LVU21
+  96 006a 414A     		ldr	r2, .L20+4
+  97 006c 82FB0132 		smull	r3, r2, r2, r1
+  98 0070 CB17     		asrs	r3, r1, #31
+  99 0072 C3EBE213 		rsb	r3, r3, r2, asr #7
+ 100 0076 4FF4FA62 		mov	r2, #2000
+ 101 007a 02FB1313 		mls	r3, r2, r3, r1
+ 102              		.loc 1 371 62 discriminator 4 view .LVU22
+ 103 007e 002B     		cmp	r3, #0
+ 104 0080 66D1     		bne	.L14
+ 105              		.loc 1 371 62 discriminator 1 view .LVU23
+ 106 0082 4942     		rsbs	r1, r1, #0
+ 107              	.L5:
+ 108              		.loc 1 371 17 discriminator 4 view .LVU24
+ 109 0084 3B4B     		ldr	r3, .L20+8
+ 110 0086 1960     		str	r1, [r3]
+ 372:Core/Src/app_bluenrg_ms.c ****   g_axes.AXIS_Y = (g_axes.AXIS_Y)%2000 == 0 ? -g_axes.AXIS_Y : -100;
+ 111              		.loc 1 372 3 is_stmt 1 discriminator 4 view .LVU25
+ 112              		.loc 1 372 26 is_stmt 0 discriminator 4 view .LVU26
+ 113 0088 5A68     		ldr	r2, [r3, #4]
+ 114              		.loc 1 372 34 discriminator 4 view .LVU27
+ 115 008a 3948     		ldr	r0, .L20+4
+ 116 008c 80FB0230 		smull	r3, r0, r0, r2
+ 117 0090 D317     		asrs	r3, r2, #31
+ 118 0092 C3EBE013 		rsb	r3, r3, r0, asr #7
+ 119 0096 4FF4FA60 		mov	r0, #2000
+ 120 009a 00FB1323 		mls	r3, r0, r3, r2
+ 121              		.loc 1 372 62 discriminator 4 view .LVU28
+ 122 009e 002B     		cmp	r3, #0
+ 123 00a0 58D1     		bne	.L15
+ 124              		.loc 1 372 62 discriminator 1 view .LVU29
+ 125 00a2 5242     		rsbs	r2, r2, #0
+ 126              	.L6:
+ 127              		.loc 1 372 17 discriminator 4 view .LVU30
+ 128 00a4 334B     		ldr	r3, .L20+8
+ 129 00a6 5A60     		str	r2, [r3, #4]
+ 373:Core/Src/app_bluenrg_ms.c ****   g_axes.AXIS_Z = (g_axes.AXIS_Z)%2000 == 0 ? -g_axes.AXIS_Z : 100;
+ 130              		.loc 1 373 3 is_stmt 1 discriminator 4 view .LVU31
+ 131              		.loc 1 373 26 is_stmt 0 discriminator 4 view .LVU32
+ 132 00a8 9B68     		ldr	r3, [r3, #8]
+ 133              		.loc 1 373 34 discriminator 4 view .LVU33
+ 134 00aa 3148     		ldr	r0, .L20+4
+ 135 00ac 80FB030C 		smull	r0, ip, r0, r3
+ 136 00b0 D817     		asrs	r0, r3, #31
+ 137 00b2 C0EBEC10 		rsb	r0, r0, ip, asr #7
+ 138 00b6 4FF4FA6C 		mov	ip, #2000
+ 139 00ba 0CFB1030 		mls	r0, ip, r0, r3
+ 140              		.loc 1 373 62 discriminator 4 view .LVU34
+ 141 00be 0028     		cmp	r0, #0
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 10
+
+
+ 142 00c0 4BD1     		bne	.L16
+ 143              		.loc 1 373 62 discriminator 1 view .LVU35
+ 144 00c2 5B42     		rsbs	r3, r3, #0
+ 145              	.L7:
+ 146              		.loc 1 373 17 discriminator 4 view .LVU36
+ 147 00c4 2B48     		ldr	r0, .L20+8
+ 148 00c6 8360     		str	r3, [r0, #8]
+ 374:Core/Src/app_bluenrg_ms.c ****   m_axes.AXIS_X = (g_axes.AXIS_X)%2000 == 0 ? -m_axes.AXIS_X : 3;
+ 149              		.loc 1 374 3 is_stmt 1 discriminator 4 view .LVU37
+ 150              		.loc 1 374 34 is_stmt 0 discriminator 4 view .LVU38
+ 151 00c8 2948     		ldr	r0, .L20+4
+ 152 00ca 80FB010C 		smull	r0, ip, r0, r1
+ 153 00ce C817     		asrs	r0, r1, #31
+ 154 00d0 C0EBEC10 		rsb	r0, r0, ip, asr #7
+ 155 00d4 4FF4FA6C 		mov	ip, #2000
+ 156 00d8 0CFB1010 		mls	r0, ip, r0, r1
+ 157              		.loc 1 374 62 discriminator 4 view .LVU39
+ 158 00dc 0028     		cmp	r0, #0
+ 159 00de 3ED1     		bne	.L17
+ 160              		.loc 1 374 54 discriminator 1 view .LVU40
+ 161 00e0 2549     		ldr	r1, .L20+12
+ 162 00e2 0968     		ldr	r1, [r1]
+ 163              		.loc 1 374 62 discriminator 1 view .LVU41
+ 164 00e4 4942     		rsbs	r1, r1, #0
+ 165              	.L8:
+ 166              		.loc 1 374 17 discriminator 4 view .LVU42
+ 167 00e6 2448     		ldr	r0, .L20+12
+ 168 00e8 0160     		str	r1, [r0]
+ 375:Core/Src/app_bluenrg_ms.c ****   m_axes.AXIS_Y = (g_axes.AXIS_Y)%2000 == 0 ? -m_axes.AXIS_Y : -3;
+ 169              		.loc 1 375 3 is_stmt 1 discriminator 4 view .LVU43
+ 170              		.loc 1 375 34 is_stmt 0 discriminator 4 view .LVU44
+ 171 00ea 2148     		ldr	r0, .L20+4
+ 172 00ec 80FB0210 		smull	r1, r0, r0, r2
+ 173 00f0 D117     		asrs	r1, r2, #31
+ 174 00f2 C1EBE011 		rsb	r1, r1, r0, asr #7
+ 175 00f6 4FF4FA60 		mov	r0, #2000
+ 176 00fa 00FB1121 		mls	r1, r0, r1, r2
+ 177              		.loc 1 375 62 discriminator 4 view .LVU45
+ 178 00fe 0029     		cmp	r1, #0
+ 179 0100 2FD1     		bne	.L18
+ 180              		.loc 1 375 54 discriminator 1 view .LVU46
+ 181 0102 1D4A     		ldr	r2, .L20+12
+ 182 0104 5268     		ldr	r2, [r2, #4]
+ 183              		.loc 1 375 62 discriminator 1 view .LVU47
+ 184 0106 5242     		rsbs	r2, r2, #0
+ 185              	.L9:
+ 186              		.loc 1 375 17 discriminator 4 view .LVU48
+ 187 0108 1B49     		ldr	r1, .L20+12
+ 188 010a 4A60     		str	r2, [r1, #4]
+ 376:Core/Src/app_bluenrg_ms.c ****   m_axes.AXIS_Z = (g_axes.AXIS_Z)%2000 == 0 ? -m_axes.AXIS_Z : 3;
+ 189              		.loc 1 376 3 is_stmt 1 discriminator 4 view .LVU49
+ 190              		.loc 1 376 34 is_stmt 0 discriminator 4 view .LVU50
+ 191 010c 1849     		ldr	r1, .L20+4
+ 192 010e 81FB0321 		smull	r2, r1, r1, r3
+ 193 0112 DA17     		asrs	r2, r3, #31
+ 194 0114 C2EBE112 		rsb	r2, r2, r1, asr #7
+ 195 0118 4FF4FA61 		mov	r1, #2000
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 11
+
+
+ 196 011c 01FB1232 		mls	r2, r1, r2, r3
+ 197              		.loc 1 376 62 discriminator 4 view .LVU51
+ 198 0120 12BB     		cbnz	r2, .L19
+ 199              		.loc 1 376 54 discriminator 1 view .LVU52
+ 200 0122 154B     		ldr	r3, .L20+12
+ 201 0124 9B68     		ldr	r3, [r3, #8]
+ 202              		.loc 1 376 62 discriminator 1 view .LVU53
+ 203 0126 5B42     		rsbs	r3, r3, #0
+ 204              	.L10:
+ 205              		.loc 1 376 17 discriminator 4 view .LVU54
+ 206 0128 134A     		ldr	r2, .L20+12
+ 207 012a 9360     		str	r3, [r2, #8]
+ 377:Core/Src/app_bluenrg_ms.c ****   q_axes.AXIS_X = -q_axes.AXIS_X;
+ 208              		.loc 1 377 3 is_stmt 1 discriminator 4 view .LVU55
+ 209              		.loc 1 377 26 is_stmt 0 discriminator 4 view .LVU56
+ 210 012c 134B     		ldr	r3, .L20+16
+ 211 012e 1A68     		ldr	r2, [r3]
+ 212              		.loc 1 377 19 discriminator 4 view .LVU57
+ 213 0130 5242     		rsbs	r2, r2, #0
+ 214              		.loc 1 377 17 discriminator 4 view .LVU58
+ 215 0132 1A60     		str	r2, [r3]
+ 378:Core/Src/app_bluenrg_ms.c ****   q_axes.AXIS_Y = -q_axes.AXIS_Y;
+ 216              		.loc 1 378 3 is_stmt 1 discriminator 4 view .LVU59
+ 217              		.loc 1 378 26 is_stmt 0 discriminator 4 view .LVU60
+ 218 0134 5A68     		ldr	r2, [r3, #4]
+ 219              		.loc 1 378 19 discriminator 4 view .LVU61
+ 220 0136 5242     		rsbs	r2, r2, #0
+ 221              		.loc 1 378 17 discriminator 4 view .LVU62
+ 222 0138 5A60     		str	r2, [r3, #4]
+ 379:Core/Src/app_bluenrg_ms.c ****   q_axes.AXIS_Z = -q_axes.AXIS_Z;
+ 223              		.loc 1 379 3 is_stmt 1 discriminator 4 view .LVU63
+ 224              		.loc 1 379 26 is_stmt 0 discriminator 4 view .LVU64
+ 225 013a 9A68     		ldr	r2, [r3, #8]
+ 226              		.loc 1 379 19 discriminator 4 view .LVU65
+ 227 013c 5242     		rsbs	r2, r2, #0
+ 228              		.loc 1 379 17 discriminator 4 view .LVU66
+ 229 013e 9A60     		str	r2, [r3, #8]
+ 380:Core/Src/app_bluenrg_ms.c **** }
+ 230              		.loc 1 380 1 discriminator 4 view .LVU67
+ 231 0140 7047     		bx	lr
+ 232              	.L11:
+ 368:Core/Src/app_bluenrg_ms.c ****   x_axes.AXIS_Y = (x_axes.AXIS_Y)%2000 == 0 ? -x_axes.AXIS_Y : -10;
+ 233              		.loc 1 368 62 view .LVU68
+ 234 0142 0A23     		movs	r3, #10
+ 235 0144 6CE7     		b	.L2
+ 236              	.L12:
+ 369:Core/Src/app_bluenrg_ms.c ****   x_axes.AXIS_Z = (x_axes.AXIS_Z)%2000 == 0 ? -x_axes.AXIS_Z : 10;
+ 237              		.loc 1 369 62 view .LVU69
+ 238 0146 6FF00903 		mvn	r3, #9
+ 239 014a 7AE7     		b	.L3
+ 240              	.L13:
+ 370:Core/Src/app_bluenrg_ms.c ****   g_axes.AXIS_X = (g_axes.AXIS_X)%2000 == 0 ? -g_axes.AXIS_X : 100;
+ 241              		.loc 1 370 62 view .LVU70
+ 242 014c 0A23     		movs	r3, #10
+ 243 014e 88E7     		b	.L4
+ 244              	.L14:
+ 371:Core/Src/app_bluenrg_ms.c ****   g_axes.AXIS_Y = (g_axes.AXIS_Y)%2000 == 0 ? -g_axes.AXIS_Y : -100;
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 12
+
+
+ 245              		.loc 1 371 62 view .LVU71
+ 246 0150 6421     		movs	r1, #100
+ 247 0152 97E7     		b	.L5
+ 248              	.L15:
+ 372:Core/Src/app_bluenrg_ms.c ****   g_axes.AXIS_Z = (g_axes.AXIS_Z)%2000 == 0 ? -g_axes.AXIS_Z : 100;
+ 249              		.loc 1 372 62 view .LVU72
+ 250 0154 6FF06302 		mvn	r2, #99
+ 251 0158 A4E7     		b	.L6
+ 252              	.L16:
+ 373:Core/Src/app_bluenrg_ms.c ****   m_axes.AXIS_X = (g_axes.AXIS_X)%2000 == 0 ? -m_axes.AXIS_X : 3;
+ 253              		.loc 1 373 62 view .LVU73
+ 254 015a 6423     		movs	r3, #100
+ 255 015c B2E7     		b	.L7
+ 256              	.L17:
+ 374:Core/Src/app_bluenrg_ms.c ****   m_axes.AXIS_Y = (g_axes.AXIS_Y)%2000 == 0 ? -m_axes.AXIS_Y : -3;
+ 257              		.loc 1 374 62 view .LVU74
+ 258 015e 0321     		movs	r1, #3
+ 259 0160 C1E7     		b	.L8
+ 260              	.L18:
+ 375:Core/Src/app_bluenrg_ms.c ****   m_axes.AXIS_Z = (g_axes.AXIS_Z)%2000 == 0 ? -m_axes.AXIS_Z : 3;
+ 261              		.loc 1 375 62 view .LVU75
+ 262 0162 6FF00202 		mvn	r2, #2
+ 263 0166 CFE7     		b	.L9
+ 264              	.L19:
+ 376:Core/Src/app_bluenrg_ms.c ****   q_axes.AXIS_X = -q_axes.AXIS_X;
+ 265              		.loc 1 376 62 view .LVU76
+ 266 0168 0323     		movs	r3, #3
+ 267 016a DDE7     		b	.L10
+ 268              	.L21:
+ 269              		.align	2
+ 270              	.L20:
+ 271 016c 00000000 		.word	x_axes
+ 272 0170 D34D6210 		.word	274877907
+ 273 0174 00000000 		.word	g_axes
+ 274 0178 00000000 		.word	m_axes
+ 275 017c 00000000 		.word	q_axes
+ 276              		.cfi_endproc
+ 277              	.LFE138:
+ 279              		.section	.text.User_Init,"ax",%progbits
+ 280              		.align	1
+ 281              		.syntax unified
+ 282              		.thumb
+ 283              		.thumb_func
+ 285              	User_Init:
+ 286              	.LFB134:
+ 237:Core/Src/app_bluenrg_ms.c ****   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
+ 287              		.loc 1 237 1 is_stmt 1 view -0
+ 288              		.cfi_startproc
+ 289              		@ args = 0, pretend = 0, frame = 0
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 291 0000 08B5     		push	{r3, lr}
+ 292              	.LCFI0:
+ 293              		.cfi_def_cfa_offset 8
+ 294              		.cfi_offset 3, -8
+ 295              		.cfi_offset 14, -4
+ 238:Core/Src/app_bluenrg_ms.c ****   BSP_LED_Init(LED2);
+ 296              		.loc 1 238 3 view .LVU78
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 13
+
+
+ 297 0002 0121     		movs	r1, #1
+ 298 0004 0020     		movs	r0, #0
+ 299 0006 FFF7FEFF 		bl	BSP_PB_Init
+ 300              	.LVL0:
+ 239:Core/Src/app_bluenrg_ms.c **** 
+ 301              		.loc 1 239 3 view .LVU79
+ 302 000a 0020     		movs	r0, #0
+ 303 000c FFF7FEFF 		bl	BSP_LED_Init
+ 304              	.LVL1:
+ 241:Core/Src/app_bluenrg_ms.c **** }
+ 305              		.loc 1 241 3 view .LVU80
+ 306 0010 0020     		movs	r0, #0
+ 307 0012 FFF7FEFF 		bl	BSP_COM_Init
+ 308              	.LVL2:
+ 242:Core/Src/app_bluenrg_ms.c **** 
+ 309              		.loc 1 242 1 is_stmt 0 view .LVU81
+ 310 0016 08BD     		pop	{r3, pc}
+ 311              		.cfi_endproc
+ 312              	.LFE134:
+ 314              		.global	__aeabi_uldivmod
+ 315              		.global	__aeabi_ul2d
+ 316              		.global	__aeabi_dadd
+ 317              		.global	__aeabi_d2f
+ 318              		.section	.text.Set_Random_Environmental_Values,"ax",%progbits
+ 319              		.align	1
+ 320              		.syntax unified
+ 321              		.thumb
+ 322              		.thumb_func
+ 324              	Set_Random_Environmental_Values:
+ 325              	.LVL3:
+ 326              	.LFB136:
+ 315:Core/Src/app_bluenrg_ms.c ****   *data_t = 27.0 + ((uint64_t)rand()*5)/RAND_MAX;     /* T sensor emulation */
+ 327              		.loc 1 315 1 is_stmt 1 view -0
+ 328              		.cfi_startproc
+ 329              		@ args = 0, pretend = 0, frame = 0
+ 330              		@ frame_needed = 0, uses_anonymous_args = 0
+ 315:Core/Src/app_bluenrg_ms.c ****   *data_t = 27.0 + ((uint64_t)rand()*5)/RAND_MAX;     /* T sensor emulation */
+ 331              		.loc 1 315 1 is_stmt 0 view .LVU83
+ 332 0000 38B5     		push	{r3, r4, r5, lr}
+ 333              	.LCFI1:
+ 334              		.cfi_def_cfa_offset 16
+ 335              		.cfi_offset 3, -16
+ 336              		.cfi_offset 4, -12
+ 337              		.cfi_offset 5, -8
+ 338              		.cfi_offset 14, -4
+ 339 0002 0546     		mov	r5, r0
+ 340 0004 0C46     		mov	r4, r1
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 341              		.loc 1 316 3 is_stmt 1 view .LVU84
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 342              		.loc 1 316 31 is_stmt 0 view .LVU85
+ 343 0006 FFF7FEFF 		bl	rand
+ 344              	.LVL4:
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 345              		.loc 1 316 21 view .LVU86
+ 346 000a 4FEAE07C 		asr	ip, r0, #31
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 14
+
+
+ 347              		.loc 1 316 37 view .LVU87
+ 348 000e 4FEA8C01 		lsl	r1, ip, #2
+ 349 0012 41EA9071 		orr	r1, r1, r0, lsr #30
+ 350 0016 8300     		lsls	r3, r0, #2
+ 351 0018 1818     		adds	r0, r3, r0
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 352              		.loc 1 316 40 view .LVU88
+ 353 001a 6FF00042 		mvn	r2, #-2147483648
+ 354 001e 4FF00003 		mov	r3, #0
+ 355 0022 4CEB0101 		adc	r1, ip, r1
+ 356 0026 FFF7FEFF 		bl	__aeabi_uldivmod
+ 357              	.LVL5:
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 358              		.loc 1 316 18 view .LVU89
+ 359 002a FFF7FEFF 		bl	__aeabi_ul2d
+ 360              	.LVL6:
+ 361 002e 0022     		movs	r2, #0
+ 362 0030 114B     		ldr	r3, .L26
+ 363 0032 FFF7FEFF 		bl	__aeabi_dadd
+ 364              	.LVL7:
+ 365 0036 FFF7FEFF 		bl	__aeabi_d2f
+ 366              	.LVL8:
+ 316:Core/Src/app_bluenrg_ms.c ****   *data_p = 1000.0 + ((uint64_t)rand()*80)/RAND_MAX; /* P sensor emulation */
+ 367              		.loc 1 316 11 view .LVU90
+ 368 003a 2860     		str	r0, [r5]	@ float
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 369              		.loc 1 317 3 is_stmt 1 view .LVU91
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 370              		.loc 1 317 33 is_stmt 0 view .LVU92
+ 371 003c FFF7FEFF 		bl	rand
+ 372              	.LVL9:
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 373              		.loc 1 317 23 view .LVU93
+ 374 0040 C317     		asrs	r3, r0, #31
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 375              		.loc 1 317 39 view .LVU94
+ 376 0042 9A00     		lsls	r2, r3, #2
+ 377 0044 42EA9072 		orr	r2, r2, r0, lsr #30
+ 378 0048 8100     		lsls	r1, r0, #2
+ 379 004a 0918     		adds	r1, r1, r0
+ 380 004c 43EB0203 		adc	r3, r3, r2
+ 381 0050 4FEA031C 		lsl	ip, r3, #4
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 382              		.loc 1 317 43 view .LVU95
+ 383 0054 6FF00042 		mvn	r2, #-2147483648
+ 384 0058 0023     		movs	r3, #0
+ 385 005a 0801     		lsls	r0, r1, #4
+ 386 005c 4CEA1171 		orr	r1, ip, r1, lsr #28
+ 387 0060 FFF7FEFF 		bl	__aeabi_uldivmod
+ 388              	.LVL10:
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 389              		.loc 1 317 20 view .LVU96
+ 390 0064 FFF7FEFF 		bl	__aeabi_ul2d
+ 391              	.LVL11:
+ 392 0068 0022     		movs	r2, #0
+ 393 006a 044B     		ldr	r3, .L26+4
+ 394 006c FFF7FEFF 		bl	__aeabi_dadd
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 15
+
+
+ 395              	.LVL12:
+ 396 0070 FFF7FEFF 		bl	__aeabi_d2f
+ 397              	.LVL13:
+ 317:Core/Src/app_bluenrg_ms.c **** }
+ 398              		.loc 1 317 11 view .LVU97
+ 399 0074 2060     		str	r0, [r4]	@ float
+ 318:Core/Src/app_bluenrg_ms.c **** 
+ 400              		.loc 1 318 1 view .LVU98
+ 401 0076 38BD     		pop	{r3, r4, r5, pc}
+ 402              	.LVL14:
+ 403              	.L27:
+ 318:Core/Src/app_bluenrg_ms.c **** 
+ 404              		.loc 1 318 1 view .LVU99
+ 405              		.align	2
+ 406              	.L26:
+ 407 0078 00003B40 		.word	1077608448
+ 408 007c 00408F40 		.word	1083129856
+ 409              		.cfi_endproc
+ 410              	.LFE136:
+ 412              		.section	.text.Set_Random_Motion_Values,"ax",%progbits
+ 413              		.align	1
+ 414              		.syntax unified
+ 415              		.thumb
+ 416              		.thumb_func
+ 418              	Set_Random_Motion_Values:
+ 419              	.LVL15:
+ 420              	.LFB137:
+ 326:Core/Src/app_bluenrg_ms.c ****   /* Update Acceleration, Gyroscope and Sensor Fusion data */
+ 421              		.loc 1 326 1 is_stmt 1 view -0
+ 422              		.cfi_startproc
+ 423              		@ args = 0, pretend = 0, frame = 0
+ 424              		@ frame_needed = 0, uses_anonymous_args = 0
+ 326:Core/Src/app_bluenrg_ms.c ****   /* Update Acceleration, Gyroscope and Sensor Fusion data */
+ 425              		.loc 1 326 1 is_stmt 0 view .LVU101
+ 426 0000 70B5     		push	{r4, r5, r6, lr}
+ 427              	.LCFI2:
+ 428              		.cfi_def_cfa_offset 16
+ 429              		.cfi_offset 4, -16
+ 430              		.cfi_offset 5, -12
+ 431              		.cfi_offset 6, -8
+ 432              		.cfi_offset 14, -4
+ 433 0002 0446     		mov	r4, r0
+ 328:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_X +=  (10  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 434              		.loc 1 328 3 is_stmt 1 view .LVU102
+ 328:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_X +=  (10  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 435              		.loc 1 328 6 is_stmt 0 view .LVU103
+ 436 0004 1328     		cmp	r0, #19
+ 437 0006 00F22B81 		bhi	.L29
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 438              		.loc 1 329 5 is_stmt 1 view .LVU104
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 439              		.loc 1 329 41 is_stmt 0 view .LVU105
+ 440 000a FFF7FEFF 		bl	rand
+ 441              	.LVL16:
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 442              		.loc 1 329 31 view .LVU106
+ 443 000e C217     		asrs	r2, r0, #31
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 16
+
+
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 444              		.loc 1 329 49 view .LVU107
+ 445 0010 A0FB0431 		umull	r3, r1, r0, r4
+ 446 0014 04FB0211 		mla	r1, r4, r2, r1
+ 447 0018 D818     		adds	r0, r3, r3
+ 448 001a 41EB0105 		adc	r5, r1, r1
+ 449 001e C018     		adds	r0, r0, r3
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 450              		.loc 1 329 54 view .LVU108
+ 451 0020 6FF00042 		mvn	r2, #-2147483648
+ 452 0024 4FF00003 		mov	r3, #0
+ 453 0028 41EB0501 		adc	r1, r1, r5
+ 454 002c FFF7FEFF 		bl	__aeabi_uldivmod
+ 455              	.LVL17:
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 456              		.loc 1 329 28 view .LVU109
+ 457 0030 0A30     		adds	r0, r0, #10
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 458              		.loc 1 329 11 view .LVU110
+ 459 0032 874D     		ldr	r5, .L32
+ 460 0034 2B68     		ldr	r3, [r5]
+ 329:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y += -(10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 461              		.loc 1 329 19 view .LVU111
+ 462 0036 0344     		add	r3, r3, r0
+ 463 0038 2B60     		str	r3, [r5]
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 464              		.loc 1 330 5 is_stmt 1 view .LVU112
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 465              		.loc 1 330 41 is_stmt 0 view .LVU113
+ 466 003a FFF7FEFF 		bl	rand
+ 467              	.LVL18:
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 468              		.loc 1 330 31 view .LVU114
+ 469 003e C217     		asrs	r2, r0, #31
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 470              		.loc 1 330 49 view .LVU115
+ 471 0040 A4FB0031 		umull	r3, r1, r4, r0
+ 472 0044 04FB0211 		mla	r1, r4, r2, r1
+ 473 0048 8E00     		lsls	r6, r1, #2
+ 474 004a 46EA9376 		orr	r6, r6, r3, lsr #30
+ 475 004e 9800     		lsls	r0, r3, #2
+ 476 0050 C018     		adds	r0, r0, r3
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 477              		.loc 1 330 54 view .LVU116
+ 478 0052 6FF00042 		mvn	r2, #-2147483648
+ 479 0056 4FF00003 		mov	r3, #0
+ 480 005a 41EB0601 		adc	r1, r1, r6
+ 481 005e FFF7FEFF 		bl	__aeabi_uldivmod
+ 482              	.LVL19:
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 483              		.loc 1 330 22 view .LVU117
+ 484 0062 C0F1FF20 		rsb	r0, r0, #-16711936
+ 485 0066 00F57F00 		add	r0, r0, #16711680
+ 486 006a F630     		adds	r0, r0, #246
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 487              		.loc 1 330 11 view .LVU118
+ 488 006c 6B68     		ldr	r3, [r5, #4]
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 17
+
+
+ 330:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z +=  (10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 489              		.loc 1 330 19 view .LVU119
+ 490 006e 0344     		add	r3, r3, r0
+ 491 0070 6B60     		str	r3, [r5, #4]
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 492              		.loc 1 331 5 is_stmt 1 view .LVU120
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 493              		.loc 1 331 41 is_stmt 0 view .LVU121
+ 494 0072 FFF7FEFF 		bl	rand
+ 495              	.LVL20:
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 496              		.loc 1 331 31 view .LVU122
+ 497 0076 C217     		asrs	r2, r0, #31
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 498              		.loc 1 331 49 view .LVU123
+ 499 0078 A4FB0031 		umull	r3, r1, r4, r0
+ 500 007c 04FB0211 		mla	r1, r4, r2, r1
+ 501 0080 CE00     		lsls	r6, r1, #3
+ 502 0082 46EA5376 		orr	r6, r6, r3, lsr #29
+ 503 0086 D800     		lsls	r0, r3, #3
+ 504 0088 C01A     		subs	r0, r0, r3
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 505              		.loc 1 331 54 view .LVU124
+ 506 008a 6FF00042 		mvn	r2, #-2147483648
+ 507 008e 4FF00003 		mov	r3, #0
+ 508 0092 66EB0101 		sbc	r1, r6, r1
+ 509 0096 FFF7FEFF 		bl	__aeabi_uldivmod
+ 510              	.LVL21:
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 511              		.loc 1 331 28 view .LVU125
+ 512 009a 0A30     		adds	r0, r0, #10
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 513              		.loc 1 331 11 view .LVU126
+ 514 009c AB68     		ldr	r3, [r5, #8]
+ 331:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X +=  (100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 515              		.loc 1 331 19 view .LVU127
+ 516 009e 0344     		add	r3, r3, r0
+ 517 00a0 AB60     		str	r3, [r5, #8]
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 518              		.loc 1 332 5 is_stmt 1 view .LVU128
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 519              		.loc 1 332 41 is_stmt 0 view .LVU129
+ 520 00a2 FFF7FEFF 		bl	rand
+ 521              	.LVL22:
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 522              		.loc 1 332 31 view .LVU130
+ 523 00a6 C317     		asrs	r3, r0, #31
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 524              		.loc 1 332 49 view .LVU131
+ 525 00a8 A4FB0001 		umull	r0, r1, r4, r0
+ 526 00ac 04FB0311 		mla	r1, r4, r3, r1
+ 527 00b0 0018     		adds	r0, r0, r0
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 528              		.loc 1 332 54 view .LVU132
+ 529 00b2 6FF00042 		mvn	r2, #-2147483648
+ 530 00b6 4FF00003 		mov	r3, #0
+ 531 00ba 4941     		adcs	r1, r1, r1
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 18
+
+
+ 532 00bc FFF7FEFF 		bl	__aeabi_uldivmod
+ 533              	.LVL23:
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 534              		.loc 1 332 28 view .LVU133
+ 535 00c0 6430     		adds	r0, r0, #100
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 536              		.loc 1 332 11 view .LVU134
+ 537 00c2 644D     		ldr	r5, .L32+4
+ 538 00c4 2B68     		ldr	r3, [r5]
+ 332:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y += -(100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 539              		.loc 1 332 19 view .LVU135
+ 540 00c6 0344     		add	r3, r3, r0
+ 541 00c8 2B60     		str	r3, [r5]
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 542              		.loc 1 333 5 is_stmt 1 view .LVU136
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 543              		.loc 1 333 41 is_stmt 0 view .LVU137
+ 544 00ca FFF7FEFF 		bl	rand
+ 545              	.LVL24:
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 546              		.loc 1 333 31 view .LVU138
+ 547 00ce C317     		asrs	r3, r0, #31
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 548              		.loc 1 333 49 view .LVU139
+ 549 00d0 A4FB0061 		umull	r6, r1, r4, r0
+ 550 00d4 04FB0311 		mla	r1, r4, r3, r1
+ 551 00d8 8900     		lsls	r1, r1, #2
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 552              		.loc 1 333 54 view .LVU140
+ 553 00da 6FF00042 		mvn	r2, #-2147483648
+ 554 00de 0023     		movs	r3, #0
+ 555 00e0 B000     		lsls	r0, r6, #2
+ 556 00e2 41EA9671 		orr	r1, r1, r6, lsr #30
+ 557 00e6 FFF7FEFF 		bl	__aeabi_uldivmod
+ 558              	.LVL25:
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 559              		.loc 1 333 22 view .LVU141
+ 560 00ea C0F1FF20 		rsb	r0, r0, #-16711936
+ 561 00ee 00F57F00 		add	r0, r0, #16711680
+ 562 00f2 9C30     		adds	r0, r0, #156
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 563              		.loc 1 333 11 view .LVU142
+ 564 00f4 6B68     		ldr	r3, [r5, #4]
+ 333:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z +=  (100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 565              		.loc 1 333 19 view .LVU143
+ 566 00f6 0344     		add	r3, r3, r0
+ 567 00f8 6B60     		str	r3, [r5, #4]
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 568              		.loc 1 334 5 is_stmt 1 view .LVU144
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 569              		.loc 1 334 41 is_stmt 0 view .LVU145
+ 570 00fa FFF7FEFF 		bl	rand
+ 571              	.LVL26:
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 572              		.loc 1 334 31 view .LVU146
+ 573 00fe C217     		asrs	r2, r0, #31
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 19
+
+
+ 574              		.loc 1 334 49 view .LVU147
+ 575 0100 A4FB0031 		umull	r3, r1, r4, r0
+ 576 0104 04FB0211 		mla	r1, r4, r2, r1
+ 577 0108 D818     		adds	r0, r3, r3
+ 578 010a 41EB0102 		adc	r2, r1, r1
+ 579 010e C018     		adds	r0, r0, r3
+ 580 0110 41EB0201 		adc	r1, r1, r2
+ 581 0114 0018     		adds	r0, r0, r0
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 582              		.loc 1 334 54 view .LVU148
+ 583 0116 6FF00042 		mvn	r2, #-2147483648
+ 584 011a 4FF00003 		mov	r3, #0
+ 585 011e 4941     		adcs	r1, r1, r1
+ 586 0120 FFF7FEFF 		bl	__aeabi_uldivmod
+ 587              	.LVL27:
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 588              		.loc 1 334 28 view .LVU149
+ 589 0124 6430     		adds	r0, r0, #100
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 590              		.loc 1 334 11 view .LVU150
+ 591 0126 AB68     		ldr	r3, [r5, #8]
+ 334:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X +=  (3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 592              		.loc 1 334 19 view .LVU151
+ 593 0128 0344     		add	r3, r3, r0
+ 594 012a AB60     		str	r3, [r5, #8]
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 595              		.loc 1 335 5 is_stmt 1 view .LVU152
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 596              		.loc 1 335 40 is_stmt 0 view .LVU153
+ 597 012c FFF7FEFF 		bl	rand
+ 598              	.LVL28:
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 599              		.loc 1 335 30 view .LVU154
+ 600 0130 C217     		asrs	r2, r0, #31
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 601              		.loc 1 335 48 view .LVU155
+ 602 0132 A4FB0031 		umull	r3, r1, r4, r0
+ 603 0136 04FB0211 		mla	r1, r4, r2, r1
+ 604 013a D818     		adds	r0, r3, r3
+ 605 013c 41EB0105 		adc	r5, r1, r1
+ 606 0140 C018     		adds	r0, r0, r3
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 607              		.loc 1 335 53 view .LVU156
+ 608 0142 6FF00042 		mvn	r2, #-2147483648
+ 609 0146 4FF00003 		mov	r3, #0
+ 610 014a 41EB0501 		adc	r1, r1, r5
+ 611 014e FFF7FEFF 		bl	__aeabi_uldivmod
+ 612              	.LVL29:
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 613              		.loc 1 335 27 view .LVU157
+ 614 0152 0330     		adds	r0, r0, #3
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 615              		.loc 1 335 11 view .LVU158
+ 616 0154 404E     		ldr	r6, .L32+8
+ 617 0156 3368     		ldr	r3, [r6]
+ 335:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y += -(3  + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 618              		.loc 1 335 19 view .LVU159
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 20
+
+
+ 619 0158 0344     		add	r3, r3, r0
+ 620 015a 3360     		str	r3, [r6]
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 621              		.loc 1 336 5 is_stmt 1 view .LVU160
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 622              		.loc 1 336 40 is_stmt 0 view .LVU161
+ 623 015c FFF7FEFF 		bl	rand
+ 624              	.LVL30:
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 625              		.loc 1 336 30 view .LVU162
+ 626 0160 C317     		asrs	r3, r0, #31
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 627              		.loc 1 336 48 view .LVU163
+ 628 0162 A4FB0051 		umull	r5, r1, r4, r0
+ 629 0166 04FB0311 		mla	r1, r4, r3, r1
+ 630 016a 8900     		lsls	r1, r1, #2
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 631              		.loc 1 336 53 view .LVU164
+ 632 016c 6FF00042 		mvn	r2, #-2147483648
+ 633 0170 0023     		movs	r3, #0
+ 634 0172 A800     		lsls	r0, r5, #2
+ 635 0174 41EA9571 		orr	r1, r1, r5, lsr #30
+ 636 0178 FFF7FEFF 		bl	__aeabi_uldivmod
+ 637              	.LVL31:
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 638              		.loc 1 336 22 view .LVU165
+ 639 017c C0F1FF20 		rsb	r0, r0, #-16711936
+ 640 0180 00F57F00 		add	r0, r0, #16711680
+ 641 0184 FD30     		adds	r0, r0, #253
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 642              		.loc 1 336 11 view .LVU166
+ 643 0186 7368     		ldr	r3, [r6, #4]
+ 336:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z +=  (3  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 644              		.loc 1 336 19 view .LVU167
+ 645 0188 0344     		add	r3, r3, r0
+ 646 018a 7360     		str	r3, [r6, #4]
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 647              		.loc 1 337 5 is_stmt 1 view .LVU168
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 648              		.loc 1 337 40 is_stmt 0 view .LVU169
+ 649 018c FFF7FEFF 		bl	rand
+ 650              	.LVL32:
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 651              		.loc 1 337 30 view .LVU170
+ 652 0190 C217     		asrs	r2, r0, #31
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 653              		.loc 1 337 48 view .LVU171
+ 654 0192 A4FB0031 		umull	r3, r1, r4, r0
+ 655 0196 04FB0211 		mla	r1, r4, r2, r1
+ 656 019a 8D00     		lsls	r5, r1, #2
+ 657 019c 45EA9375 		orr	r5, r5, r3, lsr #30
+ 658 01a0 9800     		lsls	r0, r3, #2
+ 659 01a2 C018     		adds	r0, r0, r3
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 660              		.loc 1 337 53 view .LVU172
+ 661 01a4 6FF00042 		mvn	r2, #-2147483648
+ 662 01a8 4FF00003 		mov	r3, #0
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 21
+
+
+ 663 01ac 41EB0501 		adc	r1, r1, r5
+ 664 01b0 FFF7FEFF 		bl	__aeabi_uldivmod
+ 665              	.LVL33:
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 666              		.loc 1 337 27 view .LVU173
+ 667 01b4 0330     		adds	r0, r0, #3
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 668              		.loc 1 337 11 view .LVU174
+ 669 01b6 B368     		ldr	r3, [r6, #8]
+ 337:Core/Src/app_bluenrg_ms.c **** 
+ 670              		.loc 1 337 19 view .LVU175
+ 671 01b8 0344     		add	r3, r3, r0
+ 672 01ba B360     		str	r3, [r6, #8]
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 673              		.loc 1 339 5 is_stmt 1 view .LVU176
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 674              		.loc 1 339 41 is_stmt 0 view .LVU177
+ 675 01bc FFF7FEFF 		bl	rand
+ 676              	.LVL34:
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 677              		.loc 1 339 31 view .LVU178
+ 678 01c0 C217     		asrs	r2, r0, #31
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 679              		.loc 1 339 49 view .LVU179
+ 680 01c2 A4FB0031 		umull	r3, r1, r4, r0
+ 681 01c6 04FB0211 		mla	r1, r4, r2, r1
+ 682 01ca D818     		adds	r0, r3, r3
+ 683 01cc 41EB0105 		adc	r5, r1, r1
+ 684 01d0 C018     		adds	r0, r0, r3
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 685              		.loc 1 339 54 view .LVU180
+ 686 01d2 6FF00042 		mvn	r2, #-2147483648
+ 687 01d6 4FF00003 		mov	r3, #0
+ 688 01da 41EB0501 		adc	r1, r1, r5
+ 689 01de FFF7FEFF 		bl	__aeabi_uldivmod
+ 690              	.LVL35:
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 691              		.loc 1 339 28 view .LVU181
+ 692 01e2 6430     		adds	r0, r0, #100
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 693              		.loc 1 339 11 view .LVU182
+ 694 01e4 1D4D     		ldr	r5, .L32+12
+ 695 01e6 2B68     		ldr	r3, [r5]
+ 339:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y += (100  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 696              		.loc 1 339 19 view .LVU183
+ 697 01e8 1B1A     		subs	r3, r3, r0
+ 698 01ea 2B60     		str	r3, [r5]
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 699              		.loc 1 340 5 is_stmt 1 view .LVU184
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 700              		.loc 1 340 41 is_stmt 0 view .LVU185
+ 701 01ec FFF7FEFF 		bl	rand
+ 702              	.LVL36:
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 703              		.loc 1 340 31 view .LVU186
+ 704 01f0 C217     		asrs	r2, r0, #31
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 22
+
+
+ 705              		.loc 1 340 49 view .LVU187
+ 706 01f2 A4FB0031 		umull	r3, r1, r4, r0
+ 707 01f6 04FB0211 		mla	r1, r4, r2, r1
+ 708 01fa 8E00     		lsls	r6, r1, #2
+ 709 01fc 46EA9376 		orr	r6, r6, r3, lsr #30
+ 710 0200 9800     		lsls	r0, r3, #2
+ 711 0202 C018     		adds	r0, r0, r3
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 712              		.loc 1 340 54 view .LVU188
+ 713 0204 6FF00042 		mvn	r2, #-2147483648
+ 714 0208 4FF00003 		mov	r3, #0
+ 715 020c 41EB0601 		adc	r1, r1, r6
+ 716 0210 FFF7FEFF 		bl	__aeabi_uldivmod
+ 717              	.LVL37:
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 718              		.loc 1 340 28 view .LVU189
+ 719 0214 6430     		adds	r0, r0, #100
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 720              		.loc 1 340 11 view .LVU190
+ 721 0216 6B68     		ldr	r3, [r5, #4]
+ 340:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z -= (100  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 722              		.loc 1 340 19 view .LVU191
+ 723 0218 0344     		add	r3, r3, r0
+ 724 021a 6B60     		str	r3, [r5, #4]
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 725              		.loc 1 341 5 is_stmt 1 view .LVU192
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 726              		.loc 1 341 41 is_stmt 0 view .LVU193
+ 727 021c FFF7FEFF 		bl	rand
+ 728              	.LVL38:
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 729              		.loc 1 341 31 view .LVU194
+ 730 0220 C217     		asrs	r2, r0, #31
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 731              		.loc 1 341 49 view .LVU195
+ 732 0222 A4FB0031 		umull	r3, r1, r4, r0
+ 733 0226 04FB0211 		mla	r1, r4, r2, r1
+ 734 022a CC00     		lsls	r4, r1, #3
+ 735              	.LVL39:
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 736              		.loc 1 341 49 view .LVU196
+ 737 022c 44EA5374 		orr	r4, r4, r3, lsr #29
+ 738 0230 D800     		lsls	r0, r3, #3
+ 739 0232 C01A     		subs	r0, r0, r3
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 740              		.loc 1 341 54 view .LVU197
+ 741 0234 6FF00042 		mvn	r2, #-2147483648
+ 742 0238 4FF00003 		mov	r3, #0
+ 743 023c 64EB0101 		sbc	r1, r4, r1
+ 744 0240 FFF7FEFF 		bl	__aeabi_uldivmod
+ 745              	.LVL40:
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 746              		.loc 1 341 28 view .LVU198
+ 747 0244 6430     		adds	r0, r0, #100
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 748              		.loc 1 341 11 view .LVU199
+ 749 0246 AB68     		ldr	r3, [r5, #8]
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 23
+
+
+ 341:Core/Src/app_bluenrg_ms.c ****   }
+ 750              		.loc 1 341 19 view .LVU200
+ 751 0248 1B1A     		subs	r3, r3, r0
+ 752 024a AB60     		str	r3, [r5, #8]
+ 753              	.L28:
+ 359:Core/Src/app_bluenrg_ms.c **** 
+ 754              		.loc 1 359 1 view .LVU201
+ 755 024c 70BD     		pop	{r4, r5, r6, pc}
+ 756              	.L33:
+ 757 024e 00BF     		.align	2
+ 758              	.L32:
+ 759 0250 00000000 		.word	x_axes
+ 760 0254 00000000 		.word	g_axes
+ 761 0258 00000000 		.word	m_axes
+ 762 025c 00000000 		.word	q_axes
+ 763              	.LVL41:
+ 764              	.L29:
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 765              		.loc 1 344 5 is_stmt 1 view .LVU202
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 766              		.loc 1 344 41 is_stmt 0 view .LVU203
+ 767 0260 FFF7FEFF 		bl	rand
+ 768              	.LVL42:
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 769              		.loc 1 344 31 view .LVU204
+ 770 0264 C217     		asrs	r2, r0, #31
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 771              		.loc 1 344 49 view .LVU205
+ 772 0266 A0FB0431 		umull	r3, r1, r0, r4
+ 773 026a 04FB0211 		mla	r1, r4, r2, r1
+ 774 026e D818     		adds	r0, r3, r3
+ 775 0270 41EB0105 		adc	r5, r1, r1
+ 776 0274 C018     		adds	r0, r0, r3
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 777              		.loc 1 344 54 view .LVU206
+ 778 0276 6FF00042 		mvn	r2, #-2147483648
+ 779 027a 4FF00003 		mov	r3, #0
+ 780 027e 41EB0501 		adc	r1, r1, r5
+ 781 0282 FFF7FEFF 		bl	__aeabi_uldivmod
+ 782              	.LVL43:
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 783              		.loc 1 344 22 view .LVU207
+ 784 0286 6FF00906 		mvn	r6, #9
+ 785 028a 301A     		subs	r0, r6, r0
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 786              		.loc 1 344 11 view .LVU208
+ 787 028c 864D     		ldr	r5, .L34
+ 788 028e 2B68     		ldr	r3, [r5]
+ 344:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Y +=  (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 789              		.loc 1 344 19 view .LVU209
+ 790 0290 0344     		add	r3, r3, r0
+ 791 0292 2B60     		str	r3, [r5]
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 792              		.loc 1 345 5 is_stmt 1 view .LVU210
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 793              		.loc 1 345 41 is_stmt 0 view .LVU211
+ 794 0294 FFF7FEFF 		bl	rand
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 24
+
+
+ 795              	.LVL44:
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 796              		.loc 1 345 31 view .LVU212
+ 797 0298 C217     		asrs	r2, r0, #31
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 798              		.loc 1 345 49 view .LVU213
+ 799 029a A4FB0031 		umull	r3, r1, r4, r0
+ 800 029e 04FB0211 		mla	r1, r4, r2, r1
+ 801 02a2 4FEA810C 		lsl	ip, r1, #2
+ 802 02a6 4CEA937C 		orr	ip, ip, r3, lsr #30
+ 803 02aa 9800     		lsls	r0, r3, #2
+ 804 02ac C018     		adds	r0, r0, r3
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 805              		.loc 1 345 54 view .LVU214
+ 806 02ae 6FF00042 		mvn	r2, #-2147483648
+ 807 02b2 4FF00003 		mov	r3, #0
+ 808 02b6 41EB0C01 		adc	r1, r1, ip
+ 809 02ba FFF7FEFF 		bl	__aeabi_uldivmod
+ 810              	.LVL45:
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 811              		.loc 1 345 28 view .LVU215
+ 812 02be 0A30     		adds	r0, r0, #10
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 813              		.loc 1 345 11 view .LVU216
+ 814 02c0 6B68     		ldr	r3, [r5, #4]
+ 345:Core/Src/app_bluenrg_ms.c ****     x_axes.AXIS_Z += -(10  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 815              		.loc 1 345 19 view .LVU217
+ 816 02c2 0344     		add	r3, r3, r0
+ 817 02c4 6B60     		str	r3, [r5, #4]
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 818              		.loc 1 346 5 is_stmt 1 view .LVU218
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 819              		.loc 1 346 41 is_stmt 0 view .LVU219
+ 820 02c6 FFF7FEFF 		bl	rand
+ 821              	.LVL46:
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 822              		.loc 1 346 31 view .LVU220
+ 823 02ca C217     		asrs	r2, r0, #31
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 824              		.loc 1 346 49 view .LVU221
+ 825 02cc A4FB0031 		umull	r3, r1, r4, r0
+ 826 02d0 04FB0211 		mla	r1, r4, r2, r1
+ 827 02d4 4FEAC10C 		lsl	ip, r1, #3
+ 828 02d8 4CEA537C 		orr	ip, ip, r3, lsr #29
+ 829 02dc D800     		lsls	r0, r3, #3
+ 830 02de C01A     		subs	r0, r0, r3
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 831              		.loc 1 346 54 view .LVU222
+ 832 02e0 6FF00042 		mvn	r2, #-2147483648
+ 833 02e4 4FF00003 		mov	r3, #0
+ 834 02e8 6CEB0101 		sbc	r1, ip, r1
+ 835 02ec FFF7FEFF 		bl	__aeabi_uldivmod
+ 836              	.LVL47:
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 837              		.loc 1 346 22 view .LVU223
+ 838 02f0 361A     		subs	r6, r6, r0
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 25
+
+
+ 839              		.loc 1 346 11 view .LVU224
+ 840 02f2 AB68     		ldr	r3, [r5, #8]
+ 346:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_X += -(100 + ((uint64_t)rand()*2*cnt)/RAND_MAX);
+ 841              		.loc 1 346 19 view .LVU225
+ 842 02f4 3344     		add	r3, r3, r6
+ 843 02f6 AB60     		str	r3, [r5, #8]
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 844              		.loc 1 347 5 is_stmt 1 view .LVU226
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 845              		.loc 1 347 41 is_stmt 0 view .LVU227
+ 846 02f8 FFF7FEFF 		bl	rand
+ 847              	.LVL48:
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 848              		.loc 1 347 31 view .LVU228
+ 849 02fc C317     		asrs	r3, r0, #31
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 850              		.loc 1 347 49 view .LVU229
+ 851 02fe A4FB0001 		umull	r0, r1, r4, r0
+ 852 0302 04FB0311 		mla	r1, r4, r3, r1
+ 853 0306 0018     		adds	r0, r0, r0
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 854              		.loc 1 347 54 view .LVU230
+ 855 0308 6FF00042 		mvn	r2, #-2147483648
+ 856 030c 4FF00003 		mov	r3, #0
+ 857 0310 4941     		adcs	r1, r1, r1
+ 858 0312 FFF7FEFF 		bl	__aeabi_uldivmod
+ 859              	.LVL49:
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 860              		.loc 1 347 22 view .LVU231
+ 861 0316 6FF06306 		mvn	r6, #99
+ 862 031a 301A     		subs	r0, r6, r0
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 863              		.loc 1 347 11 view .LVU232
+ 864 031c 634D     		ldr	r5, .L34+4
+ 865 031e 2B68     		ldr	r3, [r5]
+ 347:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Y +=  (100 + ((uint64_t)rand()*4*cnt)/RAND_MAX);
+ 866              		.loc 1 347 19 view .LVU233
+ 867 0320 0344     		add	r3, r3, r0
+ 868 0322 2B60     		str	r3, [r5]
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 869              		.loc 1 348 5 is_stmt 1 view .LVU234
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 870              		.loc 1 348 41 is_stmt 0 view .LVU235
+ 871 0324 FFF7FEFF 		bl	rand
+ 872              	.LVL50:
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 873              		.loc 1 348 31 view .LVU236
+ 874 0328 C317     		asrs	r3, r0, #31
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 875              		.loc 1 348 49 view .LVU237
+ 876 032a A4FB00C1 		umull	ip, r1, r4, r0
+ 877 032e 04FB0311 		mla	r1, r4, r3, r1
+ 878 0332 8900     		lsls	r1, r1, #2
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 879              		.loc 1 348 54 view .LVU238
+ 880 0334 6FF00042 		mvn	r2, #-2147483648
+ 881 0338 0023     		movs	r3, #0
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 26
+
+
+ 882 033a 4FEA8C00 		lsl	r0, ip, #2
+ 883 033e 41EA9C71 		orr	r1, r1, ip, lsr #30
+ 884 0342 FFF7FEFF 		bl	__aeabi_uldivmod
+ 885              	.LVL51:
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 886              		.loc 1 348 28 view .LVU239
+ 887 0346 6430     		adds	r0, r0, #100
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 888              		.loc 1 348 11 view .LVU240
+ 889 0348 6B68     		ldr	r3, [r5, #4]
+ 348:Core/Src/app_bluenrg_ms.c ****     g_axes.AXIS_Z += -(100 + ((uint64_t)rand()*6*cnt)/RAND_MAX);
+ 890              		.loc 1 348 19 view .LVU241
+ 891 034a 0344     		add	r3, r3, r0
+ 892 034c 6B60     		str	r3, [r5, #4]
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 893              		.loc 1 349 5 is_stmt 1 view .LVU242
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 894              		.loc 1 349 41 is_stmt 0 view .LVU243
+ 895 034e FFF7FEFF 		bl	rand
+ 896              	.LVL52:
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 897              		.loc 1 349 31 view .LVU244
+ 898 0352 C217     		asrs	r2, r0, #31
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 899              		.loc 1 349 49 view .LVU245
+ 900 0354 A4FB0031 		umull	r3, r1, r4, r0
+ 901 0358 04FB0211 		mla	r1, r4, r2, r1
+ 902 035c D818     		adds	r0, r3, r3
+ 903 035e 41EB0102 		adc	r2, r1, r1
+ 904 0362 C018     		adds	r0, r0, r3
+ 905 0364 41EB0201 		adc	r1, r1, r2
+ 906 0368 0018     		adds	r0, r0, r0
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 907              		.loc 1 349 54 view .LVU246
+ 908 036a 6FF00042 		mvn	r2, #-2147483648
+ 909 036e 4FF00003 		mov	r3, #0
+ 910 0372 4941     		adcs	r1, r1, r1
+ 911 0374 FFF7FEFF 		bl	__aeabi_uldivmod
+ 912              	.LVL53:
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 913              		.loc 1 349 22 view .LVU247
+ 914 0378 361A     		subs	r6, r6, r0
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 915              		.loc 1 349 11 view .LVU248
+ 916 037a AB68     		ldr	r3, [r5, #8]
+ 349:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_X += -(3  + ((uint64_t)rand()*7*cnt)/RAND_MAX);
+ 917              		.loc 1 349 19 view .LVU249
+ 918 037c 3344     		add	r3, r3, r6
+ 919 037e AB60     		str	r3, [r5, #8]
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 920              		.loc 1 350 5 is_stmt 1 view .LVU250
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 921              		.loc 1 350 40 is_stmt 0 view .LVU251
+ 922 0380 FFF7FEFF 		bl	rand
+ 923              	.LVL54:
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 924              		.loc 1 350 30 view .LVU252
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 27
+
+
+ 925 0384 C217     		asrs	r2, r0, #31
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 926              		.loc 1 350 48 view .LVU253
+ 927 0386 A4FB0031 		umull	r3, r1, r4, r0
+ 928 038a 04FB0211 		mla	r1, r4, r2, r1
+ 929 038e CD00     		lsls	r5, r1, #3
+ 930 0390 45EA5375 		orr	r5, r5, r3, lsr #29
+ 931 0394 D800     		lsls	r0, r3, #3
+ 932 0396 C01A     		subs	r0, r0, r3
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 933              		.loc 1 350 53 view .LVU254
+ 934 0398 6FF00042 		mvn	r2, #-2147483648
+ 935 039c 4FF00003 		mov	r3, #0
+ 936 03a0 65EB0101 		sbc	r1, r5, r1
+ 937 03a4 FFF7FEFF 		bl	__aeabi_uldivmod
+ 938              	.LVL55:
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 939              		.loc 1 350 22 view .LVU255
+ 940 03a8 6FF00206 		mvn	r6, #2
+ 941 03ac 301A     		subs	r0, r6, r0
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 942              		.loc 1 350 11 view .LVU256
+ 943 03ae 404D     		ldr	r5, .L34+8
+ 944 03b0 2B68     		ldr	r3, [r5]
+ 350:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Y +=  (3  + ((uint64_t)rand()*9*cnt)/RAND_MAX);
+ 945              		.loc 1 350 19 view .LVU257
+ 946 03b2 0344     		add	r3, r3, r0
+ 947 03b4 2B60     		str	r3, [r5]
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 948              		.loc 1 351 5 is_stmt 1 view .LVU258
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 949              		.loc 1 351 40 is_stmt 0 view .LVU259
+ 950 03b6 FFF7FEFF 		bl	rand
+ 951              	.LVL56:
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 952              		.loc 1 351 30 view .LVU260
+ 953 03ba C217     		asrs	r2, r0, #31
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 954              		.loc 1 351 48 view .LVU261
+ 955 03bc A4FB0031 		umull	r3, r1, r4, r0
+ 956 03c0 04FB0211 		mla	r1, r4, r2, r1
+ 957 03c4 4FEAC10C 		lsl	ip, r1, #3
+ 958 03c8 4CEA537C 		orr	ip, ip, r3, lsr #29
+ 959 03cc D800     		lsls	r0, r3, #3
+ 960 03ce C018     		adds	r0, r0, r3
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 961              		.loc 1 351 53 view .LVU262
+ 962 03d0 6FF00042 		mvn	r2, #-2147483648
+ 963 03d4 4FF00003 		mov	r3, #0
+ 964 03d8 41EB0C01 		adc	r1, r1, ip
+ 965 03dc FFF7FEFF 		bl	__aeabi_uldivmod
+ 966              	.LVL57:
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 967              		.loc 1 351 27 view .LVU263
+ 968 03e0 0330     		adds	r0, r0, #3
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 969              		.loc 1 351 11 view .LVU264
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 28
+
+
+ 970 03e2 6B68     		ldr	r3, [r5, #4]
+ 351:Core/Src/app_bluenrg_ms.c ****     m_axes.AXIS_Z += -(3  + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 971              		.loc 1 351 19 view .LVU265
+ 972 03e4 0344     		add	r3, r3, r0
+ 973 03e6 6B60     		str	r3, [r5, #4]
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 974              		.loc 1 352 5 is_stmt 1 view .LVU266
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 975              		.loc 1 352 40 is_stmt 0 view .LVU267
+ 976 03e8 FFF7FEFF 		bl	rand
+ 977              	.LVL58:
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 978              		.loc 1 352 30 view .LVU268
+ 979 03ec C217     		asrs	r2, r0, #31
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 980              		.loc 1 352 48 view .LVU269
+ 981 03ee A4FB0031 		umull	r3, r1, r4, r0
+ 982 03f2 04FB0211 		mla	r1, r4, r2, r1
+ 983 03f6 D818     		adds	r0, r3, r3
+ 984 03f8 41EB010C 		adc	ip, r1, r1
+ 985 03fc C018     		adds	r0, r0, r3
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 986              		.loc 1 352 53 view .LVU270
+ 987 03fe 6FF00042 		mvn	r2, #-2147483648
+ 988 0402 4FF00003 		mov	r3, #0
+ 989 0406 41EB0C01 		adc	r1, r1, ip
+ 990 040a FFF7FEFF 		bl	__aeabi_uldivmod
+ 991              	.LVL59:
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 992              		.loc 1 352 22 view .LVU271
+ 993 040e 361A     		subs	r6, r6, r0
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 994              		.loc 1 352 11 view .LVU272
+ 995 0410 AB68     		ldr	r3, [r5, #8]
+ 352:Core/Src/app_bluenrg_ms.c **** 
+ 996              		.loc 1 352 19 view .LVU273
+ 997 0412 3344     		add	r3, r3, r6
+ 998 0414 AB60     		str	r3, [r5, #8]
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 999              		.loc 1 354 5 is_stmt 1 view .LVU274
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1000              		.loc 1 354 40 is_stmt 0 view .LVU275
+ 1001 0416 FFF7FEFF 		bl	rand
+ 1002              	.LVL60:
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1003              		.loc 1 354 30 view .LVU276
+ 1004 041a C217     		asrs	r2, r0, #31
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1005              		.loc 1 354 48 view .LVU277
+ 1006 041c A4FB0031 		umull	r3, r1, r4, r0
+ 1007 0420 04FB0211 		mla	r1, r4, r2, r1
+ 1008 0424 CD00     		lsls	r5, r1, #3
+ 1009 0426 45EA5375 		orr	r5, r5, r3, lsr #29
+ 1010 042a D800     		lsls	r0, r3, #3
+ 1011 042c C01A     		subs	r0, r0, r3
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1012              		.loc 1 354 53 view .LVU278
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 29
+
+
+ 1013 042e 6FF00042 		mvn	r2, #-2147483648
+ 1014 0432 4FF00003 		mov	r3, #0
+ 1015 0436 65EB0101 		sbc	r1, r5, r1
+ 1016 043a FFF7FEFF 		bl	__aeabi_uldivmod
+ 1017              	.LVL61:
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1018              		.loc 1 354 27 view .LVU279
+ 1019 043e C830     		adds	r0, r0, #200
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1020              		.loc 1 354 11 view .LVU280
+ 1021 0440 1C4D     		ldr	r5, .L34+12
+ 1022 0442 2B68     		ldr	r3, [r5]
+ 354:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Y -= (150 + ((uint64_t)rand()*3*cnt)/RAND_MAX);
+ 1023              		.loc 1 354 19 view .LVU281
+ 1024 0444 0344     		add	r3, r3, r0
+ 1025 0446 2B60     		str	r3, [r5]
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1026              		.loc 1 355 5 is_stmt 1 view .LVU282
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1027              		.loc 1 355 40 is_stmt 0 view .LVU283
+ 1028 0448 FFF7FEFF 		bl	rand
+ 1029              	.LVL62:
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1030              		.loc 1 355 30 view .LVU284
+ 1031 044c C217     		asrs	r2, r0, #31
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1032              		.loc 1 355 48 view .LVU285
+ 1033 044e A4FB0031 		umull	r3, r1, r4, r0
+ 1034 0452 04FB0211 		mla	r1, r4, r2, r1
+ 1035 0456 D818     		adds	r0, r3, r3
+ 1036 0458 41EB0106 		adc	r6, r1, r1
+ 1037 045c C018     		adds	r0, r0, r3
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1038              		.loc 1 355 53 view .LVU286
+ 1039 045e 6FF00042 		mvn	r2, #-2147483648
+ 1040 0462 4FF00003 		mov	r3, #0
+ 1041 0466 41EB0601 		adc	r1, r1, r6
+ 1042 046a FFF7FEFF 		bl	__aeabi_uldivmod
+ 1043              	.LVL63:
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1044              		.loc 1 355 27 view .LVU287
+ 1045 046e 9630     		adds	r0, r0, #150
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1046              		.loc 1 355 11 view .LVU288
+ 1047 0470 6B68     		ldr	r3, [r5, #4]
+ 355:Core/Src/app_bluenrg_ms.c ****     q_axes.AXIS_Z += (10  + ((uint64_t)rand()*5*cnt)/RAND_MAX);
+ 1048              		.loc 1 355 19 view .LVU289
+ 1049 0472 1B1A     		subs	r3, r3, r0
+ 1050 0474 6B60     		str	r3, [r5, #4]
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1051              		.loc 1 356 5 is_stmt 1 view .LVU290
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1052              		.loc 1 356 40 is_stmt 0 view .LVU291
+ 1053 0476 FFF7FEFF 		bl	rand
+ 1054              	.LVL64:
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1055              		.loc 1 356 30 view .LVU292
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 30
+
+
+ 1056 047a C217     		asrs	r2, r0, #31
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1057              		.loc 1 356 48 view .LVU293
+ 1058 047c A4FB0031 		umull	r3, r1, r4, r0
+ 1059 0480 04FB0211 		mla	r1, r4, r2, r1
+ 1060 0484 8C00     		lsls	r4, r1, #2
+ 1061              	.LVL65:
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1062              		.loc 1 356 48 view .LVU294
+ 1063 0486 44EA9374 		orr	r4, r4, r3, lsr #30
+ 1064 048a 9800     		lsls	r0, r3, #2
+ 1065 048c C018     		adds	r0, r0, r3
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1066              		.loc 1 356 53 view .LVU295
+ 1067 048e 6FF00042 		mvn	r2, #-2147483648
+ 1068 0492 4FF00003 		mov	r3, #0
+ 1069 0496 41EB0401 		adc	r1, r1, r4
+ 1070 049a FFF7FEFF 		bl	__aeabi_uldivmod
+ 1071              	.LVL66:
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1072              		.loc 1 356 27 view .LVU296
+ 1073 049e 0A30     		adds	r0, r0, #10
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1074              		.loc 1 356 11 view .LVU297
+ 1075 04a0 AB68     		ldr	r3, [r5, #8]
+ 356:Core/Src/app_bluenrg_ms.c ****   }
+ 1076              		.loc 1 356 19 view .LVU298
+ 1077 04a2 0344     		add	r3, r3, r0
+ 1078 04a4 AB60     		str	r3, [r5, #8]
+ 359:Core/Src/app_bluenrg_ms.c **** 
+ 1079              		.loc 1 359 1 view .LVU299
+ 1080 04a6 D1E6     		b	.L28
+ 1081              	.L35:
+ 1082              		.align	2
+ 1083              	.L34:
+ 1084 04a8 00000000 		.word	x_axes
+ 1085 04ac 00000000 		.word	g_axes
+ 1086 04b0 00000000 		.word	m_axes
+ 1087 04b4 00000000 		.word	q_axes
+ 1088              		.cfi_endproc
+ 1089              	.LFE137:
+ 1091              		.section	.text.User_Process,"ax",%progbits
+ 1092              		.align	1
+ 1093              		.syntax unified
+ 1094              		.thumb
+ 1095              		.thumb_func
+ 1097              	User_Process:
+ 1098              	.LFB135:
+ 252:Core/Src/app_bluenrg_ms.c ****   float data_t;
+ 1099              		.loc 1 252 1 is_stmt 1 view -0
+ 1100              		.cfi_startproc
+ 1101              		@ args = 0, pretend = 0, frame = 8
+ 1102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1103 0000 10B5     		push	{r4, lr}
+ 1104              	.LCFI3:
+ 1105              		.cfi_def_cfa_offset 8
+ 1106              		.cfi_offset 4, -8
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 31
+
+
+ 1107              		.cfi_offset 14, -4
+ 1108 0002 82B0     		sub	sp, sp, #8
+ 1109              	.LCFI4:
+ 1110              		.cfi_def_cfa_offset 16
+ 253:Core/Src/app_bluenrg_ms.c ****   float data_p;
+ 1111              		.loc 1 253 3 view .LVU301
+ 254:Core/Src/app_bluenrg_ms.c ****   static uint32_t counter = 0;
+ 1112              		.loc 1 254 3 view .LVU302
+ 255:Core/Src/app_bluenrg_ms.c **** 
+ 1113              		.loc 1 255 3 view .LVU303
+ 257:Core/Src/app_bluenrg_ms.c ****   {
+ 1114              		.loc 1 257 3 view .LVU304
+ 257:Core/Src/app_bluenrg_ms.c ****   {
+ 1115              		.loc 1 257 7 is_stmt 0 view .LVU305
+ 1116 0004 254B     		ldr	r3, .L44
+ 1117 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 257:Core/Src/app_bluenrg_ms.c ****   {
+ 1118              		.loc 1 257 6 view .LVU306
+ 1119 0008 3BB9     		cbnz	r3, .L41
+ 1120              	.L37:
+ 276:Core/Src/app_bluenrg_ms.c **** 
+ 1121              		.loc 1 276 5 is_stmt 1 view .LVU307
+ 1122 000a 0020     		movs	r0, #0
+ 1123 000c FFF7FEFF 		bl	BSP_LED_Toggle
+ 1124              	.LVL67:
+ 278:Core/Src/app_bluenrg_ms.c ****     {
+ 1125              		.loc 1 278 5 view .LVU308
+ 278:Core/Src/app_bluenrg_ms.c ****     {
+ 1126              		.loc 1 278 9 is_stmt 0 view .LVU309
+ 1127 0010 234B     		ldr	r3, .L44+4
+ 1128 0012 1B68     		ldr	r3, [r3]
+ 278:Core/Src/app_bluenrg_ms.c ****     {
+ 1129              		.loc 1 278 8 view .LVU310
+ 1130 0014 3BB9     		cbnz	r3, .L42
+ 1131              	.L36:
+ 306:Core/Src/app_bluenrg_ms.c **** 
+ 1132              		.loc 1 306 1 view .LVU311
+ 1133 0016 02B0     		add	sp, sp, #8
+ 1134              	.LCFI5:
+ 1135              		.cfi_remember_state
+ 1136              		.cfi_def_cfa_offset 8
+ 1137              		@ sp needed
+ 1138 0018 10BD     		pop	{r4, pc}
+ 1139              	.L41:
+ 1140              	.LCFI6:
+ 1141              		.cfi_restore_state
+ 259:Core/Src/app_bluenrg_ms.c ****     set_connectable = FALSE;
+ 1142              		.loc 1 259 5 is_stmt 1 view .LVU312
+ 1143 001a FFF7FEFF 		bl	Set_DeviceConnectable
+ 1144              	.LVL68:
+ 260:Core/Src/app_bluenrg_ms.c ****   }
+ 1145              		.loc 1 260 5 view .LVU313
+ 260:Core/Src/app_bluenrg_ms.c ****   }
+ 1146              		.loc 1 260 21 is_stmt 0 view .LVU314
+ 1147 001e 1F4B     		ldr	r3, .L44
+ 1148 0020 0022     		movs	r2, #0
+ 1149 0022 1A70     		strb	r2, [r3]
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 32
+
+
+ 1150 0024 F1E7     		b	.L37
+ 1151              	.L42:
+ 281:Core/Src/app_bluenrg_ms.c **** 
+ 1152              		.loc 1 281 7 is_stmt 1 view .LVU315
+ 281:Core/Src/app_bluenrg_ms.c **** 
+ 1153              		.loc 1 281 13 is_stmt 0 view .LVU316
+ 1154 0026 FFF7FEFF 		bl	HAL_GetTick
+ 1155              	.LVL69:
+ 281:Core/Src/app_bluenrg_ms.c **** 
+ 1156              		.loc 1 281 7 view .LVU317
+ 1157 002a FFF7FEFF 		bl	srand
+ 1158              	.LVL70:
+ 284:Core/Src/app_bluenrg_ms.c ****       BlueMS_Environmental_Update((int32_t)(data_p *100), (int16_t)(data_t * 10));
+ 1159              		.loc 1 284 7 is_stmt 1 view .LVU318
+ 1160 002e 6946     		mov	r1, sp
+ 1161 0030 01A8     		add	r0, sp, #4
+ 1162 0032 FFF7FEFF 		bl	Set_Random_Environmental_Values
+ 1163              	.LVL71:
+ 285:Core/Src/app_bluenrg_ms.c **** 
+ 1164              		.loc 1 285 7 view .LVU319
+ 285:Core/Src/app_bluenrg_ms.c **** 
+ 1165              		.loc 1 285 52 is_stmt 0 view .LVU320
+ 1166 0036 9DED007A 		vldr.32	s14, [sp]
+ 1167 003a DFED1A7A 		vldr.32	s15, .L44+8
+ 1168 003e 27EE277A 		vmul.f32	s14, s14, s15
+ 285:Core/Src/app_bluenrg_ms.c **** 
+ 1169              		.loc 1 285 76 view .LVU321
+ 1170 0042 DDED017A 		vldr.32	s15, [sp, #4]
+ 1171 0046 F2EE046A 		vmov.f32	s13, #1.0e+1
+ 1172 004a 67EEA67A 		vmul.f32	s15, s15, s13
+ 285:Core/Src/app_bluenrg_ms.c **** 
+ 1173              		.loc 1 285 7 view .LVU322
+ 1174 004e FDEEE77A 		vcvt.s32.f32	s15, s15
+ 1175 0052 17EE903A 		vmov	r3, s15	@ int
+ 1176 0056 19B2     		sxth	r1, r3
+ 1177 0058 FDEEC77A 		vcvt.s32.f32	s15, s14
+ 1178 005c 17EE900A 		vmov	r0, s15	@ int
+ 1179 0060 FFF7FEFF 		bl	BlueMS_Environmental_Update
+ 1180              	.LVL72:
+ 288:Core/Src/app_bluenrg_ms.c ****       Acc_Update(&x_axes, &g_axes, &m_axes);
+ 1181              		.loc 1 288 7 is_stmt 1 view .LVU323
+ 1182 0064 104C     		ldr	r4, .L44+12
+ 1183 0066 2068     		ldr	r0, [r4]
+ 1184 0068 FFF7FEFF 		bl	Set_Random_Motion_Values
+ 1185              	.LVL73:
+ 289:Core/Src/app_bluenrg_ms.c ****       Quat_Update(&q_axes);
+ 1186              		.loc 1 289 7 view .LVU324
+ 1187 006c 0F4A     		ldr	r2, .L44+16
+ 1188 006e 1049     		ldr	r1, .L44+20
+ 1189 0070 1048     		ldr	r0, .L44+24
+ 1190 0072 FFF7FEFF 		bl	Acc_Update
+ 1191              	.LVL74:
+ 290:Core/Src/app_bluenrg_ms.c **** 
+ 1192              		.loc 1 290 7 view .LVU325
+ 1193 0076 1048     		ldr	r0, .L44+28
+ 1194 0078 FFF7FEFF 		bl	Quat_Update
+ 1195              	.LVL75:
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 33
+
+
+ 292:Core/Src/app_bluenrg_ms.c ****       if (counter == 40) {
+ 1196              		.loc 1 292 7 view .LVU326
+ 292:Core/Src/app_bluenrg_ms.c ****       if (counter == 40) {
+ 1197              		.loc 1 292 15 is_stmt 0 view .LVU327
+ 1198 007c 2368     		ldr	r3, [r4]
+ 1199 007e 0133     		adds	r3, r3, #1
+ 1200 0080 2360     		str	r3, [r4]
+ 293:Core/Src/app_bluenrg_ms.c ****         counter = 0;
+ 1201              		.loc 1 293 7 is_stmt 1 view .LVU328
+ 293:Core/Src/app_bluenrg_ms.c ****         counter = 0;
+ 1202              		.loc 1 293 10 is_stmt 0 view .LVU329
+ 1203 0082 282B     		cmp	r3, #40
+ 1204 0084 04D0     		beq	.L43
+ 1205              	.L39:
+ 298:Core/Src/app_bluenrg_ms.c **** #endif
+ 1206              		.loc 1 298 7 is_stmt 1 view .LVU330
+ 1207 0086 4FF47A70 		mov	r0, #1000
+ 1208 008a FFF7FEFF 		bl	HAL_Delay
+ 1209              	.LVL76:
+ 306:Core/Src/app_bluenrg_ms.c **** 
+ 1210              		.loc 1 306 1 is_stmt 0 view .LVU331
+ 1211 008e C2E7     		b	.L36
+ 1212              	.L43:
+ 294:Core/Src/app_bluenrg_ms.c ****         Reset_Motion_Values();
+ 1213              		.loc 1 294 9 is_stmt 1 view .LVU332
+ 294:Core/Src/app_bluenrg_ms.c ****         Reset_Motion_Values();
+ 1214              		.loc 1 294 17 is_stmt 0 view .LVU333
+ 1215 0090 0022     		movs	r2, #0
+ 1216 0092 2260     		str	r2, [r4]
+ 295:Core/Src/app_bluenrg_ms.c ****       }
+ 1217              		.loc 1 295 9 is_stmt 1 view .LVU334
+ 1218 0094 FFF7FEFF 		bl	Reset_Motion_Values
+ 1219              	.LVL77:
+ 1220 0098 F5E7     		b	.L39
+ 1221              	.L45:
+ 1222 009a 00BF     		.align	2
+ 1223              	.L44:
+ 1224 009c 00000000 		.word	set_connectable
+ 1225 00a0 00000000 		.word	connected
+ 1226 00a4 0000C842 		.word	1120403456
+ 1227 00a8 00000000 		.word	counter.0
+ 1228 00ac 00000000 		.word	m_axes
+ 1229 00b0 00000000 		.word	g_axes
+ 1230 00b4 00000000 		.word	x_axes
+ 1231 00b8 00000000 		.word	q_axes
+ 1232              		.cfi_endproc
+ 1233              	.LFE135:
+ 1235              		.section	.rodata.MX_BlueNRG_MS_Init.str1.4,"aMS",%progbits,1
+ 1236              		.align	2
+ 1237              	.LC0:
+ 1238 0000 426C7565 		.ascii	"BlueNRG\000"
+ 1238      4E524700 
+ 1239              		.section	.text.MX_BlueNRG_MS_Init,"ax",%progbits
+ 1240              		.align	1
+ 1241              		.global	MX_BlueNRG_MS_Init
+ 1242              		.syntax unified
+ 1243              		.thumb
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 34
+
+
+ 1244              		.thumb_func
+ 1246              	MX_BlueNRG_MS_Init:
+ 1247              	.LFB132:
+  96:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN SV */
+ 1248              		.loc 1 96 1 view -0
+ 1249              		.cfi_startproc
+ 1250              		@ args = 0, pretend = 0, frame = 16
+ 1251              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1252 0000 10B5     		push	{r4, lr}
+ 1253              	.LCFI7:
+ 1254              		.cfi_def_cfa_offset 8
+ 1255              		.cfi_offset 4, -8
+ 1256              		.cfi_offset 14, -4
+ 1257 0002 88B0     		sub	sp, sp, #32
+ 1258              	.LCFI8:
+ 1259              		.cfi_def_cfa_offset 40
+ 106:Core/Src/app_bluenrg_ms.c ****   uint16_t service_handle, dev_name_char_handle, appearance_char_handle;
+ 1260              		.loc 1 106 3 view .LVU336
+ 1261              	.LVL78:
+ 107:Core/Src/app_bluenrg_ms.c **** 
+ 1262              		.loc 1 107 3 view .LVU337
+ 109:Core/Src/app_bluenrg_ms.c ****   uint8_t  hwVersion;
+ 1263              		.loc 1 109 3 view .LVU338
+ 110:Core/Src/app_bluenrg_ms.c ****   uint16_t fwVersion;
+ 1264              		.loc 1 110 3 view .LVU339
+ 111:Core/Src/app_bluenrg_ms.c ****   int ret;
+ 1265              		.loc 1 111 3 view .LVU340
+ 112:Core/Src/app_bluenrg_ms.c **** 
+ 1266              		.loc 1 112 3 view .LVU341
+ 114:Core/Src/app_bluenrg_ms.c **** 
+ 1267              		.loc 1 114 3 view .LVU342
+ 1268 0004 FFF7FEFF 		bl	User_Init
+ 1269              	.LVL79:
+ 117:Core/Src/app_bluenrg_ms.c **** 
+ 1270              		.loc 1 117 3 view .LVU343
+ 117:Core/Src/app_bluenrg_ms.c **** 
+ 1271              		.loc 1 117 28 is_stmt 0 view .LVU344
+ 1272 0008 0020     		movs	r0, #0
+ 1273 000a FFF7FEFF 		bl	BSP_PB_GetState
+ 1274              	.LVL80:
+ 117:Core/Src/app_bluenrg_ms.c **** 
+ 1275              		.loc 1 117 26 view .LVU345
+ 1276 000e C3B2     		uxtb	r3, r0
+ 1277 0010 334A     		ldr	r2, .L62
+ 1278 0012 1370     		strb	r3, [r2]
+ 119:Core/Src/app_bluenrg_ms.c **** 
+ 1279              		.loc 1 119 3 is_stmt 1 view .LVU346
+ 1280 0014 0021     		movs	r1, #0
+ 1281 0016 3348     		ldr	r0, .L62+4
+ 1282 0018 FFF7FEFF 		bl	hci_init
+ 1283              	.LVL81:
+ 122:Core/Src/app_bluenrg_ms.c **** 
+ 1284              		.loc 1 122 3 view .LVU347
+ 1285 001c 0DF11601 		add	r1, sp, #22
+ 1286 0020 06A8     		add	r0, sp, #24
+ 1287 0022 FFF7FEFF 		bl	getBlueNRGVersion
+ 1288              	.LVL82:
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 35
+
+
+ 130:Core/Src/app_bluenrg_ms.c ****   HAL_Delay(100);
+ 1289              		.loc 1 130 3 view .LVU348
+ 1290 0026 FFF7FEFF 		bl	hci_reset
+ 1291              	.LVL83:
+ 131:Core/Src/app_bluenrg_ms.c **** 
+ 1292              		.loc 1 131 3 view .LVU349
+ 1293 002a 6420     		movs	r0, #100
+ 1294 002c FFF7FEFF 		bl	HAL_Delay
+ 1295              	.LVL84:
+ 133:Core/Src/app_bluenrg_ms.c ****   if (hwVersion > 0x30) { /* X-NUCLEO-IDB05A1 expansion board is used */
+ 1296              		.loc 1 133 55 view .LVU350
+ 134:Core/Src/app_bluenrg_ms.c ****     bnrg_expansion_board = IDB05A1;
+ 1297              		.loc 1 134 3 view .LVU351
+ 134:Core/Src/app_bluenrg_ms.c ****     bnrg_expansion_board = IDB05A1;
+ 1298              		.loc 1 134 17 is_stmt 0 view .LVU352
+ 1299 0030 9DF81830 		ldrb	r3, [sp, #24]	@ zero_extendqisi2
+ 134:Core/Src/app_bluenrg_ms.c ****     bnrg_expansion_board = IDB05A1;
+ 1300              		.loc 1 134 6 view .LVU353
+ 1301 0034 302B     		cmp	r3, #48
+ 1302 0036 02D9     		bls	.L47
+ 135:Core/Src/app_bluenrg_ms.c ****   }
+ 1303              		.loc 1 135 5 is_stmt 1 view .LVU354
+ 135:Core/Src/app_bluenrg_ms.c ****   }
+ 1304              		.loc 1 135 26 is_stmt 0 view .LVU355
+ 1305 0038 2B4B     		ldr	r3, .L62+8
+ 1306 003a 0122     		movs	r2, #1
+ 1307 003c 1A70     		strb	r2, [r3]
+ 1308              	.L47:
+ 138:Core/Src/app_bluenrg_ms.c **** 
+ 1309              		.loc 1 138 3 is_stmt 1 view .LVU356
+ 138:Core/Src/app_bluenrg_ms.c **** 
+ 1310              		.loc 1 138 9 is_stmt 0 view .LVU357
+ 1311 003e 2B4C     		ldr	r4, .L62+12
+ 1312 0040 2346     		mov	r3, r4
+ 1313 0042 0DF11902 		add	r2, sp, #25
+ 1314 0046 0621     		movs	r1, #6
+ 1315 0048 8020     		movs	r0, #128
+ 1316 004a FFF7FEFF 		bl	aci_hal_read_config_data
+ 1317              	.LVL85:
+ 140:Core/Src/app_bluenrg_ms.c ****     PRINTF("Read Static Random address failed.\n");
+ 1318              		.loc 1 140 3 is_stmt 1 view .LVU358
+ 141:Core/Src/app_bluenrg_ms.c ****   }
+ 1319              		.loc 1 141 51 view .LVU359
+ 144:Core/Src/app_bluenrg_ms.c ****     PRINTF("Static Random address not well formed.\n");
+ 1320              		.loc 1 144 3 view .LVU360
+ 144:Core/Src/app_bluenrg_ms.c ****     PRINTF("Static Random address not well formed.\n");
+ 1321              		.loc 1 144 14 is_stmt 0 view .LVU361
+ 1322 004e 6379     		ldrb	r3, [r4, #5]	@ zero_extendqisi2
+ 144:Core/Src/app_bluenrg_ms.c ****     PRINTF("Static Random address not well formed.\n");
+ 1323              		.loc 1 144 6 view .LVU362
+ 1324 0050 03F0C003 		and	r3, r3, #192
+ 1325 0054 C02B     		cmp	r3, #192
+ 1326 0056 00D0     		beq	.L48
+ 1327              	.L49:
+ 145:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 1328              		.loc 1 145 55 is_stmt 1 discriminator 1 view .LVU363
+ 146:Core/Src/app_bluenrg_ms.c ****   }
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 36
+
+
+ 1329              		.loc 1 146 5 discriminator 1 view .LVU364
+ 146:Core/Src/app_bluenrg_ms.c ****   }
+ 1330              		.loc 1 146 10 discriminator 1 view .LVU365
+ 1331 0058 FEE7     		b	.L49
+ 1332              	.L48:
+ 150:Core/Src/app_bluenrg_ms.c ****   if(ret){
+ 1333              		.loc 1 150 3 view .LVU366
+ 150:Core/Src/app_bluenrg_ms.c ****   if(ret){
+ 1334              		.loc 1 150 9 is_stmt 0 view .LVU367
+ 1335 005a FFF7FEFF 		bl	aci_gatt_init
+ 1336              	.LVL86:
+ 151:Core/Src/app_bluenrg_ms.c ****     PRINTF("GATT_Init failed.\n");
+ 1337              		.loc 1 151 3 is_stmt 1 view .LVU368
+ 152:Core/Src/app_bluenrg_ms.c ****   }
+ 1338              		.loc 1 152 34 view .LVU369
+ 156:Core/Src/app_bluenrg_ms.c ****     ret = aci_gap_init_IDB05A1(GAP_PERIPHERAL_ROLE_IDB05A1, 0, 0x07, &service_handle, &dev_name_cha
+ 1339              		.loc 1 156 3 view .LVU370
+ 156:Core/Src/app_bluenrg_ms.c ****     ret = aci_gap_init_IDB05A1(GAP_PERIPHERAL_ROLE_IDB05A1, 0, 0x07, &service_handle, &dev_name_cha
+ 1340              		.loc 1 156 28 is_stmt 0 view .LVU371
+ 1341 005e 224B     		ldr	r3, .L62+8
+ 1342 0060 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 156:Core/Src/app_bluenrg_ms.c ****     ret = aci_gap_init_IDB05A1(GAP_PERIPHERAL_ROLE_IDB05A1, 0, 0x07, &service_handle, &dev_name_cha
+ 1343              		.loc 1 156 6 view .LVU372
+ 1344 0062 012B     		cmp	r3, #1
+ 1345 0064 13D0     		beq	.L61
+ 160:Core/Src/app_bluenrg_ms.c ****   }
+ 1346              		.loc 1 160 5 is_stmt 1 view .LVU373
+ 160:Core/Src/app_bluenrg_ms.c ****   }
+ 1347              		.loc 1 160 11 is_stmt 0 view .LVU374
+ 1348 0066 0DF11A03 		add	r3, sp, #26
+ 1349 006a 07AA     		add	r2, sp, #28
+ 1350 006c 0DF11E01 		add	r1, sp, #30
+ 1351 0070 0120     		movs	r0, #1
+ 1352 0072 FFF7FEFF 		bl	aci_gap_init_IDB04A1
+ 1353              	.LVL87:
+ 1354              	.L51:
+ 162:Core/Src/app_bluenrg_ms.c ****     PRINTF("GAP_Init failed.\n");
+ 1355              		.loc 1 162 3 is_stmt 1 view .LVU375
+ 163:Core/Src/app_bluenrg_ms.c ****   }
+ 1356              		.loc 1 163 33 view .LVU376
+ 167:Core/Src/app_bluenrg_ms.c ****                                    strlen(name), (uint8_t *)name);
+ 1357              		.loc 1 167 3 view .LVU377
+ 167:Core/Src/app_bluenrg_ms.c ****                                    strlen(name), (uint8_t *)name);
+ 1358              		.loc 1 167 9 is_stmt 0 view .LVU378
+ 1359 0076 1E4B     		ldr	r3, .L62+16
+ 1360 0078 0093     		str	r3, [sp]
+ 1361 007a 0723     		movs	r3, #7
+ 1362 007c 0022     		movs	r2, #0
+ 1363 007e BDF81C10 		ldrh	r1, [sp, #28]
+ 1364 0082 BDF81E00 		ldrh	r0, [sp, #30]
+ 1365 0086 FFF7FEFF 		bl	aci_gatt_update_char_value
+ 1366              	.LVL88:
+ 169:Core/Src/app_bluenrg_ms.c ****     PRINTF("aci_gatt_update_char_value failed.\n");
+ 1367              		.loc 1 169 3 is_stmt 1 view .LVU379
+ 169:Core/Src/app_bluenrg_ms.c ****     PRINTF("aci_gatt_update_char_value failed.\n");
+ 1368              		.loc 1 169 6 is_stmt 0 view .LVU380
+ 1369 008a 68B1     		cbz	r0, .L52
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 37
+
+
+ 1370              	.L53:
+ 170:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 1371              		.loc 1 170 51 is_stmt 1 discriminator 2 view .LVU381
+ 171:Core/Src/app_bluenrg_ms.c ****   }
+ 1372              		.loc 1 171 5 discriminator 2 view .LVU382
+ 171:Core/Src/app_bluenrg_ms.c ****   }
+ 1373              		.loc 1 171 10 discriminator 2 view .LVU383
+ 1374 008c FEE7     		b	.L53
+ 1375              	.LVL89:
+ 1376              	.L61:
+ 157:Core/Src/app_bluenrg_ms.c ****   }
+ 1377              		.loc 1 157 5 view .LVU384
+ 157:Core/Src/app_bluenrg_ms.c ****   }
+ 1378              		.loc 1 157 11 is_stmt 0 view .LVU385
+ 1379 008e 0DF11A03 		add	r3, sp, #26
+ 1380 0092 0193     		str	r3, [sp, #4]
+ 1381 0094 07AB     		add	r3, sp, #28
+ 1382 0096 0093     		str	r3, [sp]
+ 1383 0098 0DF11E03 		add	r3, sp, #30
+ 1384 009c 0722     		movs	r2, #7
+ 1385 009e 0021     		movs	r1, #0
+ 1386 00a0 0120     		movs	r0, #1
+ 1387 00a2 FFF7FEFF 		bl	aci_gap_init_IDB05A1
+ 1388              	.LVL90:
+ 1389 00a6 E6E7     		b	.L51
+ 1390              	.LVL91:
+ 1391              	.L52:
+ 174:Core/Src/app_bluenrg_ms.c ****                                      OOB_AUTH_DATA_ABSENT,
+ 1392              		.loc 1 174 3 is_stmt 1 view .LVU386
+ 174:Core/Src/app_bluenrg_ms.c ****                                      OOB_AUTH_DATA_ABSENT,
+ 1393              		.loc 1 174 9 is_stmt 0 view .LVU387
+ 1394 00a8 0120     		movs	r0, #1
+ 1395              	.LVL92:
+ 174:Core/Src/app_bluenrg_ms.c ****                                      OOB_AUTH_DATA_ABSENT,
+ 1396              		.loc 1 174 9 view .LVU388
+ 1397 00aa 0390     		str	r0, [sp, #12]
+ 1398 00ac 114B     		ldr	r3, .L62+20
+ 1399 00ae 0293     		str	r3, [sp, #8]
+ 1400 00b0 0021     		movs	r1, #0
+ 1401 00b2 0191     		str	r1, [sp, #4]
+ 1402 00b4 1023     		movs	r3, #16
+ 1403 00b6 0093     		str	r3, [sp]
+ 1404 00b8 0723     		movs	r3, #7
+ 1405 00ba 0A46     		mov	r2, r1
+ 1406 00bc FFF7FEFF 		bl	aci_gap_set_auth_requirement
+ 1407              	.LVL93:
+ 182:Core/Src/app_bluenrg_ms.c ****     PRINTF("aci_gap_set_authentication_requirement failed.\n");
+ 1408              		.loc 1 182 3 is_stmt 1 view .LVU389
+ 182:Core/Src/app_bluenrg_ms.c ****     PRINTF("aci_gap_set_authentication_requirement failed.\n");
+ 1409              		.loc 1 182 6 is_stmt 0 view .LVU390
+ 1410 00c0 00B1     		cbz	r0, .L54
+ 1411              	.L55:
+ 183:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 1412              		.loc 1 183 63 is_stmt 1 discriminator 3 view .LVU391
+ 184:Core/Src/app_bluenrg_ms.c ****   }
+ 1413              		.loc 1 184 5 discriminator 3 view .LVU392
+ 184:Core/Src/app_bluenrg_ms.c ****   }
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 38
+
+
+ 1414              		.loc 1 184 10 discriminator 3 view .LVU393
+ 1415 00c2 FEE7     		b	.L55
+ 1416              	.L54:
+ 187:Core/Src/app_bluenrg_ms.c **** 
+ 1417              		.loc 1 187 36 view .LVU394
+ 189:Core/Src/app_bluenrg_ms.c ****   if(ret == BLE_STATUS_SUCCESS) {
+ 1418              		.loc 1 189 3 view .LVU395
+ 189:Core/Src/app_bluenrg_ms.c ****   if(ret == BLE_STATUS_SUCCESS) {
+ 1419              		.loc 1 189 9 is_stmt 0 view .LVU396
+ 1420 00c4 FFF7FEFF 		bl	Add_HWServW2ST_Service
+ 1421              	.LVL94:
+ 190:Core/Src/app_bluenrg_ms.c ****     PRINTF("BlueMS HW service added successfully.\n");
+ 1422              		.loc 1 190 3 is_stmt 1 view .LVU397
+ 190:Core/Src/app_bluenrg_ms.c ****     PRINTF("BlueMS HW service added successfully.\n");
+ 1423              		.loc 1 190 5 is_stmt 0 view .LVU398
+ 1424 00c8 00B1     		cbz	r0, .L56
+ 1425              	.L57:
+ 193:Core/Src/app_bluenrg_ms.c ****     while(1);
+ 1426              		.loc 1 193 68 is_stmt 1 discriminator 4 view .LVU399
+ 194:Core/Src/app_bluenrg_ms.c ****   }
+ 1427              		.loc 1 194 5 discriminator 4 view .LVU400
+ 194:Core/Src/app_bluenrg_ms.c ****   }
+ 1428              		.loc 1 194 10 discriminator 4 view .LVU401
+ 1429 00ca FEE7     		b	.L57
+ 1430              	.L56:
+ 191:Core/Src/app_bluenrg_ms.c ****   } else {
+ 1431              		.loc 1 191 54 view .LVU402
+ 197:Core/Src/app_bluenrg_ms.c ****   if(ret == BLE_STATUS_SUCCESS) {
+ 1432              		.loc 1 197 3 view .LVU403
+ 197:Core/Src/app_bluenrg_ms.c ****   if(ret == BLE_STATUS_SUCCESS) {
+ 1433              		.loc 1 197 9 is_stmt 0 view .LVU404
+ 1434 00cc FFF7FEFF 		bl	Add_SWServW2ST_Service
+ 1435              	.LVL95:
+ 198:Core/Src/app_bluenrg_ms.c ****      PRINTF("BlueMS SW service added successfully.\n");
+ 1436              		.loc 1 198 3 is_stmt 1 view .LVU405
+ 198:Core/Src/app_bluenrg_ms.c ****      PRINTF("BlueMS SW service added successfully.\n");
+ 1437              		.loc 1 198 5 is_stmt 0 view .LVU406
+ 1438 00d0 00B1     		cbz	r0, .L58
+ 1439              	.L59:
+ 201:Core/Src/app_bluenrg_ms.c ****      while(1);
+ 1440              		.loc 1 201 69 is_stmt 1 discriminator 5 view .LVU407
+ 202:Core/Src/app_bluenrg_ms.c ****   }
+ 1441              		.loc 1 202 6 discriminator 5 view .LVU408
+ 202:Core/Src/app_bluenrg_ms.c ****   }
+ 1442              		.loc 1 202 11 discriminator 5 view .LVU409
+ 1443 00d2 FEE7     		b	.L59
+ 1444              	.L58:
+ 199:Core/Src/app_bluenrg_ms.c ****   } else {
+ 1445              		.loc 1 199 55 view .LVU410
+ 206:Core/Src/app_bluenrg_ms.c **** 
+ 1446              		.loc 1 206 3 view .LVU411
+ 206:Core/Src/app_bluenrg_ms.c **** 
+ 1447              		.loc 1 206 9 is_stmt 0 view .LVU412
+ 1448 00d4 0421     		movs	r1, #4
+ 1449 00d6 0120     		movs	r0, #1
+ 1450              	.LVL96:
+ 206:Core/Src/app_bluenrg_ms.c **** 
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 39
+
+
+ 1451              		.loc 1 206 9 view .LVU413
+ 1452 00d8 FFF7FEFF 		bl	aci_hal_set_tx_power_level
+ 1453              	.LVL97:
+ 211:Core/Src/app_bluenrg_ms.c **** 
+ 1454              		.loc 1 211 1 view .LVU414
+ 1455 00dc 08B0     		add	sp, sp, #32
+ 1456              	.LCFI9:
+ 1457              		.cfi_def_cfa_offset 8
+ 1458              		@ sp needed
+ 1459 00de 10BD     		pop	{r4, pc}
+ 1460              	.L63:
+ 1461              		.align	2
+ 1462              	.L62:
+ 1463 00e0 00000000 		.word	user_button_init_state
+ 1464 00e4 00000000 		.word	user_notify
+ 1465 00e8 00000000 		.word	bnrg_expansion_board
+ 1466 00ec 00000000 		.word	bdaddr
+ 1467 00f0 00000000 		.word	.LC0
+ 1468 00f4 40E20100 		.word	123456
+ 1469              		.cfi_endproc
+ 1470              	.LFE132:
+ 1472              		.section	.text.MX_BlueNRG_MS_Process,"ax",%progbits
+ 1473              		.align	1
+ 1474              		.global	MX_BlueNRG_MS_Process
+ 1475              		.syntax unified
+ 1476              		.thumb
+ 1477              		.thumb_func
+ 1479              	MX_BlueNRG_MS_Process:
+ 1480              	.LFB133:
+ 217:Core/Src/app_bluenrg_ms.c ****   /* USER CODE BEGIN BlueNRG_MS_Process_PreTreatment */
+ 1481              		.loc 1 217 1 is_stmt 1 view -0
+ 1482              		.cfi_startproc
+ 1483              		@ args = 0, pretend = 0, frame = 0
+ 1484              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1485 0000 08B5     		push	{r3, lr}
+ 1486              	.LCFI10:
+ 1487              		.cfi_def_cfa_offset 8
+ 1488              		.cfi_offset 3, -8
+ 1489              		.cfi_offset 14, -4
+ 222:Core/Src/app_bluenrg_ms.c ****   hci_user_evt_proc();
+ 1490              		.loc 1 222 3 view .LVU416
+ 1491 0002 FFF7FEFF 		bl	User_Process
+ 1492              	.LVL98:
+ 223:Core/Src/app_bluenrg_ms.c **** 
+ 1493              		.loc 1 223 3 view .LVU417
+ 1494 0006 FFF7FEFF 		bl	hci_user_evt_proc
+ 1495              	.LVL99:
+ 228:Core/Src/app_bluenrg_ms.c **** 
+ 1496              		.loc 1 228 1 is_stmt 0 view .LVU418
+ 1497 000a 08BD     		pop	{r3, pc}
+ 1498              		.cfi_endproc
+ 1499              	.LFE133:
+ 1501              		.section	.text.BSP_PB_Callback,"ax",%progbits
+ 1502              		.align	1
+ 1503              		.global	BSP_PB_Callback
+ 1504              		.syntax unified
+ 1505              		.thumb
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 40
+
+
+ 1506              		.thumb_func
+ 1508              	BSP_PB_Callback:
+ 1509              	.LVL100:
+ 1510              	.LFB139:
+ 381:Core/Src/app_bluenrg_ms.c **** 
+ 382:Core/Src/app_bluenrg_ms.c **** /**
+ 383:Core/Src/app_bluenrg_ms.c ****   * @brief  BSP Push Button callback
+ 384:Core/Src/app_bluenrg_ms.c ****   * @param  Button Specifies the pin connected EXTI line
+ 385:Core/Src/app_bluenrg_ms.c ****   * @retval None.
+ 386:Core/Src/app_bluenrg_ms.c ****   */
+ 387:Core/Src/app_bluenrg_ms.c **** void BSP_PB_Callback(Button_TypeDef Button)
+ 388:Core/Src/app_bluenrg_ms.c **** {
+ 1511              		.loc 1 388 1 is_stmt 1 view -0
+ 1512              		.cfi_startproc
+ 1513              		@ args = 0, pretend = 0, frame = 0
+ 1514              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1515              		@ link register save eliminated.
+ 389:Core/Src/app_bluenrg_ms.c ****   /* Set the User Button flag */
+ 390:Core/Src/app_bluenrg_ms.c ****   user_button_pressed = 1;
+ 1516              		.loc 1 390 3 view .LVU420
+ 1517              		.loc 1 390 23 is_stmt 0 view .LVU421
+ 1518 0000 014B     		ldr	r3, .L67
+ 1519 0002 0122     		movs	r2, #1
+ 1520 0004 1A70     		strb	r2, [r3]
+ 391:Core/Src/app_bluenrg_ms.c **** }
+ 1521              		.loc 1 391 1 view .LVU422
+ 1522 0006 7047     		bx	lr
+ 1523              	.L68:
+ 1524              		.align	2
+ 1525              	.L67:
+ 1526 0008 00000000 		.word	user_button_pressed
+ 1527              		.cfi_endproc
+ 1528              	.LFE139:
+ 1530              		.section	.bss.counter.0,"aw",%nobits
+ 1531              		.align	2
+ 1534              	counter.0:
+ 1535 0000 00000000 		.space	4
+ 1536              		.section	.bss.user_button_pressed,"aw",%nobits
+ 1539              	user_button_pressed:
+ 1540 0000 00       		.space	1
+ 1541              		.section	.data.user_button_init_state,"aw"
+ 1544              	user_button_init_state:
+ 1545 0000 01       		.byte	1
+ 1546              		.comm	bdaddr,6,4
+ 1547              		.global	bnrg_expansion_board
+ 1548              		.section	.bss.bnrg_expansion_board,"aw",%nobits
+ 1551              	bnrg_expansion_board:
+ 1552 0000 00       		.space	1
+ 1553              		.text
+ 1554              	.Letext0:
+ 1555              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 1556              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 1557              		.file 4 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_def.h"
+ 1558              		.file 5 "/usr/lib/gcc/arm-none-eabi/12.1.0/include/stddef.h"
+ 1559              		.file 6 "Core/Inc/gatt_db.h"
+ 1560              		.file 7 "Core/Inc/stm32l4xx_nucleo.h"
+ 1561              		.file 8 "/usr/arm-none-eabi/include/stdlib.h"
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 41
+
+
+ 1562              		.file 9 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 1563              		.file 10 "Core/Inc/sensor.h"
+ 1564              		.file 11 "Middlewares/ST/BlueNRG-MS/includes/hci.h"
+ 1565              		.file 12 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_hal_aci.h"
+ 1566              		.file 13 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_gap_aci.h"
+ 1567              		.file 14 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_gatt_aci.h"
+ 1568              		.file 15 "/usr/arm-none-eabi/include/string.h"
+ 1569              		.file 16 "Middlewares/ST/BlueNRG-MS/includes/hci_le.h"
+ 1570              		.file 17 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_utils.h"
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 42
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 app_bluenrg_ms.c
+     /tmp/ccQ3Bu9p.s:21     .text.Reset_Motion_Values:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:26     .text.Reset_Motion_Values:0000000000000000 Reset_Motion_Values
+     /tmp/ccQ3Bu9p.s:271    .text.Reset_Motion_Values:000000000000016c $d
+     /tmp/ccQ3Bu9p.s:280    .text.User_Init:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:285    .text.User_Init:0000000000000000 User_Init
+     /tmp/ccQ3Bu9p.s:319    .text.Set_Random_Environmental_Values:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:324    .text.Set_Random_Environmental_Values:0000000000000000 Set_Random_Environmental_Values
+     /tmp/ccQ3Bu9p.s:407    .text.Set_Random_Environmental_Values:0000000000000078 $d
+     /tmp/ccQ3Bu9p.s:413    .text.Set_Random_Motion_Values:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:418    .text.Set_Random_Motion_Values:0000000000000000 Set_Random_Motion_Values
+     /tmp/ccQ3Bu9p.s:759    .text.Set_Random_Motion_Values:0000000000000250 $d
+     /tmp/ccQ3Bu9p.s:767    .text.Set_Random_Motion_Values:0000000000000260 $t
+     /tmp/ccQ3Bu9p.s:1084   .text.Set_Random_Motion_Values:00000000000004a8 $d
+     /tmp/ccQ3Bu9p.s:1092   .text.User_Process:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:1097   .text.User_Process:0000000000000000 User_Process
+     /tmp/ccQ3Bu9p.s:1224   .text.User_Process:000000000000009c $d
+     /tmp/ccQ3Bu9p.s:1534   .bss.counter.0:0000000000000000 counter.0
+     /tmp/ccQ3Bu9p.s:1236   .rodata.MX_BlueNRG_MS_Init.str1.4:0000000000000000 $d
+     /tmp/ccQ3Bu9p.s:1240   .text.MX_BlueNRG_MS_Init:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:1246   .text.MX_BlueNRG_MS_Init:0000000000000000 MX_BlueNRG_MS_Init
+     /tmp/ccQ3Bu9p.s:1463   .text.MX_BlueNRG_MS_Init:00000000000000e0 $d
+     /tmp/ccQ3Bu9p.s:1544   .data.user_button_init_state:0000000000000000 user_button_init_state
+     /tmp/ccQ3Bu9p.s:1551   .bss.bnrg_expansion_board:0000000000000000 bnrg_expansion_board
+                            *COM*:0000000000000006 bdaddr
+     /tmp/ccQ3Bu9p.s:1473   .text.MX_BlueNRG_MS_Process:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:1479   .text.MX_BlueNRG_MS_Process:0000000000000000 MX_BlueNRG_MS_Process
+     /tmp/ccQ3Bu9p.s:1502   .text.BSP_PB_Callback:0000000000000000 $t
+     /tmp/ccQ3Bu9p.s:1508   .text.BSP_PB_Callback:0000000000000000 BSP_PB_Callback
+     /tmp/ccQ3Bu9p.s:1526   .text.BSP_PB_Callback:0000000000000008 $d
+     /tmp/ccQ3Bu9p.s:1539   .bss.user_button_pressed:0000000000000000 user_button_pressed
+     /tmp/ccQ3Bu9p.s:1531   .bss.counter.0:0000000000000000 $d
+     /tmp/ccQ3Bu9p.s:1540   .bss.user_button_pressed:0000000000000000 $d
+     /tmp/ccQ3Bu9p.s:1552   .bss.bnrg_expansion_board:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+x_axes
+g_axes
+m_axes
+q_axes
+BSP_PB_Init
+BSP_LED_Init
+BSP_COM_Init
+__aeabi_uldivmod
+__aeabi_ul2d
+__aeabi_dadd
+__aeabi_d2f
+rand
+BSP_LED_Toggle
+Set_DeviceConnectable
+HAL_GetTick
+srand
+BlueMS_Environmental_Update
+Acc_Update
+Quat_Update
+HAL_Delay
+ARM GAS  /tmp/ccQ3Bu9p.s 			page 43
+
+
+set_connectable
+connected
+BSP_PB_GetState
+hci_init
+getBlueNRGVersion
+hci_reset
+aci_hal_read_config_data
+aci_gatt_init
+aci_gap_init_IDB04A1
+aci_gatt_update_char_value
+aci_gap_init_IDB05A1
+aci_gap_set_auth_requirement
+Add_HWServW2ST_Service
+Add_SWServW2ST_Service
+aci_hal_set_tx_power_level
+user_notify
+hci_user_evt_proc

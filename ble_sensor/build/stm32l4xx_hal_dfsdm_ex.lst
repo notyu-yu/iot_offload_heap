@@ -1,0 +1,269 @@
+ARM GAS  /tmp/ccY8fnRR.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32l4xx_hal_dfsdm_ex.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c"
+  20              		.section	.text.HAL_DFDSMEx_ChannelSetPulsesSkipping,"ax",%progbits
+  21              		.align	1
+  22              		.global	HAL_DFDSMEx_ChannelSetPulsesSkipping
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	HAL_DFDSMEx_ChannelSetPulsesSkipping:
+  28              	.LVL0:
+  29              	.LFB292:
+   1:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /**
+   2:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   ******************************************************************************
+   3:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @file    stm32l4xx_hal_dfsdm_ex.c
+   4:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @author  MCD Application Team
+   5:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @brief   DFSDM Extended HAL module driver.
+   6:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *          This file provides firmware functions to manage the following
+   7:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *          functionality of the DFSDM Peripheral Controller:
+   8:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *           + Set and get pulses skipping on channel.
+   9:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *
+  10:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   ******************************************************************************
+  11:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @attention
+  12:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *
+  13:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * Copyright (c) 2017 STMicroelectronics.
+  14:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * All rights reserved.
+  15:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *
+  16:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  17:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * in the root directory of this software component.
+  18:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  19:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *
+  20:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   ******************************************************************************
+  21:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  22:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  23:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Includes ------------------------------------------------------------------*/
+  24:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** #include "stm32l4xx_hal.h"
+  25:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  26:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /** @addtogroup STM32L4xx_HAL_Driver
+  27:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @{
+  28:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  29:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+ARM GAS  /tmp/ccY8fnRR.s 			page 2
+
+
+  30:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** #ifdef HAL_DFSDM_MODULE_ENABLED
+  31:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  32:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) ||
+  33:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     defined(STM32L4P5xx) || defined(STM32L4Q5xx)
+  34:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  35:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /** @defgroup DFSDMEx DFSDMEx
+  36:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @brief DFSDM Extended HAL module driver
+  37:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @{
+  38:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  39:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  40:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Private types -------------------------------------------------------------*/
+  41:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Private variables ---------------------------------------------------------*/
+  42:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Private constants ---------------------------------------------------------*/
+  43:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Private macros ------------------------------------------------------------*/
+  44:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Private functions ---------------------------------------------------------*/
+  45:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /* Exported functions --------------------------------------------------------*/
+  46:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  47:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /** @defgroup DFSDMEx_Exported_Functions DFSDM Extended Exported Functions
+  48:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @{
+  49:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  50:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  51:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /** @defgroup DFSDMEx_Exported_Functions_Group1_Channel Extended channel operation functions
+  52:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @brief    DFSDM extended channel operation functions
+  53:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****  *
+  54:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** @verbatim
+  55:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****  ===============================================================================
+  56:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****                ##### Extended channel operation functions #####
+  57:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****  ===============================================================================
+  58:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     [..]  This section provides functions allowing to:
+  59:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****       (+) Set and get value of pulses skipping on channel
+  60:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  61:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** @endverbatim
+  62:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @{
+  63:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  64:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  65:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /**
+  66:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @brief  Set value of pulses skipping.
+  67:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @param  hdfsdm_channel DFSDM channel handle.
+  68:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @param  PulsesValue Value of pulses to be skipped.
+  69:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   *         This parameter must be a number between Min_Data = 0 and Max_Data = 63.
+  70:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @retval HAL status.
+  71:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  72:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** HAL_StatusTypeDef HAL_DFDSMEx_ChannelSetPulsesSkipping(DFSDM_Channel_HandleTypeDef *hdfsdm_channel,
+  73:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** {
+  30              		.loc 1 73 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  74:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   HAL_StatusTypeDef status = HAL_OK;
+  35              		.loc 1 74 3 view .LVU1
+  75:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  76:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   /* Check pulses value */
+  77:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   assert_param(IS_DFSDM_CHANNEL_SKIPPING_VALUE(PulsesValue));
+  36              		.loc 1 77 3 view .LVU2
+  78:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  79:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   /* Check DFSDM channel state */
+ARM GAS  /tmp/ccY8fnRR.s 			page 3
+
+
+  80:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   if (hdfsdm_channel->State == HAL_DFSDM_CHANNEL_STATE_READY)
+  37              		.loc 1 80 3 view .LVU3
+  38              		.loc 1 80 21 is_stmt 0 view .LVU4
+  39 0000 90F83430 		ldrb	r3, [r0, #52]	@ zero_extendqisi2
+  40              		.loc 1 80 6 view .LVU5
+  41 0004 012B     		cmp	r3, #1
+  42 0006 01D0     		beq	.L4
+  81:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   {
+  82:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     /* Set new value of pulses skipping */
+  83:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     hdfsdm_channel->Instance->CHDLYR = (PulsesValue & DFSDM_CHDLYR_PLSSKP);
+  84:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  85:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   else
+  86:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   {
+  87:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     status = HAL_ERROR;
+  43              		.loc 1 87 12 view .LVU6
+  44 0008 0120     		movs	r0, #1
+  45              	.LVL1:
+  88:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  89:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   return status;
+  46              		.loc 1 89 3 is_stmt 1 view .LVU7
+  90:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** }
+  47              		.loc 1 90 1 is_stmt 0 view .LVU8
+  48 000a 7047     		bx	lr
+  49              	.LVL2:
+  50              	.L4:
+  83:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  51              		.loc 1 83 5 is_stmt 1 view .LVU9
+  83:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  52              		.loc 1 83 19 is_stmt 0 view .LVU10
+  53 000c 0368     		ldr	r3, [r0]
+  83:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  54              		.loc 1 83 53 view .LVU11
+  55 000e 01F03F01 		and	r1, r1, #63
+  56              	.LVL3:
+  83:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  57              		.loc 1 83 38 view .LVU12
+  58 0012 5961     		str	r1, [r3, #20]
+  74:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  59              		.loc 1 74 21 view .LVU13
+  60 0014 0020     		movs	r0, #0
+  61              	.LVL4:
+  74:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  62              		.loc 1 74 21 view .LVU14
+  63 0016 7047     		bx	lr
+  64              		.cfi_endproc
+  65              	.LFE292:
+  67              		.section	.text.HAL_DFDSMEx_ChannelGetPulsesSkipping,"ax",%progbits
+  68              		.align	1
+  69              		.global	HAL_DFDSMEx_ChannelGetPulsesSkipping
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  74              	HAL_DFDSMEx_ChannelGetPulsesSkipping:
+  75              	.LVL5:
+  76              	.LFB293:
+  91:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+  92:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** /**
+ARM GAS  /tmp/ccY8fnRR.s 			page 4
+
+
+  93:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @brief  Get value of pulses skipping.
+  94:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @param  hdfsdm_channel DFSDM channel handle.
+  95:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @param  PulsesValue Value of pulses to be skipped.
+  96:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   * @retval HAL status.
+  97:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   */
+  98:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** HAL_StatusTypeDef HAL_DFDSMEx_ChannelGetPulsesSkipping(const DFSDM_Channel_HandleTypeDef *hdfsdm_ch
+  99:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** {
+  77              		.loc 1 99 1 is_stmt 1 view -0
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 0
+  80              		@ frame_needed = 0, uses_anonymous_args = 0
+  81              		@ link register save eliminated.
+ 100:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   HAL_StatusTypeDef status = HAL_OK;
+  82              		.loc 1 100 3 view .LVU16
+ 101:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+ 102:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   /* Check DFSDM channel state */
+ 103:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   if (hdfsdm_channel->State == HAL_DFSDM_CHANNEL_STATE_READY)
+  83              		.loc 1 103 3 view .LVU17
+  84              		.loc 1 103 21 is_stmt 0 view .LVU18
+  85 0000 90F83430 		ldrb	r3, [r0, #52]	@ zero_extendqisi2
+  86              		.loc 1 103 6 view .LVU19
+  87 0004 012B     		cmp	r3, #1
+  88 0006 01D0     		beq	.L8
+ 104:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   {
+ 105:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     /* Get value of remaining pulses to be skipped */
+ 106:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     *PulsesValue = (hdfsdm_channel->Instance->CHDLYR & DFSDM_CHDLYR_PLSSKP);
+ 107:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+ 108:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   else
+ 109:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   {
+ 110:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****     status = HAL_ERROR;
+  89              		.loc 1 110 12 view .LVU20
+  90 0008 0120     		movs	r0, #1
+  91              	.LVL6:
+ 111:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+ 112:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   return status;
+  92              		.loc 1 112 3 is_stmt 1 view .LVU21
+ 113:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** }
+  93              		.loc 1 113 1 is_stmt 0 view .LVU22
+  94 000a 7047     		bx	lr
+  95              	.LVL7:
+  96              	.L8:
+ 106:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  97              		.loc 1 106 5 is_stmt 1 view .LVU23
+ 106:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+  98              		.loc 1 106 35 is_stmt 0 view .LVU24
+  99 000c 0368     		ldr	r3, [r0]
+ 106:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+ 100              		.loc 1 106 45 view .LVU25
+ 101 000e 5B69     		ldr	r3, [r3, #20]
+ 106:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+ 102              		.loc 1 106 54 view .LVU26
+ 103 0010 03F03F03 		and	r3, r3, #63
+ 106:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c ****   }
+ 104              		.loc 1 106 18 view .LVU27
+ 105 0014 0B60     		str	r3, [r1]
+ 100:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+ 106              		.loc 1 100 21 view .LVU28
+ARM GAS  /tmp/ccY8fnRR.s 			page 5
+
+
+ 107 0016 0020     		movs	r0, #0
+ 108              	.LVL8:
+ 100:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dfsdm_ex.c **** 
+ 109              		.loc 1 100 21 view .LVU29
+ 110 0018 7047     		bx	lr
+ 111              		.cfi_endproc
+ 112              	.LFE293:
+ 114              		.text
+ 115              	.Letext0:
+ 116              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 117              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 118              		.file 4 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4s5xx.h"
+ 119              		.file 5 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h"
+ 120              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 121              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dfsdm.h"
+ARM GAS  /tmp/ccY8fnRR.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stm32l4xx_hal_dfsdm_ex.c
+     /tmp/ccY8fnRR.s:21     .text.HAL_DFDSMEx_ChannelSetPulsesSkipping:0000000000000000 $t
+     /tmp/ccY8fnRR.s:27     .text.HAL_DFDSMEx_ChannelSetPulsesSkipping:0000000000000000 HAL_DFDSMEx_ChannelSetPulsesSkipping
+     /tmp/ccY8fnRR.s:68     .text.HAL_DFDSMEx_ChannelGetPulsesSkipping:0000000000000000 $t
+     /tmp/ccY8fnRR.s:74     .text.HAL_DFDSMEx_ChannelGetPulsesSkipping:0000000000000000 HAL_DFDSMEx_ChannelGetPulsesSkipping
+
+NO UNDEFINED SYMBOLS

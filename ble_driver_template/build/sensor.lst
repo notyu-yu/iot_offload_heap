@@ -1,0 +1,726 @@
+ARM GAS  /tmp/ccBEkavh.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"sensor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/sensor.c"
+  20              		.section	.rodata.Set_DeviceConnectable.str1.4,"aMS",%progbits,1
+  21              		.align	2
+  22              	.LC0:
+  23 0000 09426C75 		.ascii	"\011BlueNRG\000"
+  23      654E5247 
+  23      00
+  24              		.section	.text.Set_DeviceConnectable,"ax",%progbits
+  25              		.align	1
+  26              		.global	Set_DeviceConnectable
+  27              		.syntax unified
+  28              		.thumb
+  29              		.thumb_func
+  31              	Set_DeviceConnectable:
+  32              	.LFB135:
+   1:Core/Src/sensor.c **** /**
+   2:Core/Src/sensor.c ****   ******************************************************************************
+   3:Core/Src/sensor.c ****   * @file    sensor.c
+   4:Core/Src/sensor.c ****   * @author  SRA Application Team
+   5:Core/Src/sensor.c ****   * @brief   Sensor init and sensor state machines
+   6:Core/Src/sensor.c ****   ******************************************************************************
+   7:Core/Src/sensor.c ****   * @attention
+   8:Core/Src/sensor.c ****   *
+   9:Core/Src/sensor.c ****   * Copyright (c) 2022 STMicroelectronics.
+  10:Core/Src/sensor.c ****   * All rights reserved.
+  11:Core/Src/sensor.c ****   *
+  12:Core/Src/sensor.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/sensor.c ****   * in the root directory of this software component.
+  14:Core/Src/sensor.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/sensor.c ****   *
+  16:Core/Src/sensor.c ****   ******************************************************************************
+  17:Core/Src/sensor.c ****   */
+  18:Core/Src/sensor.c **** 
+  19:Core/Src/sensor.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/sensor.c **** #include <stdio.h>
+  21:Core/Src/sensor.c **** #include <string.h>
+  22:Core/Src/sensor.c **** #include <stdlib.h>
+  23:Core/Src/sensor.c **** #include "sensor.h"
+  24:Core/Src/sensor.c **** #include "gatt_db.h"
+ARM GAS  /tmp/ccBEkavh.s 			page 2
+
+
+  25:Core/Src/sensor.c **** #include "bluenrg_gap.h"
+  26:Core/Src/sensor.c **** #include "bluenrg_gap_aci.h"
+  27:Core/Src/sensor.c **** #include "hci_le.h"
+  28:Core/Src/sensor.c **** #include "hci_const.h"
+  29:Core/Src/sensor.c **** #include "bluenrg_aci_const.h"
+  30:Core/Src/sensor.c **** #include "bluenrg_gatt_aci.h"
+  31:Core/Src/sensor.c **** 
+  32:Core/Src/sensor.c **** /* Private typedef -----------------------------------------------------------*/
+  33:Core/Src/sensor.c **** /* Private define ------------------------------------------------------------*/
+  34:Core/Src/sensor.c **** #define  ADV_INTERVAL_MIN_MS  1000
+  35:Core/Src/sensor.c **** #define  ADV_INTERVAL_MAX_MS  1200
+  36:Core/Src/sensor.c **** 
+  37:Core/Src/sensor.c **** /* Private macro -------------------------------------------------------------*/
+  38:Core/Src/sensor.c **** /* Private variables ---------------------------------------------------------*/
+  39:Core/Src/sensor.c **** extern uint8_t bdaddr[BDADDR_SIZE];
+  40:Core/Src/sensor.c **** extern uint8_t bnrg_expansion_board;
+  41:Core/Src/sensor.c **** __IO uint8_t set_connectable = 1;
+  42:Core/Src/sensor.c **** __IO uint16_t connection_handle = 0;
+  43:Core/Src/sensor.c **** __IO uint8_t  notification_enabled = FALSE;
+  44:Core/Src/sensor.c **** __IO uint32_t connected = FALSE;
+  45:Core/Src/sensor.c **** 
+  46:Core/Src/sensor.c **** extern uint16_t EnvironmentalCharHandle;
+  47:Core/Src/sensor.c **** extern uint16_t AccGyroMagCharHandle;
+  48:Core/Src/sensor.c **** 
+  49:Core/Src/sensor.c **** volatile uint8_t request_free_fall_notify = FALSE;
+  50:Core/Src/sensor.c **** 
+  51:Core/Src/sensor.c **** AxesRaw_t x_axes = {0, 0, 0};
+  52:Core/Src/sensor.c **** AxesRaw_t g_axes = {0, 0, 0};
+  53:Core/Src/sensor.c **** AxesRaw_t m_axes = {0, 0, 0};
+  54:Core/Src/sensor.c **** AxesRaw_t q_axes[SEND_N_QUATERNIONS] = {{0, 0, 0}};
+  55:Core/Src/sensor.c **** 
+  56:Core/Src/sensor.c **** /* Private function prototypes -----------------------------------------------*/
+  57:Core/Src/sensor.c **** void GAP_DisconnectionComplete_CB(void);
+  58:Core/Src/sensor.c **** void GAP_ConnectionComplete_CB(uint8_t addr[6], uint16_t handle);
+  59:Core/Src/sensor.c **** 
+  60:Core/Src/sensor.c **** /* Private functions ---------------------------------------------------------*/
+  61:Core/Src/sensor.c **** 
+  62:Core/Src/sensor.c **** /*******************************************************************************
+  63:Core/Src/sensor.c ****  * Function Name  : Set_DeviceConnectable.
+  64:Core/Src/sensor.c ****  * Description    : Puts the device in connectable mode.
+  65:Core/Src/sensor.c ****  * Input          : None.
+  66:Core/Src/sensor.c ****  * Output         : None.
+  67:Core/Src/sensor.c ****  * Return         : None.
+  68:Core/Src/sensor.c ****  *******************************************************************************/
+  69:Core/Src/sensor.c **** void Set_DeviceConnectable(void)
+  70:Core/Src/sensor.c **** {
+  33              		.loc 1 70 1 view -0
+  34              		.cfi_startproc
+  35              		@ args = 0, pretend = 0, frame = 40
+  36              		@ frame_needed = 0, uses_anonymous_args = 0
+  37 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  38              	.LCFI0:
+  39              		.cfi_def_cfa_offset 20
+  40              		.cfi_offset 4, -20
+  41              		.cfi_offset 5, -16
+  42              		.cfi_offset 6, -12
+  43              		.cfi_offset 7, -8
+ARM GAS  /tmp/ccBEkavh.s 			page 3
+
+
+  44              		.cfi_offset 14, -4
+  45 0002 93B0     		sub	sp, sp, #76
+  46              	.LCFI1:
+  47              		.cfi_def_cfa_offset 96
+  71:Core/Src/sensor.c ****   uint8_t ret;
+  48              		.loc 1 71 3 view .LVU1
+  72:Core/Src/sensor.c ****   const char local_name[] = {AD_TYPE_COMPLETE_LOCAL_NAME,SENSOR_DEMO_NAME};
+  49              		.loc 1 72 3 view .LVU2
+  50              		.loc 1 72 14 is_stmt 0 view .LVU3
+  51 0004 364B     		ldr	r3, .L3
+  52 0006 10AE     		add	r6, sp, #64
+  53 0008 93E80300 		ldm	r3, {r0, r1}
+  54 000c 86E80300 		stm	r6, {r0, r1}
+  73:Core/Src/sensor.c **** 
+  74:Core/Src/sensor.c ****   uint8_t manuf_data[26] = {
+  55              		.loc 1 74 3 is_stmt 1 view .LVU4
+  56              		.loc 1 74 11 is_stmt 0 view .LVU5
+  57 0010 0223     		movs	r3, #2
+  58 0012 8DF82430 		strb	r3, [sp, #36]
+  59 0016 0A23     		movs	r3, #10
+  60 0018 8DF82530 		strb	r3, [sp, #37]
+  61 001c 0024     		movs	r4, #0
+  62 001e 8DF82640 		strb	r4, [sp, #38]
+  63 0022 0827     		movs	r7, #8
+  64 0024 8DF82770 		strb	r7, [sp, #39]
+  65 0028 0923     		movs	r3, #9
+  66 002a 8DF82830 		strb	r3, [sp, #40]
+  67 002e 4223     		movs	r3, #66
+  68 0030 8DF82930 		strb	r3, [sp, #41]
+  69 0034 6C23     		movs	r3, #108
+  70 0036 8DF82A30 		strb	r3, [sp, #42]
+  71 003a 7523     		movs	r3, #117
+  72 003c 8DF82B30 		strb	r3, [sp, #43]
+  73 0040 6523     		movs	r3, #101
+  74 0042 8DF82C30 		strb	r3, [sp, #44]
+  75 0046 4E23     		movs	r3, #78
+  76 0048 8DF82D30 		strb	r3, [sp, #45]
+  77 004c 5223     		movs	r3, #82
+  78 004e 8DF82E30 		strb	r3, [sp, #46]
+  79 0052 4723     		movs	r3, #71
+  80 0054 8DF82F30 		strb	r3, [sp, #47]
+  81 0058 0D23     		movs	r3, #13
+  82 005a 8DF83030 		strb	r3, [sp, #48]
+  83 005e FF23     		movs	r3, #255
+  84 0060 8DF83130 		strb	r3, [sp, #49]
+  85 0064 0125     		movs	r5, #1
+  86 0066 8DF83250 		strb	r5, [sp, #50]
+  87 006a 8023     		movs	r3, #128
+  88 006c 8DF83330 		strb	r3, [sp, #51]
+  89 0070 8DF83440 		strb	r4, [sp, #52]
+  90 0074 F423     		movs	r3, #244
+  91 0076 8DF83530 		strb	r3, [sp, #53]
+  92 007a 8DF83640 		strb	r4, [sp, #54]
+  93 007e 8DF83740 		strb	r4, [sp, #55]
+  75:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+  76:Core/Src/sensor.c ****     8,0x09,SENSOR_DEMO_NAME,  // Complete Name
+  77:Core/Src/sensor.c ****     13,0xFF,0x01, /* SKD version */
+ARM GAS  /tmp/ccBEkavh.s 			page 4
+
+
+  78:Core/Src/sensor.c ****     0x80,
+  79:Core/Src/sensor.c ****     0x00,
+  80:Core/Src/sensor.c ****     0xF4, /* ACC+Gyro+Mag 0xE0 | 0x04 Temp | 0x10 Pressure */
+  81:Core/Src/sensor.c ****     0x00, /*  */
+  82:Core/Src/sensor.c ****     0x00, /*  */
+  83:Core/Src/sensor.c ****     bdaddr[5], /* BLE MAC start -MSB first- */
+  94              		.loc 1 83 11 view .LVU6
+  95 0082 184B     		ldr	r3, .L3+4
+  96 0084 5A79     		ldrb	r2, [r3, #5]	@ zero_extendqisi2
+  74:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+  97              		.loc 1 74 11 view .LVU7
+  98 0086 8DF83820 		strb	r2, [sp, #56]
+  84:Core/Src/sensor.c ****     bdaddr[4],
+  99              		.loc 1 84 11 view .LVU8
+ 100 008a 1A79     		ldrb	r2, [r3, #4]	@ zero_extendqisi2
+  74:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+ 101              		.loc 1 74 11 view .LVU9
+ 102 008c 8DF83920 		strb	r2, [sp, #57]
+  85:Core/Src/sensor.c ****     bdaddr[3],
+ 103              		.loc 1 85 11 view .LVU10
+ 104 0090 DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+  74:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+ 105              		.loc 1 74 11 view .LVU11
+ 106 0092 8DF83A20 		strb	r2, [sp, #58]
+  86:Core/Src/sensor.c ****     bdaddr[2],
+ 107              		.loc 1 86 11 view .LVU12
+ 108 0096 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+  74:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+ 109              		.loc 1 74 11 view .LVU13
+ 110 0098 8DF83B20 		strb	r2, [sp, #59]
+  87:Core/Src/sensor.c ****     bdaddr[1],
+ 111              		.loc 1 87 11 view .LVU14
+ 112 009c 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+  74:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+ 113              		.loc 1 74 11 view .LVU15
+ 114 009e 8DF83C20 		strb	r2, [sp, #60]
+  88:Core/Src/sensor.c ****     bdaddr[0]  /* BLE MAC stop */
+ 115              		.loc 1 88 11 view .LVU16
+ 116 00a2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  74:Core/Src/sensor.c ****     2,0x0A,0x00, /* 0 dBm */  // Transmission Power
+ 117              		.loc 1 74 11 view .LVU17
+ 118 00a4 8DF83D30 		strb	r3, [sp, #61]
+  89:Core/Src/sensor.c ****   };
+  90:Core/Src/sensor.c **** 
+  91:Core/Src/sensor.c ****   manuf_data[18] |= 0x01; /* Sensor Fusion */
+ 119              		.loc 1 91 3 is_stmt 1 view .LVU18
+ 120              		.loc 1 91 18 is_stmt 0 view .LVU19
+ 121 00a8 8DF83650 		strb	r5, [sp, #54]
+  92:Core/Src/sensor.c **** 
+  93:Core/Src/sensor.c ****   hci_le_set_scan_resp_data(0, NULL);
+ 122              		.loc 1 93 3 is_stmt 1 view .LVU20
+ 123 00ac 2146     		mov	r1, r4
+ 124 00ae 2046     		mov	r0, r4
+ 125 00b0 FFF7FEFF 		bl	hci_le_set_scan_resp_data
+ 126              	.LVL0:
+  94:Core/Src/sensor.c **** 
+  95:Core/Src/sensor.c ****   PRINTF("Set General Discoverable Mode.\n");
+ARM GAS  /tmp/ccBEkavh.s 			page 5
+
+
+ 127              		.loc 1 95 45 view .LVU21
+  96:Core/Src/sensor.c **** 
+  97:Core/Src/sensor.c ****   ret = aci_gap_set_discoverable(ADV_DATA_TYPE,
+ 128              		.loc 1 97 3 view .LVU22
+ 129              		.loc 1 97 9 is_stmt 0 view .LVU23
+ 130 00b4 0694     		str	r4, [sp, #24]
+ 131 00b6 0594     		str	r4, [sp, #20]
+ 132 00b8 0494     		str	r4, [sp, #16]
+ 133 00ba 0394     		str	r4, [sp, #12]
+ 134 00bc 0296     		str	r6, [sp, #8]
+ 135 00be 0197     		str	r7, [sp, #4]
+ 136 00c0 0094     		str	r4, [sp]
+ 137 00c2 2B46     		mov	r3, r5
+ 138 00c4 4FF4F062 		mov	r2, #1920
+ 139 00c8 4FF4C861 		mov	r1, #1600
+ 140 00cc 2046     		mov	r0, r4
+ 141 00ce FFF7FEFF 		bl	aci_gap_set_discoverable
+ 142              	.LVL1:
+  98:Core/Src/sensor.c ****                                 (ADV_INTERVAL_MIN_MS*1000)/625,(ADV_INTERVAL_MAX_MS*1000)/625,
+  99:Core/Src/sensor.c ****                                  STATIC_RANDOM_ADDR, NO_WHITE_LIST_USE,
+ 100:Core/Src/sensor.c ****                                  sizeof(local_name), local_name, 0, NULL, 0, 0);
+ 101:Core/Src/sensor.c **** 
+ 102:Core/Src/sensor.c ****   aci_gap_update_adv_data(26, manuf_data);
+ 143              		.loc 1 102 3 is_stmt 1 view .LVU24
+ 144 00d2 09A9     		add	r1, sp, #36
+ 145 00d4 1A20     		movs	r0, #26
+ 146 00d6 FFF7FEFF 		bl	aci_gap_update_adv_data
+ 147              	.LVL2:
+ 103:Core/Src/sensor.c **** 
+ 104:Core/Src/sensor.c ****   if(ret != BLE_STATUS_SUCCESS)
+ 148              		.loc 1 104 3 view .LVU25
+ 105:Core/Src/sensor.c ****   {
+ 106:Core/Src/sensor.c ****     PRINTF("aci_gap_set_discoverable() failed: 0x%02x\r\n", ret);
+ 107:Core/Src/sensor.c ****   }
+ 108:Core/Src/sensor.c ****   else
+ 109:Core/Src/sensor.c ****     PRINTF("aci_gap_set_discoverable() --> SUCCESS\r\n");
+ 110:Core/Src/sensor.c **** }
+ 149              		.loc 1 110 1 is_stmt 0 view .LVU26
+ 150 00da 13B0     		add	sp, sp, #76
+ 151              	.LCFI2:
+ 152              		.cfi_def_cfa_offset 20
+ 153              		@ sp needed
+ 154 00dc F0BD     		pop	{r4, r5, r6, r7, pc}
+ 155              	.L4:
+ 156 00de 00BF     		.align	2
+ 157              	.L3:
+ 158 00e0 00000000 		.word	.LC0
+ 159 00e4 00000000 		.word	bdaddr
+ 160              		.cfi_endproc
+ 161              	.LFE135:
+ 163              		.section	.text.GAP_DisconnectionComplete_CB,"ax",%progbits
+ 164              		.align	1
+ 165              		.global	GAP_DisconnectionComplete_CB
+ 166              		.syntax unified
+ 167              		.thumb
+ 168              		.thumb_func
+ 170              	GAP_DisconnectionComplete_CB:
+ARM GAS  /tmp/ccBEkavh.s 			page 6
+
+
+ 171              	.LFB137:
+ 111:Core/Src/sensor.c **** 
+ 112:Core/Src/sensor.c **** /**
+ 113:Core/Src/sensor.c ****  * @brief  Callback processing the ACI events.
+ 114:Core/Src/sensor.c ****  * @note   Inside this function each event must be identified and correctly
+ 115:Core/Src/sensor.c ****  *         parsed.
+ 116:Core/Src/sensor.c ****  * @param  void* Pointer to the ACI packet
+ 117:Core/Src/sensor.c ****  * @retval None
+ 118:Core/Src/sensor.c ****  */
+ 119:Core/Src/sensor.c **** void user_notify(void * pData)
+ 120:Core/Src/sensor.c **** {
+ 121:Core/Src/sensor.c ****   hci_uart_pckt *hci_pckt = pData;
+ 122:Core/Src/sensor.c ****   /* obtain event packet */
+ 123:Core/Src/sensor.c ****   hci_event_pckt *event_pckt = (hci_event_pckt*)hci_pckt->data;
+ 124:Core/Src/sensor.c **** 
+ 125:Core/Src/sensor.c ****   if(hci_pckt->type != HCI_EVENT_PKT)
+ 126:Core/Src/sensor.c ****     return;
+ 127:Core/Src/sensor.c **** 
+ 128:Core/Src/sensor.c ****   switch(event_pckt->evt){
+ 129:Core/Src/sensor.c **** 
+ 130:Core/Src/sensor.c ****   case EVT_DISCONN_COMPLETE:
+ 131:Core/Src/sensor.c ****     {
+ 132:Core/Src/sensor.c ****       GAP_DisconnectionComplete_CB();
+ 133:Core/Src/sensor.c ****     }
+ 134:Core/Src/sensor.c ****     break;
+ 135:Core/Src/sensor.c **** 
+ 136:Core/Src/sensor.c ****   case EVT_LE_META_EVENT:
+ 137:Core/Src/sensor.c ****     {
+ 138:Core/Src/sensor.c ****       evt_le_meta_event *evt = (void *)event_pckt->data;
+ 139:Core/Src/sensor.c **** 
+ 140:Core/Src/sensor.c ****       switch(evt->subevent){
+ 141:Core/Src/sensor.c ****       case EVT_LE_CONN_COMPLETE:
+ 142:Core/Src/sensor.c ****         {
+ 143:Core/Src/sensor.c ****           evt_le_connection_complete *cc = (void *)evt->data;
+ 144:Core/Src/sensor.c ****           GAP_ConnectionComplete_CB(cc->peer_bdaddr, cc->handle);
+ 145:Core/Src/sensor.c ****         }
+ 146:Core/Src/sensor.c ****         break;
+ 147:Core/Src/sensor.c ****       }
+ 148:Core/Src/sensor.c ****     }
+ 149:Core/Src/sensor.c ****     break;
+ 150:Core/Src/sensor.c **** 
+ 151:Core/Src/sensor.c ****   case EVT_VENDOR:
+ 152:Core/Src/sensor.c ****     {
+ 153:Core/Src/sensor.c ****       evt_blue_aci *blue_evt = (void*)event_pckt->data;
+ 154:Core/Src/sensor.c ****       switch(blue_evt->ecode){
+ 155:Core/Src/sensor.c **** 
+ 156:Core/Src/sensor.c ****       case EVT_BLUE_GATT_READ_PERMIT_REQ:
+ 157:Core/Src/sensor.c ****         {
+ 158:Core/Src/sensor.c ****           evt_gatt_read_permit_req *pr = (void*)blue_evt->data;
+ 159:Core/Src/sensor.c ****           Read_Request_CB(pr->attr_handle);
+ 160:Core/Src/sensor.c ****         }
+ 161:Core/Src/sensor.c ****         break;
+ 162:Core/Src/sensor.c ****       }
+ 163:Core/Src/sensor.c **** 
+ 164:Core/Src/sensor.c ****     }
+ 165:Core/Src/sensor.c ****     break;
+ 166:Core/Src/sensor.c ****   }
+ARM GAS  /tmp/ccBEkavh.s 			page 7
+
+
+ 167:Core/Src/sensor.c **** }
+ 168:Core/Src/sensor.c **** 
+ 169:Core/Src/sensor.c **** /**
+ 170:Core/Src/sensor.c ****  * @brief  This function is called when the peer device gets disconnected.
+ 171:Core/Src/sensor.c ****  * @param  None
+ 172:Core/Src/sensor.c ****  * @retval None
+ 173:Core/Src/sensor.c ****  */
+ 174:Core/Src/sensor.c **** void GAP_DisconnectionComplete_CB(void)
+ 175:Core/Src/sensor.c **** {
+ 172              		.loc 1 175 1 is_stmt 1 view -0
+ 173              		.cfi_startproc
+ 174              		@ args = 0, pretend = 0, frame = 0
+ 175              		@ frame_needed = 0, uses_anonymous_args = 0
+ 176              		@ link register save eliminated.
+ 176:Core/Src/sensor.c ****   connected = FALSE;
+ 177              		.loc 1 176 3 view .LVU28
+ 178              		.loc 1 176 13 is_stmt 0 view .LVU29
+ 179 0000 0023     		movs	r3, #0
+ 180 0002 044A     		ldr	r2, .L6
+ 181 0004 1360     		str	r3, [r2]
+ 177:Core/Src/sensor.c ****   PRINTF("Disconnected\n");
+ 182              		.loc 1 177 27 is_stmt 1 view .LVU30
+ 178:Core/Src/sensor.c ****   /* Make the device connectable again. */
+ 179:Core/Src/sensor.c ****   set_connectable = TRUE;
+ 183              		.loc 1 179 3 view .LVU31
+ 184              		.loc 1 179 19 is_stmt 0 view .LVU32
+ 185 0006 044A     		ldr	r2, .L6+4
+ 186 0008 0121     		movs	r1, #1
+ 187 000a 1170     		strb	r1, [r2]
+ 180:Core/Src/sensor.c ****   notification_enabled = FALSE;
+ 188              		.loc 1 180 3 is_stmt 1 view .LVU33
+ 189              		.loc 1 180 24 is_stmt 0 view .LVU34
+ 190 000c 034A     		ldr	r2, .L6+8
+ 191 000e 1370     		strb	r3, [r2]
+ 181:Core/Src/sensor.c **** }
+ 192              		.loc 1 181 1 view .LVU35
+ 193 0010 7047     		bx	lr
+ 194              	.L7:
+ 195 0012 00BF     		.align	2
+ 196              	.L6:
+ 197 0014 00000000 		.word	connected
+ 198 0018 00000000 		.word	set_connectable
+ 199 001c 00000000 		.word	notification_enabled
+ 200              		.cfi_endproc
+ 201              	.LFE137:
+ 203              		.section	.text.GAP_ConnectionComplete_CB,"ax",%progbits
+ 204              		.align	1
+ 205              		.global	GAP_ConnectionComplete_CB
+ 206              		.syntax unified
+ 207              		.thumb
+ 208              		.thumb_func
+ 210              	GAP_ConnectionComplete_CB:
+ 211              	.LVL3:
+ 212              	.LFB138:
+ 182:Core/Src/sensor.c **** 
+ 183:Core/Src/sensor.c **** /**
+ 184:Core/Src/sensor.c ****  * @brief  This function is called when there is a LE Connection Complete event.
+ARM GAS  /tmp/ccBEkavh.s 			page 8
+
+
+ 185:Core/Src/sensor.c ****  * @param  uint8_t Address of peer device
+ 186:Core/Src/sensor.c ****  * @param  uint16_t Connection handle
+ 187:Core/Src/sensor.c ****  * @retval None
+ 188:Core/Src/sensor.c ****  */
+ 189:Core/Src/sensor.c **** void GAP_ConnectionComplete_CB(uint8_t addr[6], uint16_t handle)
+ 190:Core/Src/sensor.c **** {
+ 213              		.loc 1 190 1 is_stmt 1 view -0
+ 214              		.cfi_startproc
+ 215              		@ args = 0, pretend = 0, frame = 0
+ 216              		@ frame_needed = 0, uses_anonymous_args = 0
+ 217              		@ link register save eliminated.
+ 191:Core/Src/sensor.c ****   connected = TRUE;
+ 218              		.loc 1 191 3 view .LVU37
+ 219              		.loc 1 191 13 is_stmt 0 view .LVU38
+ 220 0000 054B     		ldr	r3, .L11
+ 221 0002 0122     		movs	r2, #1
+ 222 0004 1A60     		str	r2, [r3]
+ 192:Core/Src/sensor.c ****   connection_handle = handle;
+ 223              		.loc 1 192 3 is_stmt 1 view .LVU39
+ 224              		.loc 1 192 21 is_stmt 0 view .LVU40
+ 225 0006 054B     		ldr	r3, .L11+4
+ 226 0008 1980     		strh	r1, [r3]	@ movhi
+ 193:Core/Src/sensor.c **** 
+ 194:Core/Src/sensor.c ****   PRINTF("Connected to device:");
+ 227              		.loc 1 194 33 is_stmt 1 view .LVU41
+ 195:Core/Src/sensor.c ****   for(uint32_t i = 5; i > 0; i--){
+ 228              		.loc 1 195 3 view .LVU42
+ 229              	.LBB2:
+ 230              		.loc 1 195 7 view .LVU43
+ 231              	.LVL4:
+ 232              		.loc 1 195 16 is_stmt 0 view .LVU44
+ 233 000a 0523     		movs	r3, #5
+ 234              		.loc 1 195 3 view .LVU45
+ 235 000c 00E0     		b	.L9
+ 236              	.LVL5:
+ 237              	.L10:
+ 196:Core/Src/sensor.c ****     PRINTF("%02X-", addr[i]);
+ 238              		.loc 1 196 29 is_stmt 1 discriminator 3 view .LVU46
+ 195:Core/Src/sensor.c ****   for(uint32_t i = 5; i > 0; i--){
+ 239              		.loc 1 195 31 discriminator 3 view .LVU47
+ 240 000e 013B     		subs	r3, r3, #1
+ 241              	.LVL6:
+ 242              	.L9:
+ 195:Core/Src/sensor.c ****   for(uint32_t i = 5; i > 0; i--){
+ 243              		.loc 1 195 25 discriminator 1 view .LVU48
+ 244 0010 002B     		cmp	r3, #0
+ 245 0012 FCD1     		bne	.L10
+ 246              	.LBE2:
+ 197:Core/Src/sensor.c ****   }
+ 198:Core/Src/sensor.c ****   PRINTF("%02X\n", addr[0]);
+ 199:Core/Src/sensor.c **** }
+ 247              		.loc 1 199 1 is_stmt 0 view .LVU49
+ 248 0014 7047     		bx	lr
+ 249              	.L12:
+ 250 0016 00BF     		.align	2
+ 251              	.L11:
+ 252 0018 00000000 		.word	connected
+ARM GAS  /tmp/ccBEkavh.s 			page 9
+
+
+ 253 001c 00000000 		.word	connection_handle
+ 254              		.cfi_endproc
+ 255              	.LFE138:
+ 257              		.section	.text.user_notify,"ax",%progbits
+ 258              		.align	1
+ 259              		.global	user_notify
+ 260              		.syntax unified
+ 261              		.thumb
+ 262              		.thumb_func
+ 264              	user_notify:
+ 265              	.LVL7:
+ 266              	.LFB136:
+ 120:Core/Src/sensor.c ****   hci_uart_pckt *hci_pckt = pData;
+ 267              		.loc 1 120 1 is_stmt 1 view -0
+ 268              		.cfi_startproc
+ 269              		@ args = 0, pretend = 0, frame = 0
+ 270              		@ frame_needed = 0, uses_anonymous_args = 0
+ 120:Core/Src/sensor.c ****   hci_uart_pckt *hci_pckt = pData;
+ 271              		.loc 1 120 1 is_stmt 0 view .LVU51
+ 272 0000 08B5     		push	{r3, lr}
+ 273              	.LCFI3:
+ 274              		.cfi_def_cfa_offset 8
+ 275              		.cfi_offset 3, -8
+ 276              		.cfi_offset 14, -4
+ 121:Core/Src/sensor.c ****   /* obtain event packet */
+ 277              		.loc 1 121 3 is_stmt 1 view .LVU52
+ 278              	.LVL8:
+ 123:Core/Src/sensor.c **** 
+ 279              		.loc 1 123 3 view .LVU53
+ 125:Core/Src/sensor.c ****     return;
+ 280              		.loc 1 125 3 view .LVU54
+ 125:Core/Src/sensor.c ****     return;
+ 281              		.loc 1 125 14 is_stmt 0 view .LVU55
+ 282 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 125:Core/Src/sensor.c ****     return;
+ 283              		.loc 1 125 5 view .LVU56
+ 284 0004 042B     		cmp	r3, #4
+ 285 0006 06D1     		bne	.L13
+ 128:Core/Src/sensor.c **** 
+ 286              		.loc 1 128 3 is_stmt 1 view .LVU57
+ 128:Core/Src/sensor.c **** 
+ 287              		.loc 1 128 20 is_stmt 0 view .LVU58
+ 288 0008 4378     		ldrb	r3, [r0, #1]	@ zero_extendqisi2
+ 128:Core/Src/sensor.c **** 
+ 289              		.loc 1 128 3 view .LVU59
+ 290 000a 3E2B     		cmp	r3, #62
+ 291 000c 07D0     		beq	.L15
+ 292 000e FF2B     		cmp	r3, #255
+ 293 0010 0ED0     		beq	.L16
+ 294 0012 052B     		cmp	r3, #5
+ 295 0014 00D0     		beq	.L18
+ 296              	.LVL9:
+ 297              	.L13:
+ 167:Core/Src/sensor.c **** 
+ 298              		.loc 1 167 1 view .LVU60
+ 299 0016 08BD     		pop	{r3, pc}
+ 300              	.LVL10:
+ARM GAS  /tmp/ccBEkavh.s 			page 10
+
+
+ 301              	.L18:
+ 132:Core/Src/sensor.c ****     }
+ 302              		.loc 1 132 7 is_stmt 1 view .LVU61
+ 303 0018 FFF7FEFF 		bl	GAP_DisconnectionComplete_CB
+ 304              	.LVL11:
+ 134:Core/Src/sensor.c **** 
+ 305              		.loc 1 134 5 view .LVU62
+ 306 001c FBE7     		b	.L13
+ 307              	.LVL12:
+ 308              	.L15:
+ 309              	.LBB3:
+ 138:Core/Src/sensor.c **** 
+ 310              		.loc 1 138 7 view .LVU63
+ 140:Core/Src/sensor.c ****       case EVT_LE_CONN_COMPLETE:
+ 311              		.loc 1 140 7 view .LVU64
+ 140:Core/Src/sensor.c ****       case EVT_LE_CONN_COMPLETE:
+ 312              		.loc 1 140 17 is_stmt 0 view .LVU65
+ 313 001e C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 314 0020 012B     		cmp	r3, #1
+ 315 0022 F8D1     		bne	.L13
+ 316              	.LBB4:
+ 143:Core/Src/sensor.c ****           GAP_ConnectionComplete_CB(cc->peer_bdaddr, cc->handle);
+ 317              		.loc 1 143 11 is_stmt 1 view .LVU66
+ 318              	.LVL13:
+ 144:Core/Src/sensor.c ****         }
+ 319              		.loc 1 144 11 view .LVU67
+ 320 0024 B0F80510 		ldrh	r1, [r0, #5]	@ unaligned
+ 321 0028 0930     		adds	r0, r0, #9
+ 322              	.LVL14:
+ 144:Core/Src/sensor.c ****         }
+ 323              		.loc 1 144 11 is_stmt 0 view .LVU68
+ 324 002a FFF7FEFF 		bl	GAP_ConnectionComplete_CB
+ 325              	.LVL15:
+ 144:Core/Src/sensor.c ****         }
+ 326              		.loc 1 144 11 view .LVU69
+ 327              	.LBE4:
+ 146:Core/Src/sensor.c ****       }
+ 328              		.loc 1 146 9 is_stmt 1 view .LVU70
+ 329 002e F2E7     		b	.L13
+ 330              	.LVL16:
+ 331              	.L16:
+ 146:Core/Src/sensor.c ****       }
+ 332              		.loc 1 146 9 is_stmt 0 view .LVU71
+ 333              	.LBE3:
+ 334              	.LBB5:
+ 153:Core/Src/sensor.c ****       switch(blue_evt->ecode){
+ 335              		.loc 1 153 7 is_stmt 1 view .LVU72
+ 154:Core/Src/sensor.c **** 
+ 336              		.loc 1 154 7 view .LVU73
+ 154:Core/Src/sensor.c **** 
+ 337              		.loc 1 154 22 is_stmt 0 view .LVU74
+ 338 0030 B0F80320 		ldrh	r2, [r0, #3]	@ unaligned
+ 339 0034 40F61443 		movw	r3, #3092
+ 340 0038 9A42     		cmp	r2, r3
+ 341 003a ECD1     		bne	.L13
+ 342              	.LBB6:
+ 158:Core/Src/sensor.c ****           Read_Request_CB(pr->attr_handle);
+ARM GAS  /tmp/ccBEkavh.s 			page 11
+
+
+ 343              		.loc 1 158 11 is_stmt 1 view .LVU75
+ 344              	.LVL17:
+ 159:Core/Src/sensor.c ****         }
+ 345              		.loc 1 159 11 view .LVU76
+ 346 003c B0F80700 		ldrh	r0, [r0, #7]	@ unaligned
+ 347              	.LVL18:
+ 159:Core/Src/sensor.c ****         }
+ 348              		.loc 1 159 11 is_stmt 0 view .LVU77
+ 349 0040 FFF7FEFF 		bl	Read_Request_CB
+ 350              	.LVL19:
+ 351              	.LBE6:
+ 161:Core/Src/sensor.c ****       }
+ 352              		.loc 1 161 9 is_stmt 1 view .LVU78
+ 353 0044 E7E7     		b	.L13
+ 354              	.LBE5:
+ 355              		.cfi_endproc
+ 356              	.LFE136:
+ 358              		.global	q_axes
+ 359              		.section	.bss.q_axes,"aw",%nobits
+ 360              		.align	2
+ 363              	q_axes:
+ 364 0000 00000000 		.space	12
+ 364      00000000 
+ 364      00000000 
+ 365              		.global	m_axes
+ 366              		.section	.bss.m_axes,"aw",%nobits
+ 367              		.align	2
+ 370              	m_axes:
+ 371 0000 00000000 		.space	12
+ 371      00000000 
+ 371      00000000 
+ 372              		.global	g_axes
+ 373              		.section	.bss.g_axes,"aw",%nobits
+ 374              		.align	2
+ 377              	g_axes:
+ 378 0000 00000000 		.space	12
+ 378      00000000 
+ 378      00000000 
+ 379              		.global	x_axes
+ 380              		.section	.bss.x_axes,"aw",%nobits
+ 381              		.align	2
+ 384              	x_axes:
+ 385 0000 00000000 		.space	12
+ 385      00000000 
+ 385      00000000 
+ 386              		.global	request_free_fall_notify
+ 387              		.section	.bss.request_free_fall_notify,"aw",%nobits
+ 390              	request_free_fall_notify:
+ 391 0000 00       		.space	1
+ 392              		.global	connected
+ 393              		.section	.bss.connected,"aw",%nobits
+ 394              		.align	2
+ 397              	connected:
+ 398 0000 00000000 		.space	4
+ 399              		.global	notification_enabled
+ 400              		.section	.bss.notification_enabled,"aw",%nobits
+ 403              	notification_enabled:
+ARM GAS  /tmp/ccBEkavh.s 			page 12
+
+
+ 404 0000 00       		.space	1
+ 405              		.global	connection_handle
+ 406              		.section	.bss.connection_handle,"aw",%nobits
+ 407              		.align	1
+ 410              	connection_handle:
+ 411 0000 0000     		.space	2
+ 412              		.global	set_connectable
+ 413              		.section	.data.set_connectable,"aw"
+ 416              	set_connectable:
+ 417 0000 01       		.byte	1
+ 418              		.text
+ 419              	.Letext0:
+ 420              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 421              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 422              		.file 4 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_def.h"
+ 423              		.file 5 "Core/Inc/gatt_db.h"
+ 424              		.file 6 "Middlewares/ST/BlueNRG-MS/includes/link_layer.h"
+ 425              		.file 7 "Middlewares/ST/BlueNRG-MS/includes/hci_const.h"
+ 426              		.file 8 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_aci_const.h"
+ 427              		.file 9 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_gatt_aci.h"
+ 428              		.file 10 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_gap_aci.h"
+ 429              		.file 11 "Middlewares/ST/BlueNRG-MS/includes/hci_le.h"
+ARM GAS  /tmp/ccBEkavh.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 sensor.c
+     /tmp/ccBEkavh.s:21     .rodata.Set_DeviceConnectable.str1.4:0000000000000000 $d
+     /tmp/ccBEkavh.s:25     .text.Set_DeviceConnectable:0000000000000000 $t
+     /tmp/ccBEkavh.s:31     .text.Set_DeviceConnectable:0000000000000000 Set_DeviceConnectable
+     /tmp/ccBEkavh.s:158    .text.Set_DeviceConnectable:00000000000000e0 $d
+     /tmp/ccBEkavh.s:164    .text.GAP_DisconnectionComplete_CB:0000000000000000 $t
+     /tmp/ccBEkavh.s:170    .text.GAP_DisconnectionComplete_CB:0000000000000000 GAP_DisconnectionComplete_CB
+     /tmp/ccBEkavh.s:197    .text.GAP_DisconnectionComplete_CB:0000000000000014 $d
+     /tmp/ccBEkavh.s:397    .bss.connected:0000000000000000 connected
+     /tmp/ccBEkavh.s:416    .data.set_connectable:0000000000000000 set_connectable
+     /tmp/ccBEkavh.s:403    .bss.notification_enabled:0000000000000000 notification_enabled
+     /tmp/ccBEkavh.s:204    .text.GAP_ConnectionComplete_CB:0000000000000000 $t
+     /tmp/ccBEkavh.s:210    .text.GAP_ConnectionComplete_CB:0000000000000000 GAP_ConnectionComplete_CB
+     /tmp/ccBEkavh.s:252    .text.GAP_ConnectionComplete_CB:0000000000000018 $d
+     /tmp/ccBEkavh.s:410    .bss.connection_handle:0000000000000000 connection_handle
+     /tmp/ccBEkavh.s:258    .text.user_notify:0000000000000000 $t
+     /tmp/ccBEkavh.s:264    .text.user_notify:0000000000000000 user_notify
+     /tmp/ccBEkavh.s:363    .bss.q_axes:0000000000000000 q_axes
+     /tmp/ccBEkavh.s:360    .bss.q_axes:0000000000000000 $d
+     /tmp/ccBEkavh.s:370    .bss.m_axes:0000000000000000 m_axes
+     /tmp/ccBEkavh.s:367    .bss.m_axes:0000000000000000 $d
+     /tmp/ccBEkavh.s:377    .bss.g_axes:0000000000000000 g_axes
+     /tmp/ccBEkavh.s:374    .bss.g_axes:0000000000000000 $d
+     /tmp/ccBEkavh.s:384    .bss.x_axes:0000000000000000 x_axes
+     /tmp/ccBEkavh.s:381    .bss.x_axes:0000000000000000 $d
+     /tmp/ccBEkavh.s:390    .bss.request_free_fall_notify:0000000000000000 request_free_fall_notify
+     /tmp/ccBEkavh.s:391    .bss.request_free_fall_notify:0000000000000000 $d
+     /tmp/ccBEkavh.s:394    .bss.connected:0000000000000000 $d
+     /tmp/ccBEkavh.s:404    .bss.notification_enabled:0000000000000000 $d
+     /tmp/ccBEkavh.s:407    .bss.connection_handle:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+hci_le_set_scan_resp_data
+aci_gap_set_discoverable
+aci_gap_update_adv_data
+bdaddr
+Read_Request_CB

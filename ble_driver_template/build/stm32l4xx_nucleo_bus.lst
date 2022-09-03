@@ -1,0 +1,1228 @@
+ARM GAS  /tmp/ccYp0wP3.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32l4xx_nucleo_bus.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/stm32l4xx_nucleo_bus.c"
+  20              		.section	.text.SPI1_MspInit,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	SPI1_MspInit:
+  27              	.LVL0:
+  28              	.LFB138:
+   1:Core/Src/stm32l4xx_nucleo_bus.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+   3:Core/Src/stm32l4xx_nucleo_bus.c ****   ******************************************************************************
+   4:Core/Src/stm32l4xx_nucleo_bus.c ****   * @file           : stm32l4xx_nucleo_bus.c
+   5:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief          : source file for the BSP BUS IO driver
+   6:Core/Src/stm32l4xx_nucleo_bus.c ****   ******************************************************************************
+   7:Core/Src/stm32l4xx_nucleo_bus.c ****   * @attention
+   8:Core/Src/stm32l4xx_nucleo_bus.c ****   *
+   9:Core/Src/stm32l4xx_nucleo_bus.c ****   * Copyright (c) 2022 STMicroelectronics.
+  10:Core/Src/stm32l4xx_nucleo_bus.c ****   * All rights reserved.
+  11:Core/Src/stm32l4xx_nucleo_bus.c ****   *
+  12:Core/Src/stm32l4xx_nucleo_bus.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/stm32l4xx_nucleo_bus.c ****   * in the root directory of this software component.
+  14:Core/Src/stm32l4xx_nucleo_bus.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/stm32l4xx_nucleo_bus.c ****   *
+  16:Core/Src/stm32l4xx_nucleo_bus.c ****   ******************************************************************************
+  17:Core/Src/stm32l4xx_nucleo_bus.c **** */
+  18:Core/Src/stm32l4xx_nucleo_bus.c **** /* USER CODE END Header */
+  19:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  20:Core/Src/stm32l4xx_nucleo_bus.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/stm32l4xx_nucleo_bus.c **** #include "stm32l4xx_nucleo_bus.h"
+  22:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  23:Core/Src/stm32l4xx_nucleo_bus.c **** __weak HAL_StatusTypeDef MX_SPI1_Init(SPI_HandleTypeDef* hspi);
+  24:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  25:Core/Src/stm32l4xx_nucleo_bus.c **** /** @addtogroup BSP
+  26:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  27:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  28:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  29:Core/Src/stm32l4xx_nucleo_bus.c **** /** @addtogroup STM32L4XX_NUCLEO
+  30:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+ARM GAS  /tmp/ccYp0wP3.s 			page 2
+
+
+  31:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  32:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  33:Core/Src/stm32l4xx_nucleo_bus.c **** /** @defgroup STM32L4XX_NUCLEO_BUS STM32L4XX_NUCLEO BUS
+  34:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  35:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  36:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  37:Core/Src/stm32l4xx_nucleo_bus.c **** /** @defgroup STM32L4XX_NUCLEO_BUS_Exported_Variables BUS Exported Variables
+  38:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  39:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  40:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  41:Core/Src/stm32l4xx_nucleo_bus.c **** SPI_HandleTypeDef hspi1;
+  42:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+  43:Core/Src/stm32l4xx_nucleo_bus.c ****   * @}
+  44:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  45:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  46:Core/Src/stm32l4xx_nucleo_bus.c **** /** @defgroup STM32L4XX_NUCLEO_BUS_Private_Variables BUS Private Variables
+  47:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  48:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  49:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  50:Core/Src/stm32l4xx_nucleo_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
+  51:Core/Src/stm32l4xx_nucleo_bus.c **** static uint32_t IsSPI1MspCbValid = 0;
+  52:Core/Src/stm32l4xx_nucleo_bus.c **** #endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+  53:Core/Src/stm32l4xx_nucleo_bus.c **** static uint32_t SPI1InitCounter = 0;
+  54:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  55:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+  56:Core/Src/stm32l4xx_nucleo_bus.c ****   * @}
+  57:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  58:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  59:Core/Src/stm32l4xx_nucleo_bus.c **** /** @defgroup STM32L4XX_NUCLEO_BUS_Private_FunctionPrototypes  BUS Private Function
+  60:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  61:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  62:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  63:Core/Src/stm32l4xx_nucleo_bus.c **** static void SPI1_MspInit(SPI_HandleTypeDef* hSPI);
+  64:Core/Src/stm32l4xx_nucleo_bus.c **** static void SPI1_MspDeInit(SPI_HandleTypeDef* hSPI);
+  65:Core/Src/stm32l4xx_nucleo_bus.c **** #if (USE_CUBEMX_BSP_V2 == 1)
+  66:Core/Src/stm32l4xx_nucleo_bus.c **** static uint32_t SPI_GetPrescaler( uint32_t clk_src_hz, uint32_t baudrate_mbps );
+  67:Core/Src/stm32l4xx_nucleo_bus.c **** #endif
+  68:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  69:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+  70:Core/Src/stm32l4xx_nucleo_bus.c ****   * @}
+  71:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  72:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  73:Core/Src/stm32l4xx_nucleo_bus.c **** /** @defgroup STM32L4XX_NUCLEO_LOW_LEVEL_Private_Functions STM32L4XX_NUCLEO LOW LEVEL Private Funct
+  74:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  75:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  76:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  77:Core/Src/stm32l4xx_nucleo_bus.c **** /** @defgroup STM32L4XX_NUCLEO_BUS_Exported_Functions STM32L4XX_NUCLEO_BUS Exported Functions
+  78:Core/Src/stm32l4xx_nucleo_bus.c ****   * @{
+  79:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  80:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  81:Core/Src/stm32l4xx_nucleo_bus.c **** /* BUS IO driver over SPI Peripheral */
+  82:Core/Src/stm32l4xx_nucleo_bus.c **** /*******************************************************************************
+  83:Core/Src/stm32l4xx_nucleo_bus.c ****                             BUS OPERATIONS OVER SPI
+  84:Core/Src/stm32l4xx_nucleo_bus.c **** *******************************************************************************/
+  85:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+  86:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief  Initializes SPI HAL.
+  87:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ARM GAS  /tmp/ccYp0wP3.s 			page 3
+
+
+  88:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+  89:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_SPI1_Init(void)
+  90:Core/Src/stm32l4xx_nucleo_bus.c **** {
+  91:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+  92:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  93:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi1.Instance  = SPI1;
+  94:Core/Src/stm32l4xx_nucleo_bus.c **** 
+  95:Core/Src/stm32l4xx_nucleo_bus.c ****   if(SPI1InitCounter++ == 0)
+  96:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+  97:Core/Src/stm32l4xx_nucleo_bus.c ****     if (HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_RESET)
+  98:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+  99:Core/Src/stm32l4xx_nucleo_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 0U)
+ 100:Core/Src/stm32l4xx_nucleo_bus.c ****         /* Init the SPI Msp */
+ 101:Core/Src/stm32l4xx_nucleo_bus.c ****         SPI1_MspInit(&hspi1);
+ 102:Core/Src/stm32l4xx_nucleo_bus.c **** #else
+ 103:Core/Src/stm32l4xx_nucleo_bus.c ****         if(IsSPI1MspCbValid == 0U)
+ 104:Core/Src/stm32l4xx_nucleo_bus.c ****         {
+ 105:Core/Src/stm32l4xx_nucleo_bus.c ****             if(BSP_SPI1_RegisterDefaultMspCallbacks() != BSP_ERROR_NONE)
+ 106:Core/Src/stm32l4xx_nucleo_bus.c ****             {
+ 107:Core/Src/stm32l4xx_nucleo_bus.c ****                 return BSP_ERROR_MSP_FAILURE;
+ 108:Core/Src/stm32l4xx_nucleo_bus.c ****             }
+ 109:Core/Src/stm32l4xx_nucleo_bus.c ****         }
+ 110:Core/Src/stm32l4xx_nucleo_bus.c **** #endif
+ 111:Core/Src/stm32l4xx_nucleo_bus.c ****         if(ret == BSP_ERROR_NONE)
+ 112:Core/Src/stm32l4xx_nucleo_bus.c ****         {
+ 113:Core/Src/stm32l4xx_nucleo_bus.c ****             /* Init the SPI */
+ 114:Core/Src/stm32l4xx_nucleo_bus.c ****             if (MX_SPI1_Init(&hspi1) != HAL_OK)
+ 115:Core/Src/stm32l4xx_nucleo_bus.c ****             {
+ 116:Core/Src/stm32l4xx_nucleo_bus.c ****                 ret = BSP_ERROR_BUS_FAILURE;
+ 117:Core/Src/stm32l4xx_nucleo_bus.c ****             }
+ 118:Core/Src/stm32l4xx_nucleo_bus.c ****         }
+ 119:Core/Src/stm32l4xx_nucleo_bus.c ****     }
+ 120:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 121:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 122:Core/Src/stm32l4xx_nucleo_bus.c ****   return ret;
+ 123:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 124:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 125:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 126:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief  DeInitializes SPI HAL.
+ 127:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval None
+ 128:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ 129:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ 130:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_SPI1_DeInit(void)
+ 131:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 132:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_BUS_FAILURE;
+ 133:Core/Src/stm32l4xx_nucleo_bus.c ****   if (SPI1InitCounter > 0)
+ 134:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 135:Core/Src/stm32l4xx_nucleo_bus.c ****     if (--SPI1InitCounter == 0)
+ 136:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 137:Core/Src/stm32l4xx_nucleo_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 0U)
+ 138:Core/Src/stm32l4xx_nucleo_bus.c ****       SPI1_MspDeInit(&hspi1);
+ 139:Core/Src/stm32l4xx_nucleo_bus.c **** #endif
+ 140:Core/Src/stm32l4xx_nucleo_bus.c ****       /* DeInit the SPI*/
+ 141:Core/Src/stm32l4xx_nucleo_bus.c ****       if (HAL_SPI_DeInit(&hspi1) == HAL_OK)
+ 142:Core/Src/stm32l4xx_nucleo_bus.c ****       {
+ 143:Core/Src/stm32l4xx_nucleo_bus.c ****         ret = BSP_ERROR_NONE;
+ 144:Core/Src/stm32l4xx_nucleo_bus.c ****       }
+ARM GAS  /tmp/ccYp0wP3.s 			page 4
+
+
+ 145:Core/Src/stm32l4xx_nucleo_bus.c ****     }
+ 146:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 147:Core/Src/stm32l4xx_nucleo_bus.c ****   return ret;
+ 148:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 149:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 150:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 151:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief  Write Data through SPI BUS.
+ 152:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param  pData: Pointer to data buffer to send
+ 153:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param  Length: Length of data in byte
+ 154:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ 155:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ 156:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_SPI1_Send(uint8_t *pData, uint16_t Length)
+ 157:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 158:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 159:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 160:Core/Src/stm32l4xx_nucleo_bus.c ****   if(HAL_SPI_Transmit(&hspi1, pData, Length, BUS_SPI1_POLL_TIMEOUT) != HAL_OK)
+ 161:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 162:Core/Src/stm32l4xx_nucleo_bus.c ****       ret = BSP_ERROR_UNKNOWN_FAILURE;
+ 163:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 164:Core/Src/stm32l4xx_nucleo_bus.c ****   return ret;
+ 165:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 166:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 167:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 168:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief  Receive Data from SPI BUS
+ 169:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param  pData: Pointer to data buffer to receive
+ 170:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param  Length: Length of data in byte
+ 171:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ 172:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ 173:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t  BSP_SPI1_Recv(uint8_t *pData, uint16_t Length)
+ 174:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 175:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 176:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 177:Core/Src/stm32l4xx_nucleo_bus.c ****   if(HAL_SPI_Receive(&hspi1, pData, Length, BUS_SPI1_POLL_TIMEOUT) != HAL_OK)
+ 178:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 179:Core/Src/stm32l4xx_nucleo_bus.c ****       ret = BSP_ERROR_UNKNOWN_FAILURE;
+ 180:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 181:Core/Src/stm32l4xx_nucleo_bus.c ****   return ret;
+ 182:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 183:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 184:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 185:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief  Send and Receive data to/from SPI BUS (Full duplex)
+ 186:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param  pData: Pointer to data buffer to send/receive
+ 187:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param  Length: Length of data in byte
+ 188:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ 189:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ 190:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_SPI1_SendRecv(uint8_t *pTxData, uint8_t *pRxData, uint16_t Length)
+ 191:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 192:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 193:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   if(HAL_SPI_TransmitReceive(&hspi1, pTxData, pRxData, Length, BUS_SPI1_POLL_TIMEOUT) != HAL_OK)
+ 195:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 196:Core/Src/stm32l4xx_nucleo_bus.c ****       ret = BSP_ERROR_UNKNOWN_FAILURE;
+ 197:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 198:Core/Src/stm32l4xx_nucleo_bus.c ****   return ret;
+ 199:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 200:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 201:Core/Src/stm32l4xx_nucleo_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
+ARM GAS  /tmp/ccYp0wP3.s 			page 5
+
+
+ 202:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 203:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief Register Default BSP SPI1 Bus Msp Callbacks
+ 204:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ 205:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ 206:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_SPI1_RegisterDefaultMspCallbacks (void)
+ 207:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 208:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 209:Core/Src/stm32l4xx_nucleo_bus.c ****   __HAL_SPI_RESET_HANDLE_STATE(&hspi1);
+ 210:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 211:Core/Src/stm32l4xx_nucleo_bus.c ****   /* Register MspInit Callback */
+ 212:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_MSPINIT_CB_ID, SPI1_MspInit)  != HAL_OK)
+ 213:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 214:Core/Src/stm32l4xx_nucleo_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 215:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 216:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 217:Core/Src/stm32l4xx_nucleo_bus.c ****   /* Register MspDeInit Callback */
+ 218:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_MSPDEINIT_CB_ID, SPI1_MspDeInit) != HAL_OK)
+ 219:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 220:Core/Src/stm32l4xx_nucleo_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 221:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 222:Core/Src/stm32l4xx_nucleo_bus.c ****   IsSPI1MspCbValid = 1;
+ 223:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 224:Core/Src/stm32l4xx_nucleo_bus.c ****   return BSP_ERROR_NONE;
+ 225:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 226:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 227:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 228:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief BSP SPI1 Bus Msp Callback registering
+ 229:Core/Src/stm32l4xx_nucleo_bus.c ****   * @param Callbacks     pointer to SPI1 MspInit/MspDeInit callback functions
+ 230:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval BSP status
+ 231:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ 232:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_SPI1_RegisterMspCallbacks (BSP_SPI_Cb_t *Callbacks)
+ 233:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 234:Core/Src/stm32l4xx_nucleo_bus.c ****   /* Prevent unused argument(s) compilation warning */
+ 235:Core/Src/stm32l4xx_nucleo_bus.c ****   __HAL_SPI_RESET_HANDLE_STATE(&hspi1);
+ 236:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 237:Core/Src/stm32l4xx_nucleo_bus.c ****    /* Register MspInit Callback */
+ 238:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_MSPINIT_CB_ID, Callbacks->pMspInitCb)  != HAL_OK)
+ 239:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 240:Core/Src/stm32l4xx_nucleo_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 241:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 242:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 243:Core/Src/stm32l4xx_nucleo_bus.c ****   /* Register MspDeInit Callback */
+ 244:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_MSPDEINIT_CB_ID, Callbacks->pMspDeInitCb) != HAL_OK)
+ 245:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 246:Core/Src/stm32l4xx_nucleo_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 247:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 248:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 249:Core/Src/stm32l4xx_nucleo_bus.c ****   IsSPI1MspCbValid = 1;
+ 250:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 251:Core/Src/stm32l4xx_nucleo_bus.c ****   return BSP_ERROR_NONE;
+ 252:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 253:Core/Src/stm32l4xx_nucleo_bus.c **** #endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+ 254:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 255:Core/Src/stm32l4xx_nucleo_bus.c **** /**
+ 256:Core/Src/stm32l4xx_nucleo_bus.c ****   * @brief  Return system tick in ms
+ 257:Core/Src/stm32l4xx_nucleo_bus.c ****   * @retval Current HAL time base time stamp
+ 258:Core/Src/stm32l4xx_nucleo_bus.c ****   */
+ARM GAS  /tmp/ccYp0wP3.s 			page 6
+
+
+ 259:Core/Src/stm32l4xx_nucleo_bus.c **** /*
+ 260:Core/Src/stm32l4xx_nucleo_bus.c **** int32_t BSP_GetTick(void) {
+ 261:Core/Src/stm32l4xx_nucleo_bus.c ****   return HAL_GetTick();
+ 262:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 263:Core/Src/stm32l4xx_nucleo_bus.c **** */
+ 264:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 265:Core/Src/stm32l4xx_nucleo_bus.c **** /* SPI1 init function */
+ 266:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 267:Core/Src/stm32l4xx_nucleo_bus.c **** __weak HAL_StatusTypeDef MX_SPI1_Init(SPI_HandleTypeDef* hspi)
+ 268:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 269:Core/Src/stm32l4xx_nucleo_bus.c ****   HAL_StatusTypeDef ret = HAL_OK;
+ 270:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 271:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Instance = SPI1;
+ 272:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.Mode = SPI_MODE_MASTER;
+ 273:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.Direction = SPI_DIRECTION_2LINES;
+ 274:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+ 275:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+ 276:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+ 277:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.NSS = SPI_NSS_SOFT;
+ 278:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+ 279:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 280:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
+ 281:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 282:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCPolynomial = 7;
+ 283:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 284:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 285:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_Init(hspi) != HAL_OK)
+ 286:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 287:Core/Src/stm32l4xx_nucleo_bus.c ****     ret = HAL_ERROR;
+ 288:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 289:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 290:Core/Src/stm32l4xx_nucleo_bus.c ****   return ret;
+ 291:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 292:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 293:Core/Src/stm32l4xx_nucleo_bus.c **** static void SPI1_MspInit(SPI_HandleTypeDef* spiHandle)
+ 294:Core/Src/stm32l4xx_nucleo_bus.c **** {
+  29              		.loc 1 294 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 294 1 is_stmt 0 view .LVU1
+  34 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 20
+  37              		.cfi_offset 4, -20
+  38              		.cfi_offset 5, -16
+  39              		.cfi_offset 6, -12
+  40              		.cfi_offset 7, -8
+  41              		.cfi_offset 14, -4
+  42 0002 89B0     		sub	sp, sp, #36
+  43              	.LCFI1:
+  44              		.cfi_def_cfa_offset 56
+ 295:Core/Src/stm32l4xx_nucleo_bus.c ****   GPIO_InitTypeDef GPIO_InitStruct;
+  45              		.loc 1 295 3 is_stmt 1 view .LVU2
+ 296:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE BEGIN SPI1_MspInit 0 */
+ 297:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 298:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE END SPI1_MspInit 0 */
+ARM GAS  /tmp/ccYp0wP3.s 			page 7
+
+
+ 299:Core/Src/stm32l4xx_nucleo_bus.c ****     /* Enable Peripheral clock */
+ 300:Core/Src/stm32l4xx_nucleo_bus.c ****     __HAL_RCC_SPI1_CLK_ENABLE();
+  46              		.loc 1 300 5 view .LVU3
+  47              	.LBB2:
+  48              		.loc 1 300 5 view .LVU4
+  49              		.loc 1 300 5 view .LVU5
+  50 0004 204B     		ldr	r3, .L3
+  51 0006 1A6E     		ldr	r2, [r3, #96]
+  52 0008 42F48052 		orr	r2, r2, #4096
+  53 000c 1A66     		str	r2, [r3, #96]
+  54              		.loc 1 300 5 view .LVU6
+  55 000e 1A6E     		ldr	r2, [r3, #96]
+  56 0010 02F48052 		and	r2, r2, #4096
+  57 0014 0092     		str	r2, [sp]
+  58              		.loc 1 300 5 view .LVU7
+  59 0016 009A     		ldr	r2, [sp]
+  60              	.LBE2:
+  61              		.loc 1 300 5 view .LVU8
+ 301:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 302:Core/Src/stm32l4xx_nucleo_bus.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+  62              		.loc 1 302 5 view .LVU9
+  63              	.LBB3:
+  64              		.loc 1 302 5 view .LVU10
+  65              		.loc 1 302 5 view .LVU11
+  66 0018 DA6C     		ldr	r2, [r3, #76]
+  67 001a 42F00102 		orr	r2, r2, #1
+  68 001e DA64     		str	r2, [r3, #76]
+  69              		.loc 1 302 5 view .LVU12
+  70 0020 DA6C     		ldr	r2, [r3, #76]
+  71 0022 02F00102 		and	r2, r2, #1
+  72 0026 0192     		str	r2, [sp, #4]
+  73              		.loc 1 302 5 view .LVU13
+  74 0028 019A     		ldr	r2, [sp, #4]
+  75              	.LBE3:
+  76              		.loc 1 302 5 view .LVU14
+ 303:Core/Src/stm32l4xx_nucleo_bus.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+  77              		.loc 1 303 5 view .LVU15
+  78              	.LBB4:
+  79              		.loc 1 303 5 view .LVU16
+  80              		.loc 1 303 5 view .LVU17
+  81 002a DA6C     		ldr	r2, [r3, #76]
+  82 002c 42F00202 		orr	r2, r2, #2
+  83 0030 DA64     		str	r2, [r3, #76]
+  84              		.loc 1 303 5 view .LVU18
+  85 0032 DB6C     		ldr	r3, [r3, #76]
+  86 0034 03F00203 		and	r3, r3, #2
+  87 0038 0293     		str	r3, [sp, #8]
+  88              		.loc 1 303 5 view .LVU19
+  89 003a 029B     		ldr	r3, [sp, #8]
+  90              	.LBE4:
+  91              		.loc 1 303 5 view .LVU20
+ 304:Core/Src/stm32l4xx_nucleo_bus.c ****     /**SPI1 GPIO Configuration
+ 305:Core/Src/stm32l4xx_nucleo_bus.c ****     PA6     ------> SPI1_MISO
+ 306:Core/Src/stm32l4xx_nucleo_bus.c ****     PA7     ------> SPI1_MOSI
+ 307:Core/Src/stm32l4xx_nucleo_bus.c ****     PB3 (JTDO-TRACESWO)     ------> SPI1_SCK
+ 308:Core/Src/stm32l4xx_nucleo_bus.c ****     */
+ 309:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Pin = BUS_SPI1_MISO_GPIO_PIN;
+ARM GAS  /tmp/ccYp0wP3.s 			page 8
+
+
+  92              		.loc 1 309 5 view .LVU21
+  93              		.loc 1 309 25 is_stmt 0 view .LVU22
+  94 003c 4023     		movs	r3, #64
+  95 003e 0393     		str	r3, [sp, #12]
+ 310:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  96              		.loc 1 310 5 is_stmt 1 view .LVU23
+  97              		.loc 1 310 26 is_stmt 0 view .LVU24
+  98 0040 0227     		movs	r7, #2
+  99 0042 0497     		str	r7, [sp, #16]
+ 311:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 100              		.loc 1 311 5 is_stmt 1 view .LVU25
+ 101              		.loc 1 311 26 is_stmt 0 view .LVU26
+ 102 0044 0026     		movs	r6, #0
+ 103 0046 0596     		str	r6, [sp, #20]
+ 312:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 104              		.loc 1 312 5 is_stmt 1 view .LVU27
+ 105              		.loc 1 312 27 is_stmt 0 view .LVU28
+ 106 0048 0325     		movs	r5, #3
+ 107 004a 0695     		str	r5, [sp, #24]
+ 313:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Alternate = BUS_SPI1_MISO_GPIO_AF;
+ 108              		.loc 1 313 5 is_stmt 1 view .LVU29
+ 109              		.loc 1 313 31 is_stmt 0 view .LVU30
+ 110 004c 0524     		movs	r4, #5
+ 111 004e 0794     		str	r4, [sp, #28]
+ 314:Core/Src/stm32l4xx_nucleo_bus.c ****     HAL_GPIO_Init(BUS_SPI1_MISO_GPIO_PORT, &GPIO_InitStruct);
+ 112              		.loc 1 314 5 is_stmt 1 view .LVU31
+ 113 0050 03A9     		add	r1, sp, #12
+ 114 0052 4FF09040 		mov	r0, #1207959552
+ 115              	.LVL1:
+ 116              		.loc 1 314 5 is_stmt 0 view .LVU32
+ 117 0056 FFF7FEFF 		bl	HAL_GPIO_Init
+ 118              	.LVL2:
+ 315:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 316:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Pin = BUS_SPI1_MOSI_GPIO_PIN;
+ 119              		.loc 1 316 5 is_stmt 1 view .LVU33
+ 120              		.loc 1 316 25 is_stmt 0 view .LVU34
+ 121 005a 8023     		movs	r3, #128
+ 122 005c 0393     		str	r3, [sp, #12]
+ 317:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 123              		.loc 1 317 5 is_stmt 1 view .LVU35
+ 124              		.loc 1 317 26 is_stmt 0 view .LVU36
+ 125 005e 0497     		str	r7, [sp, #16]
+ 318:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 126              		.loc 1 318 5 is_stmt 1 view .LVU37
+ 127              		.loc 1 318 26 is_stmt 0 view .LVU38
+ 128 0060 0596     		str	r6, [sp, #20]
+ 319:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 129              		.loc 1 319 5 is_stmt 1 view .LVU39
+ 130              		.loc 1 319 27 is_stmt 0 view .LVU40
+ 131 0062 0695     		str	r5, [sp, #24]
+ 320:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Alternate = BUS_SPI1_MOSI_GPIO_AF;
+ 132              		.loc 1 320 5 is_stmt 1 view .LVU41
+ 133              		.loc 1 320 31 is_stmt 0 view .LVU42
+ 134 0064 0794     		str	r4, [sp, #28]
+ 321:Core/Src/stm32l4xx_nucleo_bus.c ****     HAL_GPIO_Init(BUS_SPI1_MOSI_GPIO_PORT, &GPIO_InitStruct);
+ 135              		.loc 1 321 5 is_stmt 1 view .LVU43
+ 136 0066 03A9     		add	r1, sp, #12
+ARM GAS  /tmp/ccYp0wP3.s 			page 9
+
+
+ 137 0068 4FF09040 		mov	r0, #1207959552
+ 138 006c FFF7FEFF 		bl	HAL_GPIO_Init
+ 139              	.LVL3:
+ 322:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 323:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Pin = BUS_SPI1_SCK_GPIO_PIN;
+ 140              		.loc 1 323 5 view .LVU44
+ 141              		.loc 1 323 25 is_stmt 0 view .LVU45
+ 142 0070 0823     		movs	r3, #8
+ 143 0072 0393     		str	r3, [sp, #12]
+ 324:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 144              		.loc 1 324 5 is_stmt 1 view .LVU46
+ 145              		.loc 1 324 26 is_stmt 0 view .LVU47
+ 146 0074 0497     		str	r7, [sp, #16]
+ 325:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 147              		.loc 1 325 5 is_stmt 1 view .LVU48
+ 148              		.loc 1 325 26 is_stmt 0 view .LVU49
+ 149 0076 0596     		str	r6, [sp, #20]
+ 326:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 150              		.loc 1 326 5 is_stmt 1 view .LVU50
+ 151              		.loc 1 326 27 is_stmt 0 view .LVU51
+ 152 0078 0695     		str	r5, [sp, #24]
+ 327:Core/Src/stm32l4xx_nucleo_bus.c ****     GPIO_InitStruct.Alternate = BUS_SPI1_SCK_GPIO_AF;
+ 153              		.loc 1 327 5 is_stmt 1 view .LVU52
+ 154              		.loc 1 327 31 is_stmt 0 view .LVU53
+ 155 007a 0794     		str	r4, [sp, #28]
+ 328:Core/Src/stm32l4xx_nucleo_bus.c ****     HAL_GPIO_Init(BUS_SPI1_SCK_GPIO_PORT, &GPIO_InitStruct);
+ 156              		.loc 1 328 5 is_stmt 1 view .LVU54
+ 157 007c 03A9     		add	r1, sp, #12
+ 158 007e 0348     		ldr	r0, .L3+4
+ 159 0080 FFF7FEFF 		bl	HAL_GPIO_Init
+ 160              	.LVL4:
+ 329:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 330:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE BEGIN SPI1_MspInit 1 */
+ 331:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 332:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE END SPI1_MspInit 1 */
+ 333:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 161              		.loc 1 333 1 is_stmt 0 view .LVU55
+ 162 0084 09B0     		add	sp, sp, #36
+ 163              	.LCFI2:
+ 164              		.cfi_def_cfa_offset 20
+ 165              		@ sp needed
+ 166 0086 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 167              	.L4:
+ 168              		.align	2
+ 169              	.L3:
+ 170 0088 00100240 		.word	1073876992
+ 171 008c 00040048 		.word	1207960576
+ 172              		.cfi_endproc
+ 173              	.LFE138:
+ 175              		.section	.text.SPI1_MspDeInit,"ax",%progbits
+ 176              		.align	1
+ 177              		.syntax unified
+ 178              		.thumb
+ 179              		.thumb_func
+ 181              	SPI1_MspDeInit:
+ 182              	.LVL5:
+ 183              	.LFB139:
+ARM GAS  /tmp/ccYp0wP3.s 			page 10
+
+
+ 334:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 335:Core/Src/stm32l4xx_nucleo_bus.c **** static void SPI1_MspDeInit(SPI_HandleTypeDef* spiHandle)
+ 336:Core/Src/stm32l4xx_nucleo_bus.c **** {
+ 184              		.loc 1 336 1 is_stmt 1 view -0
+ 185              		.cfi_startproc
+ 186              		@ args = 0, pretend = 0, frame = 0
+ 187              		@ frame_needed = 0, uses_anonymous_args = 0
+ 188              		.loc 1 336 1 is_stmt 0 view .LVU57
+ 189 0000 08B5     		push	{r3, lr}
+ 190              	.LCFI3:
+ 191              		.cfi_def_cfa_offset 8
+ 192              		.cfi_offset 3, -8
+ 193              		.cfi_offset 14, -4
+ 337:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE BEGIN SPI1_MspDeInit 0 */
+ 338:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 339:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE END SPI1_MspDeInit 0 */
+ 340:Core/Src/stm32l4xx_nucleo_bus.c ****     /* Peripheral clock disable */
+ 341:Core/Src/stm32l4xx_nucleo_bus.c ****     __HAL_RCC_SPI1_CLK_DISABLE();
+ 194              		.loc 1 341 5 is_stmt 1 view .LVU58
+ 195 0002 0A4A     		ldr	r2, .L7
+ 196 0004 136E     		ldr	r3, [r2, #96]
+ 197 0006 23F48053 		bic	r3, r3, #4096
+ 198 000a 1366     		str	r3, [r2, #96]
+ 342:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 343:Core/Src/stm32l4xx_nucleo_bus.c ****     /**SPI1 GPIO Configuration
+ 344:Core/Src/stm32l4xx_nucleo_bus.c ****     PA6     ------> SPI1_MISO
+ 345:Core/Src/stm32l4xx_nucleo_bus.c ****     PA7     ------> SPI1_MOSI
+ 346:Core/Src/stm32l4xx_nucleo_bus.c ****     PB3 (JTDO-TRACESWO)     ------> SPI1_SCK
+ 347:Core/Src/stm32l4xx_nucleo_bus.c ****     */
+ 348:Core/Src/stm32l4xx_nucleo_bus.c ****     HAL_GPIO_DeInit(BUS_SPI1_MISO_GPIO_PORT, BUS_SPI1_MISO_GPIO_PIN);
+ 199              		.loc 1 348 5 view .LVU59
+ 200 000c 4021     		movs	r1, #64
+ 201 000e 4FF09040 		mov	r0, #1207959552
+ 202              	.LVL6:
+ 203              		.loc 1 348 5 is_stmt 0 view .LVU60
+ 204 0012 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 205              	.LVL7:
+ 349:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 350:Core/Src/stm32l4xx_nucleo_bus.c ****     HAL_GPIO_DeInit(BUS_SPI1_MOSI_GPIO_PORT, BUS_SPI1_MOSI_GPIO_PIN);
+ 206              		.loc 1 350 5 is_stmt 1 view .LVU61
+ 207 0016 8021     		movs	r1, #128
+ 208 0018 4FF09040 		mov	r0, #1207959552
+ 209 001c FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 210              	.LVL8:
+ 351:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 352:Core/Src/stm32l4xx_nucleo_bus.c ****     HAL_GPIO_DeInit(BUS_SPI1_SCK_GPIO_PORT, BUS_SPI1_SCK_GPIO_PIN);
+ 211              		.loc 1 352 5 view .LVU62
+ 212 0020 0821     		movs	r1, #8
+ 213 0022 0348     		ldr	r0, .L7+4
+ 214 0024 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 215              	.LVL9:
+ 353:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 354:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE BEGIN SPI1_MspDeInit 1 */
+ 355:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 356:Core/Src/stm32l4xx_nucleo_bus.c ****   /* USER CODE END SPI1_MspDeInit 1 */
+ 357:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 216              		.loc 1 357 1 is_stmt 0 view .LVU63
+ARM GAS  /tmp/ccYp0wP3.s 			page 11
+
+
+ 217 0028 08BD     		pop	{r3, pc}
+ 218              	.L8:
+ 219 002a 00BF     		.align	2
+ 220              	.L7:
+ 221 002c 00100240 		.word	1073876992
+ 222 0030 00040048 		.word	1207960576
+ 223              		.cfi_endproc
+ 224              	.LFE139:
+ 226              		.section	.text.BSP_SPI1_DeInit,"ax",%progbits
+ 227              		.align	1
+ 228              		.global	BSP_SPI1_DeInit
+ 229              		.syntax unified
+ 230              		.thumb
+ 231              		.thumb_func
+ 233              	BSP_SPI1_DeInit:
+ 234              	.LFB133:
+ 131:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_BUS_FAILURE;
+ 235              		.loc 1 131 1 is_stmt 1 view -0
+ 236              		.cfi_startproc
+ 237              		@ args = 0, pretend = 0, frame = 0
+ 238              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132:Core/Src/stm32l4xx_nucleo_bus.c ****   if (SPI1InitCounter > 0)
+ 239              		.loc 1 132 3 view .LVU65
+ 240              	.LVL10:
+ 133:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 241              		.loc 1 133 3 view .LVU66
+ 133:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 242              		.loc 1 133 23 is_stmt 0 view .LVU67
+ 243 0000 0D4B     		ldr	r3, .L19
+ 244 0002 1B68     		ldr	r3, [r3]
+ 133:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 245              		.loc 1 133 6 view .LVU68
+ 246 0004 8BB1     		cbz	r3, .L11
+ 135:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 247              		.loc 1 135 5 is_stmt 1 view .LVU69
+ 135:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 248              		.loc 1 135 9 is_stmt 0 view .LVU70
+ 249 0006 013B     		subs	r3, r3, #1
+ 135:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 250              		.loc 1 135 8 view .LVU71
+ 251 0008 0B4A     		ldr	r2, .L19
+ 252 000a 1360     		str	r3, [r2]
+ 253 000c 83B9     		cbnz	r3, .L12
+ 131:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_BUS_FAILURE;
+ 254              		.loc 1 131 1 view .LVU72
+ 255 000e 10B5     		push	{r4, lr}
+ 256              	.LCFI4:
+ 257              		.cfi_def_cfa_offset 8
+ 258              		.cfi_offset 4, -8
+ 259              		.cfi_offset 14, -4
+ 138:Core/Src/stm32l4xx_nucleo_bus.c **** #endif
+ 260              		.loc 1 138 7 is_stmt 1 view .LVU73
+ 261 0010 0A4C     		ldr	r4, .L19+4
+ 262 0012 2046     		mov	r0, r4
+ 263 0014 FFF7FEFF 		bl	SPI1_MspDeInit
+ 264              	.LVL11:
+ 141:Core/Src/stm32l4xx_nucleo_bus.c ****       {
+ARM GAS  /tmp/ccYp0wP3.s 			page 12
+
+
+ 265              		.loc 1 141 7 view .LVU74
+ 141:Core/Src/stm32l4xx_nucleo_bus.c ****       {
+ 266              		.loc 1 141 11 is_stmt 0 view .LVU75
+ 267 0018 2046     		mov	r0, r4
+ 268 001a FFF7FEFF 		bl	HAL_SPI_DeInit
+ 269              	.LVL12:
+ 141:Core/Src/stm32l4xx_nucleo_bus.c ****       {
+ 270              		.loc 1 141 10 view .LVU76
+ 271 001e 08B9     		cbnz	r0, .L18
+ 143:Core/Src/stm32l4xx_nucleo_bus.c ****       }
+ 272              		.loc 1 143 13 view .LVU77
+ 273 0020 0020     		movs	r0, #0
+ 274              	.LVL13:
+ 147:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 275              		.loc 1 147 3 is_stmt 1 view .LVU78
+ 276              	.L9:
+ 148:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 277              		.loc 1 148 1 is_stmt 0 view .LVU79
+ 278 0022 10BD     		pop	{r4, pc}
+ 279              	.LVL14:
+ 280              	.L18:
+ 132:Core/Src/stm32l4xx_nucleo_bus.c ****   if (SPI1InitCounter > 0)
+ 281              		.loc 1 132 11 view .LVU80
+ 282 0024 6FF00700 		mvn	r0, #7
+ 283 0028 FBE7     		b	.L9
+ 284              	.L11:
+ 285              	.LCFI5:
+ 286              		.cfi_def_cfa_offset 0
+ 287              		.cfi_restore 4
+ 288              		.cfi_restore 14
+ 289 002a 6FF00700 		mvn	r0, #7
+ 290 002e 7047     		bx	lr
+ 291              	.L12:
+ 292 0030 6FF00700 		mvn	r0, #7
+ 148:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 293              		.loc 1 148 1 view .LVU81
+ 294 0034 7047     		bx	lr
+ 295              	.L20:
+ 296 0036 00BF     		.align	2
+ 297              	.L19:
+ 298 0038 00000000 		.word	SPI1InitCounter
+ 299 003c 00000000 		.word	hspi1
+ 300              		.cfi_endproc
+ 301              	.LFE133:
+ 303              		.section	.text.BSP_SPI1_Send,"ax",%progbits
+ 304              		.align	1
+ 305              		.global	BSP_SPI1_Send
+ 306              		.syntax unified
+ 307              		.thumb
+ 308              		.thumb_func
+ 310              	BSP_SPI1_Send:
+ 311              	.LVL15:
+ 312              	.LFB134:
+ 157:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 313              		.loc 1 157 1 is_stmt 1 view -0
+ 314              		.cfi_startproc
+ 315              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /tmp/ccYp0wP3.s 			page 13
+
+
+ 316              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 317              		.loc 1 157 1 is_stmt 0 view .LVU83
+ 318 0000 08B5     		push	{r3, lr}
+ 319              	.LCFI6:
+ 320              		.cfi_def_cfa_offset 8
+ 321              		.cfi_offset 3, -8
+ 322              		.cfi_offset 14, -4
+ 323 0002 0A46     		mov	r2, r1
+ 158:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 324              		.loc 1 158 3 is_stmt 1 view .LVU84
+ 325              	.LVL16:
+ 160:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 326              		.loc 1 160 3 view .LVU85
+ 160:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 327              		.loc 1 160 6 is_stmt 0 view .LVU86
+ 328 0004 4FF48053 		mov	r3, #4096
+ 329 0008 0146     		mov	r1, r0
+ 330              	.LVL17:
+ 160:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 331              		.loc 1 160 6 view .LVU87
+ 332 000a 0448     		ldr	r0, .L26
+ 333              	.LVL18:
+ 160:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 334              		.loc 1 160 6 view .LVU88
+ 335 000c FFF7FEFF 		bl	HAL_SPI_Transmit
+ 336              	.LVL19:
+ 160:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 337              		.loc 1 160 5 view .LVU89
+ 338 0010 00B9     		cbnz	r0, .L25
+ 339              	.LVL20:
+ 340              	.L21:
+ 165:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 341              		.loc 1 165 1 view .LVU90
+ 342 0012 08BD     		pop	{r3, pc}
+ 343              	.LVL21:
+ 344              	.L25:
+ 162:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 345              		.loc 1 162 11 view .LVU91
+ 346 0014 6FF00500 		mvn	r0, #5
+ 347              	.LVL22:
+ 164:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 348              		.loc 1 164 3 is_stmt 1 view .LVU92
+ 164:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 349              		.loc 1 164 10 is_stmt 0 view .LVU93
+ 350 0018 FBE7     		b	.L21
+ 351              	.L27:
+ 352 001a 00BF     		.align	2
+ 353              	.L26:
+ 354 001c 00000000 		.word	hspi1
+ 355              		.cfi_endproc
+ 356              	.LFE134:
+ 358              		.section	.text.BSP_SPI1_Recv,"ax",%progbits
+ 359              		.align	1
+ 360              		.global	BSP_SPI1_Recv
+ 361              		.syntax unified
+ 362              		.thumb
+ARM GAS  /tmp/ccYp0wP3.s 			page 14
+
+
+ 363              		.thumb_func
+ 365              	BSP_SPI1_Recv:
+ 366              	.LVL23:
+ 367              	.LFB135:
+ 174:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 368              		.loc 1 174 1 is_stmt 1 view -0
+ 369              		.cfi_startproc
+ 370              		@ args = 0, pretend = 0, frame = 0
+ 371              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 372              		.loc 1 174 1 is_stmt 0 view .LVU95
+ 373 0000 08B5     		push	{r3, lr}
+ 374              	.LCFI7:
+ 375              		.cfi_def_cfa_offset 8
+ 376              		.cfi_offset 3, -8
+ 377              		.cfi_offset 14, -4
+ 378 0002 0A46     		mov	r2, r1
+ 175:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 379              		.loc 1 175 3 is_stmt 1 view .LVU96
+ 380              	.LVL24:
+ 177:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 381              		.loc 1 177 3 view .LVU97
+ 177:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 382              		.loc 1 177 6 is_stmt 0 view .LVU98
+ 383 0004 4FF48053 		mov	r3, #4096
+ 384 0008 0146     		mov	r1, r0
+ 385              	.LVL25:
+ 177:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 386              		.loc 1 177 6 view .LVU99
+ 387 000a 0448     		ldr	r0, .L33
+ 388              	.LVL26:
+ 177:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 389              		.loc 1 177 6 view .LVU100
+ 390 000c FFF7FEFF 		bl	HAL_SPI_Receive
+ 391              	.LVL27:
+ 177:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 392              		.loc 1 177 5 view .LVU101
+ 393 0010 00B9     		cbnz	r0, .L32
+ 394              	.LVL28:
+ 395              	.L28:
+ 182:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 396              		.loc 1 182 1 view .LVU102
+ 397 0012 08BD     		pop	{r3, pc}
+ 398              	.LVL29:
+ 399              	.L32:
+ 179:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 400              		.loc 1 179 11 view .LVU103
+ 401 0014 6FF00500 		mvn	r0, #5
+ 402              	.LVL30:
+ 181:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 403              		.loc 1 181 3 is_stmt 1 view .LVU104
+ 181:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 404              		.loc 1 181 10 is_stmt 0 view .LVU105
+ 405 0018 FBE7     		b	.L28
+ 406              	.L34:
+ 407 001a 00BF     		.align	2
+ 408              	.L33:
+ARM GAS  /tmp/ccYp0wP3.s 			page 15
+
+
+ 409 001c 00000000 		.word	hspi1
+ 410              		.cfi_endproc
+ 411              	.LFE135:
+ 413              		.section	.text.BSP_SPI1_SendRecv,"ax",%progbits
+ 414              		.align	1
+ 415              		.global	BSP_SPI1_SendRecv
+ 416              		.syntax unified
+ 417              		.thumb
+ 418              		.thumb_func
+ 420              	BSP_SPI1_SendRecv:
+ 421              	.LVL31:
+ 422              	.LFB136:
+ 191:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 423              		.loc 1 191 1 is_stmt 1 view -0
+ 424              		.cfi_startproc
+ 425              		@ args = 0, pretend = 0, frame = 0
+ 426              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 427              		.loc 1 191 1 is_stmt 0 view .LVU107
+ 428 0000 00B5     		push	{lr}
+ 429              	.LCFI8:
+ 430              		.cfi_def_cfa_offset 4
+ 431              		.cfi_offset 14, -4
+ 432 0002 83B0     		sub	sp, sp, #12
+ 433              	.LCFI9:
+ 434              		.cfi_def_cfa_offset 16
+ 435 0004 1346     		mov	r3, r2
+ 192:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 436              		.loc 1 192 3 is_stmt 1 view .LVU108
+ 437              	.LVL32:
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 438              		.loc 1 194 3 view .LVU109
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 439              		.loc 1 194 6 is_stmt 0 view .LVU110
+ 440 0006 4FF48052 		mov	r2, #4096
+ 441              	.LVL33:
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 442              		.loc 1 194 6 view .LVU111
+ 443 000a 0092     		str	r2, [sp]
+ 444 000c 0A46     		mov	r2, r1
+ 445 000e 0146     		mov	r1, r0
+ 446              	.LVL34:
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 447              		.loc 1 194 6 view .LVU112
+ 448 0010 0448     		ldr	r0, .L40
+ 449              	.LVL35:
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 450              		.loc 1 194 6 view .LVU113
+ 451 0012 FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+ 452              	.LVL36:
+ 194:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 453              		.loc 1 194 5 view .LVU114
+ 454 0016 10B9     		cbnz	r0, .L39
+ 455              	.LVL37:
+ 456              	.L35:
+ 199:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 457              		.loc 1 199 1 view .LVU115
+ARM GAS  /tmp/ccYp0wP3.s 			page 16
+
+
+ 458 0018 03B0     		add	sp, sp, #12
+ 459              	.LCFI10:
+ 460              		.cfi_remember_state
+ 461              		.cfi_def_cfa_offset 4
+ 462              		@ sp needed
+ 463 001a 5DF804FB 		ldr	pc, [sp], #4
+ 464              	.LVL38:
+ 465              	.L39:
+ 466              	.LCFI11:
+ 467              		.cfi_restore_state
+ 196:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 468              		.loc 1 196 11 view .LVU116
+ 469 001e 6FF00500 		mvn	r0, #5
+ 470              	.LVL39:
+ 198:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 471              		.loc 1 198 3 is_stmt 1 view .LVU117
+ 198:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 472              		.loc 1 198 10 is_stmt 0 view .LVU118
+ 473 0022 F9E7     		b	.L35
+ 474              	.L41:
+ 475              		.align	2
+ 476              	.L40:
+ 477 0024 00000000 		.word	hspi1
+ 478              		.cfi_endproc
+ 479              	.LFE136:
+ 481              		.section	.text.MX_SPI1_Init,"ax",%progbits
+ 482              		.align	1
+ 483              		.weak	MX_SPI1_Init
+ 484              		.syntax unified
+ 485              		.thumb
+ 486              		.thumb_func
+ 488              	MX_SPI1_Init:
+ 489              	.LVL40:
+ 490              	.LFB137:
+ 268:Core/Src/stm32l4xx_nucleo_bus.c ****   HAL_StatusTypeDef ret = HAL_OK;
+ 491              		.loc 1 268 1 is_stmt 1 view -0
+ 492              		.cfi_startproc
+ 493              		@ args = 0, pretend = 0, frame = 0
+ 494              		@ frame_needed = 0, uses_anonymous_args = 0
+ 268:Core/Src/stm32l4xx_nucleo_bus.c ****   HAL_StatusTypeDef ret = HAL_OK;
+ 495              		.loc 1 268 1 is_stmt 0 view .LVU120
+ 496 0000 08B5     		push	{r3, lr}
+ 497              	.LCFI12:
+ 498              		.cfi_def_cfa_offset 8
+ 499              		.cfi_offset 3, -8
+ 500              		.cfi_offset 14, -4
+ 269:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 501              		.loc 1 269 3 is_stmt 1 view .LVU121
+ 502              	.LVL41:
+ 271:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.Mode = SPI_MODE_MASTER;
+ 503              		.loc 1 271 3 view .LVU122
+ 271:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.Mode = SPI_MODE_MASTER;
+ 504              		.loc 1 271 18 is_stmt 0 view .LVU123
+ 505 0002 0F4A     		ldr	r2, .L46
+ 506 0004 0260     		str	r2, [r0]
+ 272:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.Direction = SPI_DIRECTION_2LINES;
+ 507              		.loc 1 272 3 is_stmt 1 view .LVU124
+ARM GAS  /tmp/ccYp0wP3.s 			page 17
+
+
+ 272:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.Direction = SPI_DIRECTION_2LINES;
+ 508              		.loc 1 272 19 is_stmt 0 view .LVU125
+ 509 0006 4FF48272 		mov	r2, #260
+ 510 000a 4260     		str	r2, [r0, #4]
+ 273:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+ 511              		.loc 1 273 3 is_stmt 1 view .LVU126
+ 273:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+ 512              		.loc 1 273 24 is_stmt 0 view .LVU127
+ 513 000c 0022     		movs	r2, #0
+ 514 000e 8260     		str	r2, [r0, #8]
+ 274:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+ 515              		.loc 1 274 3 is_stmt 1 view .LVU128
+ 274:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+ 516              		.loc 1 274 23 is_stmt 0 view .LVU129
+ 517 0010 4FF4E061 		mov	r1, #1792
+ 518 0014 C160     		str	r1, [r0, #12]
+ 275:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+ 519              		.loc 1 275 3 is_stmt 1 view .LVU130
+ 275:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+ 520              		.loc 1 275 26 is_stmt 0 view .LVU131
+ 521 0016 0261     		str	r2, [r0, #16]
+ 276:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.NSS = SPI_NSS_SOFT;
+ 522              		.loc 1 276 3 is_stmt 1 view .LVU132
+ 276:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.NSS = SPI_NSS_SOFT;
+ 523              		.loc 1 276 23 is_stmt 0 view .LVU133
+ 524 0018 4261     		str	r2, [r0, #20]
+ 277:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+ 525              		.loc 1 277 3 is_stmt 1 view .LVU134
+ 277:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+ 526              		.loc 1 277 18 is_stmt 0 view .LVU135
+ 527 001a 4FF40071 		mov	r1, #512
+ 528 001e 8161     		str	r1, [r0, #24]
+ 278:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 529              		.loc 1 278 3 is_stmt 1 view .LVU136
+ 278:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 530              		.loc 1 278 32 is_stmt 0 view .LVU137
+ 531 0020 1821     		movs	r1, #24
+ 532 0022 C161     		str	r1, [r0, #28]
+ 279:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
+ 533              		.loc 1 279 3 is_stmt 1 view .LVU138
+ 279:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
+ 534              		.loc 1 279 23 is_stmt 0 view .LVU139
+ 535 0024 0262     		str	r2, [r0, #32]
+ 280:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 536              		.loc 1 280 3 is_stmt 1 view .LVU140
+ 280:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 537              		.loc 1 280 21 is_stmt 0 view .LVU141
+ 538 0026 4262     		str	r2, [r0, #36]
+ 281:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCPolynomial = 7;
+ 539              		.loc 1 281 3 is_stmt 1 view .LVU142
+ 281:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCPolynomial = 7;
+ 540              		.loc 1 281 29 is_stmt 0 view .LVU143
+ 541 0028 8262     		str	r2, [r0, #40]
+ 282:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 542              		.loc 1 282 3 is_stmt 1 view .LVU144
+ 282:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 543              		.loc 1 282 28 is_stmt 0 view .LVU145
+ARM GAS  /tmp/ccYp0wP3.s 			page 18
+
+
+ 544 002a 0721     		movs	r1, #7
+ 545 002c C162     		str	r1, [r0, #44]
+ 283:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 546              		.loc 1 283 3 is_stmt 1 view .LVU146
+ 283:Core/Src/stm32l4xx_nucleo_bus.c ****   hspi->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 547              		.loc 1 283 24 is_stmt 0 view .LVU147
+ 548 002e 0263     		str	r2, [r0, #48]
+ 284:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_Init(hspi) != HAL_OK)
+ 549              		.loc 1 284 3 is_stmt 1 view .LVU148
+ 284:Core/Src/stm32l4xx_nucleo_bus.c ****   if (HAL_SPI_Init(hspi) != HAL_OK)
+ 550              		.loc 1 284 23 is_stmt 0 view .LVU149
+ 551 0030 0822     		movs	r2, #8
+ 552 0032 4263     		str	r2, [r0, #52]
+ 285:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 553              		.loc 1 285 3 is_stmt 1 view .LVU150
+ 285:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 554              		.loc 1 285 7 is_stmt 0 view .LVU151
+ 555 0034 FFF7FEFF 		bl	HAL_SPI_Init
+ 556              	.LVL42:
+ 285:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 557              		.loc 1 285 6 view .LVU152
+ 558 0038 00B1     		cbz	r0, .L43
+ 287:Core/Src/stm32l4xx_nucleo_bus.c ****   }
+ 559              		.loc 1 287 9 view .LVU153
+ 560 003a 0120     		movs	r0, #1
+ 561              	.L43:
+ 562              	.LVL43:
+ 290:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 563              		.loc 1 290 3 is_stmt 1 view .LVU154
+ 291:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 564              		.loc 1 291 1 is_stmt 0 view .LVU155
+ 565 003c 08BD     		pop	{r3, pc}
+ 566              	.L47:
+ 567 003e 00BF     		.align	2
+ 568              	.L46:
+ 569 0040 00300140 		.word	1073819648
+ 570              		.cfi_endproc
+ 571              	.LFE137:
+ 573              		.section	.text.BSP_SPI1_Init,"ax",%progbits
+ 574              		.align	1
+ 575              		.global	BSP_SPI1_Init
+ 576              		.syntax unified
+ 577              		.thumb
+ 578              		.thumb_func
+ 580              	BSP_SPI1_Init:
+ 581              	.LFB132:
+  90:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 582              		.loc 1 90 1 is_stmt 1 view -0
+ 583              		.cfi_startproc
+ 584              		@ args = 0, pretend = 0, frame = 0
+ 585              		@ frame_needed = 0, uses_anonymous_args = 0
+  91:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 586              		.loc 1 91 3 view .LVU157
+ 587              	.LVL44:
+  93:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 588              		.loc 1 93 3 view .LVU158
+  93:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ARM GAS  /tmp/ccYp0wP3.s 			page 19
+
+
+ 589              		.loc 1 93 19 is_stmt 0 view .LVU159
+ 590 0000 0E4B     		ldr	r3, .L59
+ 591 0002 0F4A     		ldr	r2, .L59+4
+ 592 0004 1A60     		str	r2, [r3]
+  95:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 593              		.loc 1 95 3 is_stmt 1 view .LVU160
+  95:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 594              		.loc 1 95 21 is_stmt 0 view .LVU161
+ 595 0006 0F4A     		ldr	r2, .L59+8
+ 596 0008 1368     		ldr	r3, [r2]
+ 597 000a 591C     		adds	r1, r3, #1
+ 598 000c 1160     		str	r1, [r2]
+  95:Core/Src/stm32l4xx_nucleo_bus.c ****   {
+ 599              		.loc 1 95 5 view .LVU162
+ 600 000e 0BB1     		cbz	r3, .L57
+  91:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 601              		.loc 1 91 11 view .LVU163
+ 602 0010 0020     		movs	r0, #0
+ 123:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 603              		.loc 1 123 1 view .LVU164
+ 604 0012 7047     		bx	lr
+ 605              	.L57:
+  90:Core/Src/stm32l4xx_nucleo_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 606              		.loc 1 90 1 view .LVU165
+ 607 0014 10B5     		push	{r4, lr}
+ 608              	.LCFI13:
+ 609              		.cfi_def_cfa_offset 8
+ 610              		.cfi_offset 4, -8
+ 611              		.cfi_offset 14, -4
+  97:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 612              		.loc 1 97 5 is_stmt 1 view .LVU166
+  97:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 613              		.loc 1 97 9 is_stmt 0 view .LVU167
+ 614 0016 0948     		ldr	r0, .L59
+ 615 0018 FFF7FEFF 		bl	HAL_SPI_GetState
+ 616              	.LVL45:
+  97:Core/Src/stm32l4xx_nucleo_bus.c ****     {
+ 617              		.loc 1 97 8 view .LVU168
+ 618 001c 08B1     		cbz	r0, .L58
+  91:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 619              		.loc 1 91 11 view .LVU169
+ 620 001e 0020     		movs	r0, #0
+ 621              	.LVL46:
+ 622              	.L48:
+ 123:Core/Src/stm32l4xx_nucleo_bus.c **** 
+ 623              		.loc 1 123 1 view .LVU170
+ 624 0020 10BD     		pop	{r4, pc}
+ 625              	.LVL47:
+ 626              	.L58:
+ 101:Core/Src/stm32l4xx_nucleo_bus.c **** #else
+ 627              		.loc 1 101 9 is_stmt 1 view .LVU171
+ 628 0022 064C     		ldr	r4, .L59
+ 629 0024 2046     		mov	r0, r4
+ 630 0026 FFF7FEFF 		bl	SPI1_MspInit
+ 631              	.LVL48:
+ 111:Core/Src/stm32l4xx_nucleo_bus.c ****         {
+ 632              		.loc 1 111 9 view .LVU172
+ARM GAS  /tmp/ccYp0wP3.s 			page 20
+
+
+ 114:Core/Src/stm32l4xx_nucleo_bus.c ****             {
+ 633              		.loc 1 114 13 view .LVU173
+ 114:Core/Src/stm32l4xx_nucleo_bus.c ****             {
+ 634              		.loc 1 114 17 is_stmt 0 view .LVU174
+ 635 002a 2046     		mov	r0, r4
+ 636 002c FFF7FEFF 		bl	MX_SPI1_Init
+ 637              	.LVL49:
+ 114:Core/Src/stm32l4xx_nucleo_bus.c ****             {
+ 638              		.loc 1 114 16 view .LVU175
+ 639 0030 0028     		cmp	r0, #0
+ 640 0032 F5D0     		beq	.L48
+ 116:Core/Src/stm32l4xx_nucleo_bus.c ****             }
+ 641              		.loc 1 116 21 view .LVU176
+ 642 0034 6FF00700 		mvn	r0, #7
+ 643              	.LVL50:
+ 122:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 644              		.loc 1 122 3 is_stmt 1 view .LVU177
+ 122:Core/Src/stm32l4xx_nucleo_bus.c **** }
+ 645              		.loc 1 122 10 is_stmt 0 view .LVU178
+ 646 0038 F2E7     		b	.L48
+ 647              	.L60:
+ 648 003a 00BF     		.align	2
+ 649              	.L59:
+ 650 003c 00000000 		.word	hspi1
+ 651 0040 00300140 		.word	1073819648
+ 652 0044 00000000 		.word	SPI1InitCounter
+ 653              		.cfi_endproc
+ 654              	.LFE132:
+ 656              		.section	.bss.SPI1InitCounter,"aw",%nobits
+ 657              		.align	2
+ 660              	SPI1InitCounter:
+ 661 0000 00000000 		.space	4
+ 662              		.comm	hspi1,100,4
+ 663              		.text
+ 664              	.Letext0:
+ 665              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 666              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 667              		.file 4 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4s5xx.h"
+ 668              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 669              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 670              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 671              		.file 8 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 672              		.file 9 "Core/Inc/stm32l4xx_nucleo_bus.h"
+ARM GAS  /tmp/ccYp0wP3.s 			page 21
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stm32l4xx_nucleo_bus.c
+     /tmp/ccYp0wP3.s:21     .text.SPI1_MspInit:0000000000000000 $t
+     /tmp/ccYp0wP3.s:26     .text.SPI1_MspInit:0000000000000000 SPI1_MspInit
+     /tmp/ccYp0wP3.s:170    .text.SPI1_MspInit:0000000000000088 $d
+     /tmp/ccYp0wP3.s:176    .text.SPI1_MspDeInit:0000000000000000 $t
+     /tmp/ccYp0wP3.s:181    .text.SPI1_MspDeInit:0000000000000000 SPI1_MspDeInit
+     /tmp/ccYp0wP3.s:221    .text.SPI1_MspDeInit:000000000000002c $d
+     /tmp/ccYp0wP3.s:227    .text.BSP_SPI1_DeInit:0000000000000000 $t
+     /tmp/ccYp0wP3.s:233    .text.BSP_SPI1_DeInit:0000000000000000 BSP_SPI1_DeInit
+     /tmp/ccYp0wP3.s:298    .text.BSP_SPI1_DeInit:0000000000000038 $d
+     /tmp/ccYp0wP3.s:660    .bss.SPI1InitCounter:0000000000000000 SPI1InitCounter
+                            *COM*:0000000000000064 hspi1
+     /tmp/ccYp0wP3.s:304    .text.BSP_SPI1_Send:0000000000000000 $t
+     /tmp/ccYp0wP3.s:310    .text.BSP_SPI1_Send:0000000000000000 BSP_SPI1_Send
+     /tmp/ccYp0wP3.s:354    .text.BSP_SPI1_Send:000000000000001c $d
+     /tmp/ccYp0wP3.s:359    .text.BSP_SPI1_Recv:0000000000000000 $t
+     /tmp/ccYp0wP3.s:365    .text.BSP_SPI1_Recv:0000000000000000 BSP_SPI1_Recv
+     /tmp/ccYp0wP3.s:409    .text.BSP_SPI1_Recv:000000000000001c $d
+     /tmp/ccYp0wP3.s:414    .text.BSP_SPI1_SendRecv:0000000000000000 $t
+     /tmp/ccYp0wP3.s:420    .text.BSP_SPI1_SendRecv:0000000000000000 BSP_SPI1_SendRecv
+     /tmp/ccYp0wP3.s:477    .text.BSP_SPI1_SendRecv:0000000000000024 $d
+     /tmp/ccYp0wP3.s:482    .text.MX_SPI1_Init:0000000000000000 $t
+     /tmp/ccYp0wP3.s:488    .text.MX_SPI1_Init:0000000000000000 MX_SPI1_Init
+     /tmp/ccYp0wP3.s:569    .text.MX_SPI1_Init:0000000000000040 $d
+     /tmp/ccYp0wP3.s:574    .text.BSP_SPI1_Init:0000000000000000 $t
+     /tmp/ccYp0wP3.s:580    .text.BSP_SPI1_Init:0000000000000000 BSP_SPI1_Init
+     /tmp/ccYp0wP3.s:650    .text.BSP_SPI1_Init:000000000000003c $d
+     /tmp/ccYp0wP3.s:657    .bss.SPI1InitCounter:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GPIO_DeInit
+HAL_SPI_DeInit
+HAL_SPI_Transmit
+HAL_SPI_Receive
+HAL_SPI_TransmitReceive
+HAL_SPI_Init
+HAL_SPI_GetState

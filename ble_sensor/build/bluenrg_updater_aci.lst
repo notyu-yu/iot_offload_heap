@@ -1,0 +1,1362 @@
+ARM GAS  /tmp/ccvscUjm.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bluenrg_updater_aci.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c"
+  20              		.section	.text.aci_updater_start,"ax",%progbits
+  21              		.align	1
+  22              		.global	aci_updater_start
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	aci_updater_start:
+  28              	.LFB292:
+   1:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** /**
+   2:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   ******************************************************************************
+   3:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * @file    bluenrg_updater_aci.c
+   4:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * @author  AMS - HEA&RF BU
+   5:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * @brief   File with HCI commands for BlueNRG FW6.0 and above
+   6:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   ******************************************************************************
+   7:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * @attention
+   8:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *
+   9:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * Copyright (c) 2013 STMicroelectronics.
+  10:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * All rights reserved.
+  11:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *
+  12:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * in the root directory of this software component.
+  14:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *
+  16:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   ******************************************************************************
+  17:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   */
+  18:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #include "bluenrg_def.h"
+  19:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #include "bluenrg_types.h"
+  20:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #include "hci_const.h"
+  21:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #include "bluenrg_aci_const.h"
+  22:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #include "bluenrg_updater_aci.h"
+  23:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  24:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #define MIN(a,b)            ((a) < (b) )? (a) : (b)
+  25:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** #define MAX(a,b)            ((a) > (b) )? (a) : (b)
+  26:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  27:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_start(void)
+  28:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+  29              		.loc 1 28 1 view -0
+  30              		.cfi_startproc
+ARM GAS  /tmp/ccvscUjm.s 			page 2
+
+
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 89B0     		sub	sp, sp, #36
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 40
+  29:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+  40              		.loc 1 29 3 view .LVU1
+  30:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t status = 0;
+  41              		.loc 1 30 3 view .LVU2
+  42              		.loc 1 30 11 is_stmt 0 view .LVU3
+  43 0004 0021     		movs	r1, #0
+  44 0006 8DF80710 		strb	r1, [sp, #7]
+  31:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  32:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+  45              		.loc 1 32 3 is_stmt 1 view .LVU4
+  46 000a 0291     		str	r1, [sp, #8]
+  47 000c 0391     		str	r1, [sp, #12]
+  48 000e 0491     		str	r1, [sp, #16]
+  49 0010 0591     		str	r1, [sp, #20]
+  50 0012 0691     		str	r1, [sp, #24]
+  51 0014 0791     		str	r1, [sp, #28]
+  33:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+  52              		.loc 1 33 3 view .LVU5
+  53              		.loc 1 33 10 is_stmt 0 view .LVU6
+  54 0016 3F23     		movs	r3, #63
+  55 0018 ADF80830 		strh	r3, [sp, #8]	@ movhi
+  34:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_START;
+  56              		.loc 1 34 3 is_stmt 1 view .LVU7
+  57              		.loc 1 34 10 is_stmt 0 view .LVU8
+  58 001c 2023     		movs	r3, #32
+  59 001e ADF80A30 		strh	r3, [sp, #10]	@ movhi
+  35:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &status;
+  60              		.loc 1 35 3 is_stmt 1 view .LVU9
+  61              		.loc 1 35 13 is_stmt 0 view .LVU10
+  62 0022 0DF10703 		add	r3, sp, #7
+  63 0026 0693     		str	r3, [sp, #24]
+  36:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = 1;
+  64              		.loc 1 36 3 is_stmt 1 view .LVU11
+  65              		.loc 1 36 11 is_stmt 0 view .LVU12
+  66 0028 0123     		movs	r3, #1
+  67 002a 0793     		str	r3, [sp, #28]
+  37:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  38:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   hci_send_req(&rq, FALSE); // No command complete is sent.
+  68              		.loc 1 38 3 is_stmt 1 view .LVU13
+  69 002c 02A8     		add	r0, sp, #8
+  70 002e FFF7FEFF 		bl	hci_send_req
+  71              	.LVL0:
+  39:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  40:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return status;  
+  72              		.loc 1 40 3 view .LVU14
+  41:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+  73              		.loc 1 41 1 is_stmt 0 view .LVU15
+  74 0032 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ARM GAS  /tmp/ccvscUjm.s 			page 3
+
+
+  75 0036 09B0     		add	sp, sp, #36
+  76              	.LCFI2:
+  77              		.cfi_def_cfa_offset 4
+  78              		@ sp needed
+  79 0038 5DF804FB 		ldr	pc, [sp], #4
+  80              		.cfi_endproc
+  81              	.LFE292:
+  83              		.section	.text.aci_updater_reboot,"ax",%progbits
+  84              		.align	1
+  85              		.global	aci_updater_reboot
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  90              	aci_updater_reboot:
+  91              	.LFB293:
+  42:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  43:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_reboot(void)
+  44:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+  92              		.loc 1 44 1 is_stmt 1 view -0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 32
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96 0000 00B5     		push	{lr}
+  97              	.LCFI3:
+  98              		.cfi_def_cfa_offset 4
+  99              		.cfi_offset 14, -4
+ 100 0002 89B0     		sub	sp, sp, #36
+ 101              	.LCFI4:
+ 102              		.cfi_def_cfa_offset 40
+  45:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 103              		.loc 1 45 3 view .LVU17
+  46:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t status = 0;
+ 104              		.loc 1 46 3 view .LVU18
+ 105              		.loc 1 46 11 is_stmt 0 view .LVU19
+ 106 0004 0021     		movs	r1, #0
+ 107 0006 8DF80710 		strb	r1, [sp, #7]
+  47:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  48:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 108              		.loc 1 48 3 is_stmt 1 view .LVU20
+ 109 000a 0291     		str	r1, [sp, #8]
+ 110 000c 0391     		str	r1, [sp, #12]
+ 111 000e 0491     		str	r1, [sp, #16]
+ 112 0010 0591     		str	r1, [sp, #20]
+ 113 0012 0691     		str	r1, [sp, #24]
+ 114 0014 0791     		str	r1, [sp, #28]
+  49:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 115              		.loc 1 49 3 view .LVU21
+ 116              		.loc 1 49 10 is_stmt 0 view .LVU22
+ 117 0016 3F23     		movs	r3, #63
+ 118 0018 ADF80830 		strh	r3, [sp, #8]	@ movhi
+  50:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_REBOOT;
+ 119              		.loc 1 50 3 is_stmt 1 view .LVU23
+ 120              		.loc 1 50 10 is_stmt 0 view .LVU24
+ 121 001c 2123     		movs	r3, #33
+ 122 001e ADF80A30 		strh	r3, [sp, #10]	@ movhi
+  51:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &status;
+ 123              		.loc 1 51 3 is_stmt 1 view .LVU25
+ARM GAS  /tmp/ccvscUjm.s 			page 4
+
+
+ 124              		.loc 1 51 13 is_stmt 0 view .LVU26
+ 125 0022 0DF10703 		add	r3, sp, #7
+ 126 0026 0693     		str	r3, [sp, #24]
+  52:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = 1;
+ 127              		.loc 1 52 3 is_stmt 1 view .LVU27
+ 128              		.loc 1 52 11 is_stmt 0 view .LVU28
+ 129 0028 0123     		movs	r3, #1
+ 130 002a 0793     		str	r3, [sp, #28]
+  53:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  54:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   hci_send_req(&rq, FALSE); // No command complete is sent.
+ 131              		.loc 1 54 3 is_stmt 1 view .LVU29
+ 132 002c 02A8     		add	r0, sp, #8
+ 133 002e FFF7FEFF 		bl	hci_send_req
+ 134              	.LVL1:
+  55:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  56:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return status;
+ 135              		.loc 1 56 3 view .LVU30
+  57:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 136              		.loc 1 57 1 is_stmt 0 view .LVU31
+ 137 0032 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 138 0036 09B0     		add	sp, sp, #36
+ 139              	.LCFI5:
+ 140              		.cfi_def_cfa_offset 4
+ 141              		@ sp needed
+ 142 0038 5DF804FB 		ldr	pc, [sp], #4
+ 143              		.cfi_endproc
+ 144              	.LFE293:
+ 146              		.section	.text.aci_get_updater_version,"ax",%progbits
+ 147              		.align	1
+ 148              		.global	aci_get_updater_version
+ 149              		.syntax unified
+ 150              		.thumb
+ 151              		.thumb_func
+ 153              	aci_get_updater_version:
+ 154              	.LVL2:
+ 155              	.LFB294:
+  58:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  59:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_get_updater_version(uint8_t *version)
+  60:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 156              		.loc 1 60 1 is_stmt 1 view -0
+ 157              		.cfi_startproc
+ 158              		@ args = 0, pretend = 0, frame = 32
+ 159              		@ frame_needed = 0, uses_anonymous_args = 0
+ 160              		.loc 1 60 1 is_stmt 0 view .LVU33
+ 161 0000 10B5     		push	{r4, lr}
+ 162              	.LCFI6:
+ 163              		.cfi_def_cfa_offset 8
+ 164              		.cfi_offset 4, -8
+ 165              		.cfi_offset 14, -4
+ 166 0002 88B0     		sub	sp, sp, #32
+ 167              	.LCFI7:
+ 168              		.cfi_def_cfa_offset 40
+ 169 0004 0446     		mov	r4, r0
+  61:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 170              		.loc 1 61 3 is_stmt 1 view .LVU34
+  62:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   get_updater_version_rp resp;
+ 171              		.loc 1 62 3 view .LVU35
+ARM GAS  /tmp/ccvscUjm.s 			page 5
+
+
+  63:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  64:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&resp, 0, sizeof(resp));
+ 172              		.loc 1 64 3 view .LVU36
+ 173 0006 0021     		movs	r1, #0
+ 174 0008 ADF80410 		strh	r1, [sp, #4]	@ movhi
+  65:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  66:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 175              		.loc 1 66 3 view .LVU37
+ 176 000c 0291     		str	r1, [sp, #8]
+ 177 000e 0391     		str	r1, [sp, #12]
+ 178 0010 0491     		str	r1, [sp, #16]
+ 179 0012 0591     		str	r1, [sp, #20]
+ 180 0014 0691     		str	r1, [sp, #24]
+ 181 0016 0791     		str	r1, [sp, #28]
+  67:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 182              		.loc 1 67 3 view .LVU38
+ 183              		.loc 1 67 10 is_stmt 0 view .LVU39
+ 184 0018 3F23     		movs	r3, #63
+ 185 001a ADF80830 		strh	r3, [sp, #8]	@ movhi
+  68:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_GET_UPDATER_VERSION;
+ 186              		.loc 1 68 3 is_stmt 1 view .LVU40
+ 187              		.loc 1 68 10 is_stmt 0 view .LVU41
+ 188 001e 2223     		movs	r3, #34
+ 189 0020 ADF80A30 		strh	r3, [sp, #10]	@ movhi
+  69:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &resp;
+ 190              		.loc 1 69 3 is_stmt 1 view .LVU42
+ 191              		.loc 1 69 13 is_stmt 0 view .LVU43
+ 192 0024 01AB     		add	r3, sp, #4
+ 193 0026 0693     		str	r3, [sp, #24]
+  70:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = GET_UPDATER_VERSION_RP_SIZE;
+ 194              		.loc 1 70 3 is_stmt 1 view .LVU44
+ 195              		.loc 1 70 11 is_stmt 0 view .LVU45
+ 196 0028 0223     		movs	r3, #2
+ 197 002a 0793     		str	r3, [sp, #28]
+  71:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  72:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 198              		.loc 1 72 3 is_stmt 1 view .LVU46
+ 199              		.loc 1 72 7 is_stmt 0 view .LVU47
+ 200 002c 02A8     		add	r0, sp, #8
+ 201              	.LVL3:
+ 202              		.loc 1 72 7 view .LVU48
+ 203 002e FFF7FEFF 		bl	hci_send_req
+ 204              	.LVL4:
+ 205              		.loc 1 72 6 view .LVU49
+ 206 0032 0028     		cmp	r0, #0
+ 207 0034 06DB     		blt	.L7
+  73:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+  74:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+  75:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *version = resp.version;
+ 208              		.loc 1 75 3 is_stmt 1 view .LVU50
+ 209              		.loc 1 75 18 is_stmt 0 view .LVU51
+ 210 0036 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 211              		.loc 1 75 12 view .LVU52
+ 212 003a 2370     		strb	r3, [r4]
+  76:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  77:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return resp.status;
+ 213              		.loc 1 77 3 is_stmt 1 view .LVU53
+ARM GAS  /tmp/ccvscUjm.s 			page 6
+
+
+ 214              		.loc 1 77 14 is_stmt 0 view .LVU54
+ 215 003c 9DF80400 		ldrb	r0, [sp, #4]	@ zero_extendqisi2
+ 216              	.L6:
+  78:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 217              		.loc 1 78 1 view .LVU55
+ 218 0040 08B0     		add	sp, sp, #32
+ 219              	.LCFI8:
+ 220              		.cfi_remember_state
+ 221              		.cfi_def_cfa_offset 8
+ 222              		@ sp needed
+ 223 0042 10BD     		pop	{r4, pc}
+ 224              	.LVL5:
+ 225              	.L7:
+ 226              	.LCFI9:
+ 227              		.cfi_restore_state
+  73:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 228              		.loc 1 73 12 view .LVU56
+ 229 0044 FF20     		movs	r0, #255
+ 230 0046 FBE7     		b	.L6
+ 231              		.cfi_endproc
+ 232              	.LFE294:
+ 234              		.section	.text.aci_get_updater_buffer_size,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	aci_get_updater_buffer_size
+ 237              		.syntax unified
+ 238              		.thumb
+ 239              		.thumb_func
+ 241              	aci_get_updater_buffer_size:
+ 242              	.LVL6:
+ 243              	.LFB295:
+  79:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  80:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_get_updater_buffer_size(uint8_t *buffer_size)
+  81:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 244              		.loc 1 81 1 is_stmt 1 view -0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 32
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248              		.loc 1 81 1 is_stmt 0 view .LVU58
+ 249 0000 10B5     		push	{r4, lr}
+ 250              	.LCFI10:
+ 251              		.cfi_def_cfa_offset 8
+ 252              		.cfi_offset 4, -8
+ 253              		.cfi_offset 14, -4
+ 254 0002 88B0     		sub	sp, sp, #32
+ 255              	.LCFI11:
+ 256              		.cfi_def_cfa_offset 40
+ 257 0004 0446     		mov	r4, r0
+  82:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 258              		.loc 1 82 3 is_stmt 1 view .LVU59
+  83:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   get_updater_bufsize_rp resp;
+ 259              		.loc 1 83 3 view .LVU60
+  84:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  85:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&resp, 0, sizeof(resp));
+ 260              		.loc 1 85 3 view .LVU61
+ 261 0006 0021     		movs	r1, #0
+ 262 0008 ADF80410 		strh	r1, [sp, #4]	@ movhi
+  86:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ARM GAS  /tmp/ccvscUjm.s 			page 7
+
+
+  87:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 263              		.loc 1 87 3 view .LVU62
+ 264 000c 0291     		str	r1, [sp, #8]
+ 265 000e 0391     		str	r1, [sp, #12]
+ 266 0010 0491     		str	r1, [sp, #16]
+ 267 0012 0591     		str	r1, [sp, #20]
+ 268 0014 0691     		str	r1, [sp, #24]
+ 269 0016 0791     		str	r1, [sp, #28]
+  88:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 270              		.loc 1 88 3 view .LVU63
+ 271              		.loc 1 88 10 is_stmt 0 view .LVU64
+ 272 0018 3F23     		movs	r3, #63
+ 273 001a ADF80830 		strh	r3, [sp, #8]	@ movhi
+  89:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_GET_UPDATER_BUFSIZE;
+ 274              		.loc 1 89 3 is_stmt 1 view .LVU65
+ 275              		.loc 1 89 10 is_stmt 0 view .LVU66
+ 276 001e 2323     		movs	r3, #35
+ 277 0020 ADF80A30 		strh	r3, [sp, #10]	@ movhi
+  90:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &resp;
+ 278              		.loc 1 90 3 is_stmt 1 view .LVU67
+ 279              		.loc 1 90 13 is_stmt 0 view .LVU68
+ 280 0024 01AB     		add	r3, sp, #4
+ 281 0026 0693     		str	r3, [sp, #24]
+  91:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = GET_UPDATER_BUFSIZE_RP_SIZE;
+ 282              		.loc 1 91 3 is_stmt 1 view .LVU69
+ 283              		.loc 1 91 11 is_stmt 0 view .LVU70
+ 284 0028 0223     		movs	r3, #2
+ 285 002a 0793     		str	r3, [sp, #28]
+  92:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  93:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 286              		.loc 1 93 3 is_stmt 1 view .LVU71
+ 287              		.loc 1 93 7 is_stmt 0 view .LVU72
+ 288 002c 02A8     		add	r0, sp, #8
+ 289              	.LVL7:
+ 290              		.loc 1 93 7 view .LVU73
+ 291 002e FFF7FEFF 		bl	hci_send_req
+ 292              	.LVL8:
+ 293              		.loc 1 93 6 view .LVU74
+ 294 0032 0028     		cmp	r0, #0
+ 295 0034 06DB     		blt	.L11
+  94:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+  95:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+  96:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *buffer_size = resp.buffer_size;
+ 296              		.loc 1 96 3 is_stmt 1 view .LVU75
+ 297              		.loc 1 96 22 is_stmt 0 view .LVU76
+ 298 0036 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 299              		.loc 1 96 16 view .LVU77
+ 300 003a 2370     		strb	r3, [r4]
+  97:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+  98:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return resp.status;
+ 301              		.loc 1 98 3 is_stmt 1 view .LVU78
+ 302              		.loc 1 98 14 is_stmt 0 view .LVU79
+ 303 003c 9DF80400 		ldrb	r0, [sp, #4]	@ zero_extendqisi2
+ 304              	.L10:
+  99:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 305              		.loc 1 99 1 view .LVU80
+ 306 0040 08B0     		add	sp, sp, #32
+ARM GAS  /tmp/ccvscUjm.s 			page 8
+
+
+ 307              	.LCFI12:
+ 308              		.cfi_remember_state
+ 309              		.cfi_def_cfa_offset 8
+ 310              		@ sp needed
+ 311 0042 10BD     		pop	{r4, pc}
+ 312              	.LVL9:
+ 313              	.L11:
+ 314              	.LCFI13:
+ 315              		.cfi_restore_state
+  94:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 316              		.loc 1 94 12 view .LVU81
+ 317 0044 FF20     		movs	r0, #255
+ 318 0046 FBE7     		b	.L10
+ 319              		.cfi_endproc
+ 320              	.LFE295:
+ 322              		.section	.text.aci_erase_blue_flag,"ax",%progbits
+ 323              		.align	1
+ 324              		.global	aci_erase_blue_flag
+ 325              		.syntax unified
+ 326              		.thumb
+ 327              		.thumb_func
+ 329              	aci_erase_blue_flag:
+ 330              	.LFB296:
+ 100:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 101:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_erase_blue_flag(void)
+ 102:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 331              		.loc 1 102 1 is_stmt 1 view -0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 32
+ 334              		@ frame_needed = 0, uses_anonymous_args = 0
+ 335 0000 00B5     		push	{lr}
+ 336              	.LCFI14:
+ 337              		.cfi_def_cfa_offset 4
+ 338              		.cfi_offset 14, -4
+ 339 0002 89B0     		sub	sp, sp, #36
+ 340              	.LCFI15:
+ 341              		.cfi_def_cfa_offset 40
+ 103:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 342              		.loc 1 103 3 view .LVU83
+ 104:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t status;
+ 343              		.loc 1 104 3 view .LVU84
+ 105:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 106:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 344              		.loc 1 106 3 view .LVU85
+ 345 0004 0021     		movs	r1, #0
+ 346 0006 0291     		str	r1, [sp, #8]
+ 347 0008 0391     		str	r1, [sp, #12]
+ 348 000a 0491     		str	r1, [sp, #16]
+ 349 000c 0591     		str	r1, [sp, #20]
+ 350 000e 0691     		str	r1, [sp, #24]
+ 351 0010 0791     		str	r1, [sp, #28]
+ 107:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 352              		.loc 1 107 3 view .LVU86
+ 353              		.loc 1 107 10 is_stmt 0 view .LVU87
+ 354 0012 3F23     		movs	r3, #63
+ 355 0014 ADF80830 		strh	r3, [sp, #8]	@ movhi
+ 108:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_ERASE_BLUE_FLAG;
+ARM GAS  /tmp/ccvscUjm.s 			page 9
+
+
+ 356              		.loc 1 108 3 is_stmt 1 view .LVU88
+ 357              		.loc 1 108 10 is_stmt 0 view .LVU89
+ 358 0018 2423     		movs	r3, #36
+ 359 001a ADF80A30 		strh	r3, [sp, #10]	@ movhi
+ 109:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &status;
+ 360              		.loc 1 109 3 is_stmt 1 view .LVU90
+ 361              		.loc 1 109 13 is_stmt 0 view .LVU91
+ 362 001e 0DF10703 		add	r3, sp, #7
+ 363 0022 0693     		str	r3, [sp, #24]
+ 110:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = 1;
+ 364              		.loc 1 110 3 is_stmt 1 view .LVU92
+ 365              		.loc 1 110 11 is_stmt 0 view .LVU93
+ 366 0024 0123     		movs	r3, #1
+ 367 0026 0793     		str	r3, [sp, #28]
+ 111:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 112:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 368              		.loc 1 112 3 is_stmt 1 view .LVU94
+ 369              		.loc 1 112 7 is_stmt 0 view .LVU95
+ 370 0028 02A8     		add	r0, sp, #8
+ 371 002a FFF7FEFF 		bl	hci_send_req
+ 372              	.LVL10:
+ 373              		.loc 1 112 6 view .LVU96
+ 374 002e 0028     		cmp	r0, #0
+ 375 0030 04DB     		blt	.L15
+ 113:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 114:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 115:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return status;  
+ 376              		.loc 1 115 3 is_stmt 1 view .LVU97
+ 377              		.loc 1 115 10 is_stmt 0 view .LVU98
+ 378 0032 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 379              	.L14:
+ 116:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 380              		.loc 1 116 1 view .LVU99
+ 381 0036 09B0     		add	sp, sp, #36
+ 382              	.LCFI16:
+ 383              		.cfi_remember_state
+ 384              		.cfi_def_cfa_offset 4
+ 385              		@ sp needed
+ 386 0038 5DF804FB 		ldr	pc, [sp], #4
+ 387              	.L15:
+ 388              	.LCFI17:
+ 389              		.cfi_restore_state
+ 113:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 390              		.loc 1 113 12 view .LVU100
+ 391 003c FF20     		movs	r0, #255
+ 392 003e FAE7     		b	.L14
+ 393              		.cfi_endproc
+ 394              	.LFE296:
+ 396              		.section	.text.aci_reset_blue_flag,"ax",%progbits
+ 397              		.align	1
+ 398              		.global	aci_reset_blue_flag
+ 399              		.syntax unified
+ 400              		.thumb
+ 401              		.thumb_func
+ 403              	aci_reset_blue_flag:
+ 404              	.LFB297:
+ 117:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ARM GAS  /tmp/ccvscUjm.s 			page 10
+
+
+ 118:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_reset_blue_flag(void)
+ 119:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 405              		.loc 1 119 1 is_stmt 1 view -0
+ 406              		.cfi_startproc
+ 407              		@ args = 0, pretend = 0, frame = 32
+ 408              		@ frame_needed = 0, uses_anonymous_args = 0
+ 409 0000 00B5     		push	{lr}
+ 410              	.LCFI18:
+ 411              		.cfi_def_cfa_offset 4
+ 412              		.cfi_offset 14, -4
+ 413 0002 89B0     		sub	sp, sp, #36
+ 414              	.LCFI19:
+ 415              		.cfi_def_cfa_offset 40
+ 120:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 416              		.loc 1 120 3 view .LVU102
+ 121:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t status;
+ 417              		.loc 1 121 3 view .LVU103
+ 122:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 123:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 418              		.loc 1 123 3 view .LVU104
+ 419 0004 0021     		movs	r1, #0
+ 420 0006 0291     		str	r1, [sp, #8]
+ 421 0008 0391     		str	r1, [sp, #12]
+ 422 000a 0491     		str	r1, [sp, #16]
+ 423 000c 0591     		str	r1, [sp, #20]
+ 424 000e 0691     		str	r1, [sp, #24]
+ 425 0010 0791     		str	r1, [sp, #28]
+ 124:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 426              		.loc 1 124 3 view .LVU105
+ 427              		.loc 1 124 10 is_stmt 0 view .LVU106
+ 428 0012 3F23     		movs	r3, #63
+ 429 0014 ADF80830 		strh	r3, [sp, #8]	@ movhi
+ 125:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_RESET_BLUE_FLAG;
+ 430              		.loc 1 125 3 is_stmt 1 view .LVU107
+ 431              		.loc 1 125 10 is_stmt 0 view .LVU108
+ 432 0018 2523     		movs	r3, #37
+ 433 001a ADF80A30 		strh	r3, [sp, #10]	@ movhi
+ 126:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &status;
+ 434              		.loc 1 126 3 is_stmt 1 view .LVU109
+ 435              		.loc 1 126 13 is_stmt 0 view .LVU110
+ 436 001e 0DF10703 		add	r3, sp, #7
+ 437 0022 0693     		str	r3, [sp, #24]
+ 127:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = 1;
+ 438              		.loc 1 127 3 is_stmt 1 view .LVU111
+ 439              		.loc 1 127 11 is_stmt 0 view .LVU112
+ 440 0024 0123     		movs	r3, #1
+ 441 0026 0793     		str	r3, [sp, #28]
+ 128:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 129:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 442              		.loc 1 129 3 is_stmt 1 view .LVU113
+ 443              		.loc 1 129 7 is_stmt 0 view .LVU114
+ 444 0028 02A8     		add	r0, sp, #8
+ 445 002a FFF7FEFF 		bl	hci_send_req
+ 446              	.LVL11:
+ 447              		.loc 1 129 6 view .LVU115
+ 448 002e 0028     		cmp	r0, #0
+ 449 0030 04DB     		blt	.L19
+ARM GAS  /tmp/ccvscUjm.s 			page 11
+
+
+ 130:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 131:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 132:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return status;  
+ 450              		.loc 1 132 3 is_stmt 1 view .LVU116
+ 451              		.loc 1 132 10 is_stmt 0 view .LVU117
+ 452 0032 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 453              	.L18:
+ 133:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 454              		.loc 1 133 1 view .LVU118
+ 455 0036 09B0     		add	sp, sp, #36
+ 456              	.LCFI20:
+ 457              		.cfi_remember_state
+ 458              		.cfi_def_cfa_offset 4
+ 459              		@ sp needed
+ 460 0038 5DF804FB 		ldr	pc, [sp], #4
+ 461              	.L19:
+ 462              	.LCFI21:
+ 463              		.cfi_restore_state
+ 130:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 464              		.loc 1 130 12 view .LVU119
+ 465 003c FF20     		movs	r0, #255
+ 466 003e FAE7     		b	.L18
+ 467              		.cfi_endproc
+ 468              	.LFE297:
+ 470              		.section	.text.aci_updater_erase_sector,"ax",%progbits
+ 471              		.align	1
+ 472              		.global	aci_updater_erase_sector
+ 473              		.syntax unified
+ 474              		.thumb
+ 475              		.thumb_func
+ 477              	aci_updater_erase_sector:
+ 478              	.LVL12:
+ 479              	.LFB298:
+ 134:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 135:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_erase_sector(uint32_t address)
+ 136:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 480              		.loc 1 136 1 is_stmt 1 view -0
+ 481              		.cfi_startproc
+ 482              		@ args = 0, pretend = 0, frame = 32
+ 483              		@ frame_needed = 0, uses_anonymous_args = 0
+ 484              		.loc 1 136 1 is_stmt 0 view .LVU121
+ 485 0000 00B5     		push	{lr}
+ 486              	.LCFI22:
+ 487              		.cfi_def_cfa_offset 4
+ 488              		.cfi_offset 14, -4
+ 489 0002 89B0     		sub	sp, sp, #36
+ 490              	.LCFI23:
+ 491              		.cfi_def_cfa_offset 40
+ 137:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 492              		.loc 1 137 3 is_stmt 1 view .LVU122
+ 138:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   updater_erase_sector_cp cp;    
+ 493              		.loc 1 138 3 view .LVU123
+ 139:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t status;
+ 494              		.loc 1 139 3 view .LVU124
+ 140:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 141:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.address = htobl(address);
+ 495              		.loc 1 141 3 view .LVU125
+ARM GAS  /tmp/ccvscUjm.s 			page 12
+
+
+ 496              		.loc 1 141 14 is_stmt 0 view .LVU126
+ 497 0004 0190     		str	r0, [sp, #4]
+ 142:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 143:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 498              		.loc 1 143 3 is_stmt 1 view .LVU127
+ 499 0006 0021     		movs	r1, #0
+ 500 0008 0291     		str	r1, [sp, #8]
+ 501 000a 0391     		str	r1, [sp, #12]
+ 502 000c 0491     		str	r1, [sp, #16]
+ 503 000e 0591     		str	r1, [sp, #20]
+ 504 0010 0691     		str	r1, [sp, #24]
+ 505 0012 0791     		str	r1, [sp, #28]
+ 144:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 506              		.loc 1 144 3 view .LVU128
+ 507              		.loc 1 144 10 is_stmt 0 view .LVU129
+ 508 0014 3F23     		movs	r3, #63
+ 509 0016 ADF80830 		strh	r3, [sp, #8]	@ movhi
+ 145:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_ERASE_SECTOR;
+ 510              		.loc 1 145 3 is_stmt 1 view .LVU130
+ 511              		.loc 1 145 10 is_stmt 0 view .LVU131
+ 512 001a 2623     		movs	r3, #38
+ 513 001c ADF80A30 		strh	r3, [sp, #10]	@ movhi
+ 146:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.cparam = &cp;
+ 514              		.loc 1 146 3 is_stmt 1 view .LVU132
+ 515              		.loc 1 146 13 is_stmt 0 view .LVU133
+ 516 0020 01AB     		add	r3, sp, #4
+ 517 0022 0493     		str	r3, [sp, #16]
+ 147:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.clen = UPDATER_ERASE_SECTOR_CP_SIZE;
+ 518              		.loc 1 147 3 is_stmt 1 view .LVU134
+ 519              		.loc 1 147 11 is_stmt 0 view .LVU135
+ 520 0024 0423     		movs	r3, #4
+ 521 0026 0593     		str	r3, [sp, #20]
+ 148:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &status;
+ 522              		.loc 1 148 3 is_stmt 1 view .LVU136
+ 523              		.loc 1 148 13 is_stmt 0 view .LVU137
+ 524 0028 0DF10303 		add	r3, sp, #3
+ 525 002c 0693     		str	r3, [sp, #24]
+ 149:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = 1;
+ 526              		.loc 1 149 3 is_stmt 1 view .LVU138
+ 527              		.loc 1 149 11 is_stmt 0 view .LVU139
+ 528 002e 0123     		movs	r3, #1
+ 529 0030 0793     		str	r3, [sp, #28]
+ 150:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 151:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 530              		.loc 1 151 3 is_stmt 1 view .LVU140
+ 531              		.loc 1 151 7 is_stmt 0 view .LVU141
+ 532 0032 02A8     		add	r0, sp, #8
+ 533              	.LVL13:
+ 534              		.loc 1 151 7 view .LVU142
+ 535 0034 FFF7FEFF 		bl	hci_send_req
+ 536              	.LVL14:
+ 537              		.loc 1 151 6 view .LVU143
+ 538 0038 0028     		cmp	r0, #0
+ 539 003a 04DB     		blt	.L23
+ 152:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 153:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 154:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return status;
+ARM GAS  /tmp/ccvscUjm.s 			page 13
+
+
+ 540              		.loc 1 154 3 is_stmt 1 view .LVU144
+ 541              		.loc 1 154 10 is_stmt 0 view .LVU145
+ 542 003c 9DF80300 		ldrb	r0, [sp, #3]	@ zero_extendqisi2
+ 543              	.L22:
+ 155:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 544              		.loc 1 155 1 view .LVU146
+ 545 0040 09B0     		add	sp, sp, #36
+ 546              	.LCFI24:
+ 547              		.cfi_remember_state
+ 548              		.cfi_def_cfa_offset 4
+ 549              		@ sp needed
+ 550 0042 5DF804FB 		ldr	pc, [sp], #4
+ 551              	.L23:
+ 552              	.LCFI25:
+ 553              		.cfi_restore_state
+ 152:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 554              		.loc 1 152 12 view .LVU147
+ 555 0046 FF20     		movs	r0, #255
+ 556 0048 FAE7     		b	.L22
+ 557              		.cfi_endproc
+ 558              	.LFE298:
+ 560              		.section	.text.aci_updater_program_data_block,"ax",%progbits
+ 561              		.align	1
+ 562              		.global	aci_updater_program_data_block
+ 563              		.syntax unified
+ 564              		.thumb
+ 565              		.thumb_func
+ 567              	aci_updater_program_data_block:
+ 568              	.LVL15:
+ 569              	.LFB299:
+ 156:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 157:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_program_data_block(uint32_t address, 
+ 158:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 				   uint16_t len,
+ 159:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 				   const uint8_t *data)
+ 160:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 570              		.loc 1 160 1 is_stmt 1 view -0
+ 571              		.cfi_startproc
+ 572              		@ args = 0, pretend = 0, frame = 160
+ 573              		@ frame_needed = 0, uses_anonymous_args = 0
+ 574              		.loc 1 160 1 is_stmt 0 view .LVU149
+ 575 0000 10B5     		push	{r4, lr}
+ 576              	.LCFI26:
+ 577              		.cfi_def_cfa_offset 8
+ 578              		.cfi_offset 4, -8
+ 579              		.cfi_offset 14, -4
+ 580 0002 A8B0     		sub	sp, sp, #160
+ 581              	.LCFI27:
+ 582              		.cfi_def_cfa_offset 168
+ 583 0004 0C46     		mov	r4, r1
+ 161:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 584              		.loc 1 161 3 is_stmt 1 view .LVU150
+ 162:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t status;
+ 585              		.loc 1 162 3 view .LVU151
+ 163:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   updater_prog_data_block_cp cp;
+ 586              		.loc 1 163 3 view .LVU152
+ 164:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 165:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if( len > sizeof(cp.data))
+ARM GAS  /tmp/ccvscUjm.s 			page 14
+
+
+ 587              		.loc 1 165 3 view .LVU153
+ 588              		.loc 1 165 5 is_stmt 0 view .LVU154
+ 589 0006 7A29     		cmp	r1, #122
+ 590 0008 27D8     		bhi	.L27
+ 591 000a 1146     		mov	r1, r2
+ 592              	.LVL16:
+ 166:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_INVALID_PARAMS;
+ 167:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   
+ 168:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.address = htobl(address);
+ 593              		.loc 1 168 3 is_stmt 1 view .LVU155
+ 594              		.loc 1 168 14 is_stmt 0 view .LVU156
+ 595 000c 0190     		str	r0, [sp, #4]
+ 169:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.data_len = htobs(len);        
+ 596              		.loc 1 169 3 is_stmt 1 view .LVU157
+ 597              		.loc 1 169 15 is_stmt 0 view .LVU158
+ 598 000e ADF80840 		strh	r4, [sp, #8]	@ movhi
+ 170:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memcpy(cp.data, data, len);
+ 599              		.loc 1 170 3 is_stmt 1 view .LVU159
+ 600 0012 2246     		mov	r2, r4
+ 601              	.LVL17:
+ 602              		.loc 1 170 3 is_stmt 0 view .LVU160
+ 603 0014 0DF10A00 		add	r0, sp, #10
+ 604              	.LVL18:
+ 605              		.loc 1 170 3 view .LVU161
+ 606 0018 FFF7FEFF 		bl	memcpy
+ 607              	.LVL19:
+ 171:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 172:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 608              		.loc 1 172 3 is_stmt 1 view .LVU162
+ 609 001c 0021     		movs	r1, #0
+ 610 001e 2291     		str	r1, [sp, #136]
+ 611 0020 2391     		str	r1, [sp, #140]
+ 612 0022 2491     		str	r1, [sp, #144]
+ 613 0024 2591     		str	r1, [sp, #148]
+ 614 0026 2691     		str	r1, [sp, #152]
+ 615 0028 2791     		str	r1, [sp, #156]
+ 173:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 616              		.loc 1 173 3 view .LVU163
+ 617              		.loc 1 173 10 is_stmt 0 view .LVU164
+ 618 002a 3F23     		movs	r3, #63
+ 619 002c ADF88830 		strh	r3, [sp, #136]	@ movhi
+ 174:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_PROG_DATA_BLOCK;
+ 620              		.loc 1 174 3 is_stmt 1 view .LVU165
+ 621              		.loc 1 174 10 is_stmt 0 view .LVU166
+ 622 0030 2723     		movs	r3, #39
+ 623 0032 ADF88A30 		strh	r3, [sp, #138]	@ movhi
+ 175:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.cparam = &cp;
+ 624              		.loc 1 175 3 is_stmt 1 view .LVU167
+ 625              		.loc 1 175 13 is_stmt 0 view .LVU168
+ 626 0036 01AB     		add	r3, sp, #4
+ 627 0038 2493     		str	r3, [sp, #144]
+ 176:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.clen = UPDATER_PROG_DATA_BLOCK_CP_SIZE+len;
+ 628              		.loc 1 176 3 is_stmt 1 view .LVU169
+ 629              		.loc 1 176 44 is_stmt 0 view .LVU170
+ 630 003a 0634     		adds	r4, r4, #6
+ 631              		.loc 1 176 11 view .LVU171
+ 632 003c 2594     		str	r4, [sp, #148]
+ARM GAS  /tmp/ccvscUjm.s 			page 15
+
+
+ 177:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &status;
+ 633              		.loc 1 177 3 is_stmt 1 view .LVU172
+ 634              		.loc 1 177 13 is_stmt 0 view .LVU173
+ 635 003e 0DF18703 		add	r3, sp, #135
+ 636 0042 2693     		str	r3, [sp, #152]
+ 178:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = 1;
+ 637              		.loc 1 178 3 is_stmt 1 view .LVU174
+ 638              		.loc 1 178 11 is_stmt 0 view .LVU175
+ 639 0044 0123     		movs	r3, #1
+ 640 0046 2793     		str	r3, [sp, #156]
+ 179:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 180:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 641              		.loc 1 180 3 is_stmt 1 view .LVU176
+ 642              		.loc 1 180 7 is_stmt 0 view .LVU177
+ 643 0048 22A8     		add	r0, sp, #136
+ 644 004a FFF7FEFF 		bl	hci_send_req
+ 645              	.LVL20:
+ 646              		.loc 1 180 6 view .LVU178
+ 647 004e 0028     		cmp	r0, #0
+ 648 0050 05DB     		blt	.L28
+ 181:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 182:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 183:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return status;
+ 649              		.loc 1 183 3 is_stmt 1 view .LVU179
+ 650              		.loc 1 183 10 is_stmt 0 view .LVU180
+ 651 0052 9DF88700 		ldrb	r0, [sp, #135]	@ zero_extendqisi2
+ 652              	.L26:
+ 184:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 653              		.loc 1 184 1 view .LVU181
+ 654 0056 28B0     		add	sp, sp, #160
+ 655              	.LCFI28:
+ 656              		.cfi_remember_state
+ 657              		.cfi_def_cfa_offset 8
+ 658              		@ sp needed
+ 659 0058 10BD     		pop	{r4, pc}
+ 660              	.LVL21:
+ 661              	.L27:
+ 662              	.LCFI29:
+ 663              		.cfi_restore_state
+ 166:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   
+ 664              		.loc 1 166 12 view .LVU182
+ 665 005a 4220     		movs	r0, #66
+ 666              	.LVL22:
+ 166:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   
+ 667              		.loc 1 166 12 view .LVU183
+ 668 005c FBE7     		b	.L26
+ 669              	.LVL23:
+ 670              	.L28:
+ 181:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 671              		.loc 1 181 12 view .LVU184
+ 672 005e FF20     		movs	r0, #255
+ 673 0060 F9E7     		b	.L26
+ 674              		.cfi_endproc
+ 675              	.LFE299:
+ 677              		.section	.text.aci_updater_read_data_block,"ax",%progbits
+ 678              		.align	1
+ 679              		.global	aci_updater_read_data_block
+ARM GAS  /tmp/ccvscUjm.s 			page 16
+
+
+ 680              		.syntax unified
+ 681              		.thumb
+ 682              		.thumb_func
+ 684              	aci_updater_read_data_block:
+ 685              	.LVL24:
+ 686              	.LFB300:
+ 185:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 186:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_read_data_block(uint32_t address,
+ 187:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 				uint16_t data_len,
+ 188:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 				uint8_t *data)
+ 189:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 687              		.loc 1 189 1 is_stmt 1 view -0
+ 688              		.cfi_startproc
+ 689              		@ args = 0, pretend = 0, frame = 160
+ 690              		@ frame_needed = 0, uses_anonymous_args = 0
+ 190:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 691              		.loc 1 190 3 view .LVU186
+ 191:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   updater_read_data_block_cp cp;
+ 692              		.loc 1 191 3 view .LVU187
+ 192:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   uint8_t buffer[HCI_MAX_PAYLOAD_SIZE];
+ 693              		.loc 1 192 3 view .LVU188
+ 193:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 194:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if((data_len+1) > HCI_MAX_PAYLOAD_SIZE)
+ 694              		.loc 1 194 3 view .LVU189
+ 695              		.loc 1 194 5 is_stmt 0 view .LVU190
+ 696 0000 7F29     		cmp	r1, #127
+ 697 0002 2AD8     		bhi	.L32
+ 189:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 698              		.loc 1 189 1 view .LVU191
+ 699 0004 30B5     		push	{r4, r5, lr}
+ 700              	.LCFI30:
+ 701              		.cfi_def_cfa_offset 12
+ 702              		.cfi_offset 4, -12
+ 703              		.cfi_offset 5, -8
+ 704              		.cfi_offset 14, -4
+ 705 0006 A9B0     		sub	sp, sp, #164
+ 706              	.LCFI31:
+ 707              		.cfi_def_cfa_offset 176
+ 708 0008 0C46     		mov	r4, r1
+ 709 000a 1546     		mov	r5, r2
+ 195:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_INVALID_PARAMS;
+ 196:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 197:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.address = htobl(address);
+ 710              		.loc 1 197 3 is_stmt 1 view .LVU192
+ 711              		.loc 1 197 14 is_stmt 0 view .LVU193
+ 712 000c 2090     		str	r0, [sp, #128]
+ 198:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.data_len = htobs(data_len);
+ 713              		.loc 1 198 3 is_stmt 1 view .LVU194
+ 714              		.loc 1 198 15 is_stmt 0 view .LVU195
+ 715 000e ADF88410 		strh	r1, [sp, #132]	@ movhi
+ 199:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 200:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 716              		.loc 1 200 3 is_stmt 1 view .LVU196
+ 717 0012 0021     		movs	r1, #0
+ 718              	.LVL25:
+ 719              		.loc 1 200 3 is_stmt 0 view .LVU197
+ 720 0014 2291     		str	r1, [sp, #136]
+ARM GAS  /tmp/ccvscUjm.s 			page 17
+
+
+ 721 0016 2391     		str	r1, [sp, #140]
+ 722 0018 2491     		str	r1, [sp, #144]
+ 723 001a 2591     		str	r1, [sp, #148]
+ 724 001c 2691     		str	r1, [sp, #152]
+ 725 001e 2791     		str	r1, [sp, #156]
+ 201:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 726              		.loc 1 201 3 is_stmt 1 view .LVU198
+ 727              		.loc 1 201 10 is_stmt 0 view .LVU199
+ 728 0020 3F23     		movs	r3, #63
+ 729 0022 ADF88830 		strh	r3, [sp, #136]	@ movhi
+ 202:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_READ_DATA_BLOCK;
+ 730              		.loc 1 202 3 is_stmt 1 view .LVU200
+ 731              		.loc 1 202 10 is_stmt 0 view .LVU201
+ 732 0026 2823     		movs	r3, #40
+ 733 0028 ADF88A30 		strh	r3, [sp, #138]	@ movhi
+ 203:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.cparam = &cp;
+ 734              		.loc 1 203 3 is_stmt 1 view .LVU202
+ 735              		.loc 1 203 13 is_stmt 0 view .LVU203
+ 736 002c 20AB     		add	r3, sp, #128
+ 737 002e 2493     		str	r3, [sp, #144]
+ 204:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.clen = UPDATER_READ_DATA_BLOCK_CP_SIZE;
+ 738              		.loc 1 204 3 is_stmt 1 view .LVU204
+ 739              		.loc 1 204 11 is_stmt 0 view .LVU205
+ 740 0030 0623     		movs	r3, #6
+ 741 0032 2593     		str	r3, [sp, #148]
+ 205:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = buffer;
+ 742              		.loc 1 205 3 is_stmt 1 view .LVU206
+ 743              		.loc 1 205 13 is_stmt 0 view .LVU207
+ 744 0034 CDF898D0 		str	sp, [sp, #152]
+ 206:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = data_len + 1;
+ 745              		.loc 1 206 3 is_stmt 1 view .LVU208
+ 746              		.loc 1 206 22 is_stmt 0 view .LVU209
+ 747 0038 631C     		adds	r3, r4, #1
+ 748              		.loc 1 206 11 view .LVU210
+ 749 003a 2793     		str	r3, [sp, #156]
+ 207:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 208:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 750              		.loc 1 208 3 is_stmt 1 view .LVU211
+ 751              		.loc 1 208 7 is_stmt 0 view .LVU212
+ 752 003c 22A8     		add	r0, sp, #136
+ 753              	.LVL26:
+ 754              		.loc 1 208 7 view .LVU213
+ 755 003e FFF7FEFF 		bl	hci_send_req
+ 756              	.LVL27:
+ 757              		.loc 1 208 6 view .LVU214
+ 758 0042 0028     		cmp	r0, #0
+ 759 0044 0BDB     		blt	.L33
+ 209:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 210:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 211:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   // First byte is status
+ 212:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memcpy(data, buffer+1, data_len);
+ 760              		.loc 1 212 3 is_stmt 1 view .LVU215
+ 761 0046 2246     		mov	r2, r4
+ 762 0048 0DF10101 		add	r1, sp, #1
+ 763 004c 2846     		mov	r0, r5
+ 764 004e FFF7FEFF 		bl	memcpy
+ 765              	.LVL28:
+ARM GAS  /tmp/ccvscUjm.s 			page 18
+
+
+ 213:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 214:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return buffer[0];
+ 766              		.loc 1 214 3 view .LVU216
+ 767              		.loc 1 214 16 is_stmt 0 view .LVU217
+ 768 0052 9DF80000 		ldrb	r0, [sp]	@ zero_extendqisi2
+ 769              	.L31:
+ 215:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 770              		.loc 1 215 1 view .LVU218
+ 771 0056 29B0     		add	sp, sp, #164
+ 772              	.LCFI32:
+ 773              		.cfi_def_cfa_offset 12
+ 774              		@ sp needed
+ 775 0058 30BD     		pop	{r4, r5, pc}
+ 776              	.LVL29:
+ 777              	.L32:
+ 778              	.LCFI33:
+ 779              		.cfi_def_cfa_offset 0
+ 780              		.cfi_restore 4
+ 781              		.cfi_restore 5
+ 782              		.cfi_restore 14
+ 195:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 783              		.loc 1 195 12 view .LVU219
+ 784 005a 4220     		movs	r0, #66
+ 785              	.LVL30:
+ 786              		.loc 1 215 1 view .LVU220
+ 787 005c 7047     		bx	lr
+ 788              	.LVL31:
+ 789              	.L33:
+ 790              	.LCFI34:
+ 791              		.cfi_def_cfa_offset 176
+ 792              		.cfi_offset 4, -12
+ 793              		.cfi_offset 5, -8
+ 794              		.cfi_offset 14, -4
+ 209:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 795              		.loc 1 209 12 view .LVU221
+ 796 005e FF20     		movs	r0, #255
+ 797 0060 F9E7     		b	.L31
+ 798              		.cfi_endproc
+ 799              	.LFE300:
+ 801              		.section	.text.aci_updater_calc_crc,"ax",%progbits
+ 802              		.align	1
+ 803              		.global	aci_updater_calc_crc
+ 804              		.syntax unified
+ 805              		.thumb
+ 806              		.thumb_func
+ 808              	aci_updater_calc_crc:
+ 809              	.LVL32:
+ 810              	.LFB301:
+ 216:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 217:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_calc_crc(uint32_t address,
+ 218:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****                          uint8_t num_sectors,
+ 219:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****                          uint32_t *crc)
+ 220:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 811              		.loc 1 220 1 is_stmt 1 view -0
+ 812              		.cfi_startproc
+ 813              		@ args = 0, pretend = 0, frame = 40
+ 814              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccvscUjm.s 			page 19
+
+
+ 815              		.loc 1 220 1 is_stmt 0 view .LVU223
+ 816 0000 10B5     		push	{r4, lr}
+ 817              	.LCFI35:
+ 818              		.cfi_def_cfa_offset 8
+ 819              		.cfi_offset 4, -8
+ 820              		.cfi_offset 14, -4
+ 821 0002 8AB0     		sub	sp, sp, #40
+ 822              	.LCFI36:
+ 823              		.cfi_def_cfa_offset 48
+ 824 0004 1446     		mov	r4, r2
+ 221:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 825              		.loc 1 221 3 is_stmt 1 view .LVU224
+ 222:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   updater_calc_crc_cp cp;
+ 826              		.loc 1 222 3 view .LVU225
+ 223:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   updater_calc_crc_rp resp;
+ 827              		.loc 1 223 3 view .LVU226
+ 224:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 225:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&resp, 0, sizeof(resp));
+ 828              		.loc 1 225 3 view .LVU227
+ 829 0006 0023     		movs	r3, #0
+ 830 0008 0093     		str	r3, [sp]
+ 831 000a 8DF80430 		strb	r3, [sp, #4]
+ 226:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 227:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.address = htobl(address);
+ 832              		.loc 1 227 3 view .LVU228
+ 833              		.loc 1 227 14 is_stmt 0 view .LVU229
+ 834 000e 0290     		str	r0, [sp, #8]
+ 228:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   cp.num_sectors = num_sectors;
+ 835              		.loc 1 228 3 is_stmt 1 view .LVU230
+ 836              		.loc 1 228 18 is_stmt 0 view .LVU231
+ 837 0010 8DF80C10 		strb	r1, [sp, #12]
+ 229:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 230:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 838              		.loc 1 230 3 is_stmt 1 view .LVU232
+ 839 0014 0493     		str	r3, [sp, #16]
+ 840 0016 0593     		str	r3, [sp, #20]
+ 841 0018 0693     		str	r3, [sp, #24]
+ 842 001a 0793     		str	r3, [sp, #28]
+ 843 001c 0893     		str	r3, [sp, #32]
+ 844 001e 0993     		str	r3, [sp, #36]
+ 231:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 845              		.loc 1 231 3 view .LVU233
+ 846              		.loc 1 231 10 is_stmt 0 view .LVU234
+ 847 0020 3F22     		movs	r2, #63
+ 848              	.LVL33:
+ 849              		.loc 1 231 10 view .LVU235
+ 850 0022 ADF81020 		strh	r2, [sp, #16]	@ movhi
+ 232:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_CALC_CRC;
+ 851              		.loc 1 232 3 is_stmt 1 view .LVU236
+ 852              		.loc 1 232 10 is_stmt 0 view .LVU237
+ 853 0026 2922     		movs	r2, #41
+ 854 0028 ADF81220 		strh	r2, [sp, #18]	@ movhi
+ 233:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.cparam = &cp;
+ 855              		.loc 1 233 3 is_stmt 1 view .LVU238
+ 856              		.loc 1 233 13 is_stmt 0 view .LVU239
+ 857 002c 02AA     		add	r2, sp, #8
+ 858 002e 0692     		str	r2, [sp, #24]
+ARM GAS  /tmp/ccvscUjm.s 			page 20
+
+
+ 234:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.clen = UPDATER_CALC_CRC_CP_SIZE;
+ 859              		.loc 1 234 3 is_stmt 1 view .LVU240
+ 860              		.loc 1 234 11 is_stmt 0 view .LVU241
+ 861 0030 0522     		movs	r2, #5
+ 862 0032 0792     		str	r2, [sp, #28]
+ 235:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &resp;
+ 863              		.loc 1 235 3 is_stmt 1 view .LVU242
+ 864              		.loc 1 235 13 is_stmt 0 view .LVU243
+ 865 0034 CDF820D0 		str	sp, [sp, #32]
+ 236:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = UPDATER_CALC_CRC_RP_SIZE;
+ 866              		.loc 1 236 3 is_stmt 1 view .LVU244
+ 867              		.loc 1 236 11 is_stmt 0 view .LVU245
+ 868 0038 0992     		str	r2, [sp, #36]
+ 237:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 238:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 869              		.loc 1 238 3 is_stmt 1 view .LVU246
+ 870              		.loc 1 238 7 is_stmt 0 view .LVU247
+ 871 003a 1946     		mov	r1, r3
+ 872              	.LVL34:
+ 873              		.loc 1 238 7 view .LVU248
+ 874 003c 04A8     		add	r0, sp, #16
+ 875              	.LVL35:
+ 876              		.loc 1 238 7 view .LVU249
+ 877 003e FFF7FEFF 		bl	hci_send_req
+ 878              	.LVL36:
+ 879              		.loc 1 238 6 view .LVU250
+ 880 0042 0028     		cmp	r0, #0
+ 881 0044 06DB     		blt	.L40
+ 239:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 240:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 241:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *crc = btohl(resp.crc);
+ 882              		.loc 1 241 3 is_stmt 1 view .LVU251
+ 883              		.loc 1 241 10 is_stmt 0 view .LVU252
+ 884 0046 DDF80130 		ldr	r3, [sp, #1]	@ unaligned
+ 885              		.loc 1 241 8 view .LVU253
+ 886 004a 2360     		str	r3, [r4]
+ 242:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 243:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return resp.status;
+ 887              		.loc 1 243 3 is_stmt 1 view .LVU254
+ 888              		.loc 1 243 14 is_stmt 0 view .LVU255
+ 889 004c 9DF80000 		ldrb	r0, [sp]	@ zero_extendqisi2
+ 890              	.L39:
+ 244:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 891              		.loc 1 244 1 view .LVU256
+ 892 0050 0AB0     		add	sp, sp, #40
+ 893              	.LCFI37:
+ 894              		.cfi_remember_state
+ 895              		.cfi_def_cfa_offset 8
+ 896              		@ sp needed
+ 897 0052 10BD     		pop	{r4, pc}
+ 898              	.LVL37:
+ 899              	.L40:
+ 900              	.LCFI38:
+ 901              		.cfi_restore_state
+ 239:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 902              		.loc 1 239 12 view .LVU257
+ 903 0054 FF20     		movs	r0, #255
+ARM GAS  /tmp/ccvscUjm.s 			page 21
+
+
+ 904 0056 FBE7     		b	.L39
+ 905              		.cfi_endproc
+ 906              	.LFE301:
+ 908              		.section	.text.aci_updater_hw_version,"ax",%progbits
+ 909              		.align	1
+ 910              		.global	aci_updater_hw_version
+ 911              		.syntax unified
+ 912              		.thumb
+ 913              		.thumb_func
+ 915              	aci_updater_hw_version:
+ 916              	.LVL38:
+ 917              	.LFB302:
+ 245:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 246:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** tBleStatus aci_updater_hw_version(uint8_t *version)
+ 247:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** {
+ 918              		.loc 1 247 1 is_stmt 1 view -0
+ 919              		.cfi_startproc
+ 920              		@ args = 0, pretend = 0, frame = 32
+ 921              		@ frame_needed = 0, uses_anonymous_args = 0
+ 922              		.loc 1 247 1 is_stmt 0 view .LVU259
+ 923 0000 10B5     		push	{r4, lr}
+ 924              	.LCFI39:
+ 925              		.cfi_def_cfa_offset 8
+ 926              		.cfi_offset 4, -8
+ 927              		.cfi_offset 14, -4
+ 928 0002 88B0     		sub	sp, sp, #32
+ 929              	.LCFI40:
+ 930              		.cfi_def_cfa_offset 40
+ 931 0004 0446     		mov	r4, r0
+ 248:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   struct hci_request rq;
+ 932              		.loc 1 248 3 is_stmt 1 view .LVU260
+ 249:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   updater_hw_version_rp resp;
+ 933              		.loc 1 249 3 view .LVU261
+ 250:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 251:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&resp, 0, sizeof(resp));
+ 934              		.loc 1 251 3 view .LVU262
+ 935 0006 0021     		movs	r1, #0
+ 936 0008 ADF80410 		strh	r1, [sp, #4]	@ movhi
+ 252:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 253:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   BLUENRG_memset(&rq, 0, sizeof(rq));
+ 937              		.loc 1 253 3 view .LVU263
+ 938 000c 0291     		str	r1, [sp, #8]
+ 939 000e 0391     		str	r1, [sp, #12]
+ 940 0010 0491     		str	r1, [sp, #16]
+ 941 0012 0591     		str	r1, [sp, #20]
+ 942 0014 0691     		str	r1, [sp, #24]
+ 943 0016 0791     		str	r1, [sp, #28]
+ 254:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ogf = OGF_VENDOR_CMD;
+ 944              		.loc 1 254 3 view .LVU264
+ 945              		.loc 1 254 10 is_stmt 0 view .LVU265
+ 946 0018 3F23     		movs	r3, #63
+ 947 001a ADF80830 		strh	r3, [sp, #8]	@ movhi
+ 255:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.ocf = OCF_UPDATER_HW_VERSION;
+ 948              		.loc 1 255 3 is_stmt 1 view .LVU266
+ 949              		.loc 1 255 10 is_stmt 0 view .LVU267
+ 950 001e 2A23     		movs	r3, #42
+ 951 0020 ADF80A30 		strh	r3, [sp, #10]	@ movhi
+ARM GAS  /tmp/ccvscUjm.s 			page 22
+
+
+ 256:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rparam = &resp;
+ 952              		.loc 1 256 3 is_stmt 1 view .LVU268
+ 953              		.loc 1 256 13 is_stmt 0 view .LVU269
+ 954 0024 01AB     		add	r3, sp, #4
+ 955 0026 0693     		str	r3, [sp, #24]
+ 257:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   rq.rlen = UPDATER_HW_VERSION_RP_SIZE;
+ 956              		.loc 1 257 3 is_stmt 1 view .LVU270
+ 957              		.loc 1 257 11 is_stmt 0 view .LVU271
+ 958 0028 0223     		movs	r3, #2
+ 959 002a 0793     		str	r3, [sp, #28]
+ 258:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 259:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   if (hci_send_req(&rq, FALSE) < 0)
+ 960              		.loc 1 259 3 is_stmt 1 view .LVU272
+ 961              		.loc 1 259 7 is_stmt 0 view .LVU273
+ 962 002c 02A8     		add	r0, sp, #8
+ 963              	.LVL39:
+ 964              		.loc 1 259 7 view .LVU274
+ 965 002e FFF7FEFF 		bl	hci_send_req
+ 966              	.LVL40:
+ 967              		.loc 1 259 6 view .LVU275
+ 968 0032 0028     		cmp	r0, #0
+ 969 0034 06DB     		blt	.L44
+ 260:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 261:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     
+ 262:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   *version = resp.version;
+ 970              		.loc 1 262 3 is_stmt 1 view .LVU276
+ 971              		.loc 1 262 18 is_stmt 0 view .LVU277
+ 972 0036 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 973              		.loc 1 262 12 view .LVU278
+ 974 003a 2370     		strb	r3, [r4]
+ 263:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** 
+ 264:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****   return resp.status;
+ 975              		.loc 1 264 3 is_stmt 1 view .LVU279
+ 976              		.loc 1 264 14 is_stmt 0 view .LVU280
+ 977 003c 9DF80400 		ldrb	r0, [sp, #4]	@ zero_extendqisi2
+ 978              	.L43:
+ 265:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c **** }
+ 979              		.loc 1 265 1 view .LVU281
+ 980 0040 08B0     		add	sp, sp, #32
+ 981              	.LCFI41:
+ 982              		.cfi_remember_state
+ 983              		.cfi_def_cfa_offset 8
+ 984              		@ sp needed
+ 985 0042 10BD     		pop	{r4, pc}
+ 986              	.LVL41:
+ 987              	.L44:
+ 988              	.LCFI42:
+ 989              		.cfi_restore_state
+ 260:Middlewares/ST/BlueNRG-MS/hci/controller/bluenrg_updater_aci.c ****     return BLE_STATUS_TIMEOUT;
+ 990              		.loc 1 260 12 view .LVU282
+ 991 0044 FF20     		movs	r0, #255
+ 992 0046 FBE7     		b	.L43
+ 993              		.cfi_endproc
+ 994              	.LFE302:
+ 996              		.text
+ 997              	.Letext0:
+ 998              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ARM GAS  /tmp/ccvscUjm.s 			page 23
+
+
+ 999              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 1000              		.file 4 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_types.h"
+ 1001              		.file 5 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_def.h"
+ 1002              		.file 6 "/usr/lib/gcc/arm-none-eabi/12.1.0/include/stddef.h"
+ 1003              		.file 7 "Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic/hci_tl.h"
+ 1004              		.file 8 "Middlewares/ST/BlueNRG-MS/includes/bluenrg_aci_const.h"
+ 1005              		.file 9 "/usr/arm-none-eabi/include/string.h"
+ 1006              		.file 10 "<built-in>"
+ARM GAS  /tmp/ccvscUjm.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 bluenrg_updater_aci.c
+     /tmp/ccvscUjm.s:21     .text.aci_updater_start:0000000000000000 $t
+     /tmp/ccvscUjm.s:27     .text.aci_updater_start:0000000000000000 aci_updater_start
+     /tmp/ccvscUjm.s:84     .text.aci_updater_reboot:0000000000000000 $t
+     /tmp/ccvscUjm.s:90     .text.aci_updater_reboot:0000000000000000 aci_updater_reboot
+     /tmp/ccvscUjm.s:147    .text.aci_get_updater_version:0000000000000000 $t
+     /tmp/ccvscUjm.s:153    .text.aci_get_updater_version:0000000000000000 aci_get_updater_version
+     /tmp/ccvscUjm.s:235    .text.aci_get_updater_buffer_size:0000000000000000 $t
+     /tmp/ccvscUjm.s:241    .text.aci_get_updater_buffer_size:0000000000000000 aci_get_updater_buffer_size
+     /tmp/ccvscUjm.s:323    .text.aci_erase_blue_flag:0000000000000000 $t
+     /tmp/ccvscUjm.s:329    .text.aci_erase_blue_flag:0000000000000000 aci_erase_blue_flag
+     /tmp/ccvscUjm.s:397    .text.aci_reset_blue_flag:0000000000000000 $t
+     /tmp/ccvscUjm.s:403    .text.aci_reset_blue_flag:0000000000000000 aci_reset_blue_flag
+     /tmp/ccvscUjm.s:471    .text.aci_updater_erase_sector:0000000000000000 $t
+     /tmp/ccvscUjm.s:477    .text.aci_updater_erase_sector:0000000000000000 aci_updater_erase_sector
+     /tmp/ccvscUjm.s:561    .text.aci_updater_program_data_block:0000000000000000 $t
+     /tmp/ccvscUjm.s:567    .text.aci_updater_program_data_block:0000000000000000 aci_updater_program_data_block
+     /tmp/ccvscUjm.s:678    .text.aci_updater_read_data_block:0000000000000000 $t
+     /tmp/ccvscUjm.s:684    .text.aci_updater_read_data_block:0000000000000000 aci_updater_read_data_block
+     /tmp/ccvscUjm.s:802    .text.aci_updater_calc_crc:0000000000000000 $t
+     /tmp/ccvscUjm.s:808    .text.aci_updater_calc_crc:0000000000000000 aci_updater_calc_crc
+     /tmp/ccvscUjm.s:909    .text.aci_updater_hw_version:0000000000000000 $t
+     /tmp/ccvscUjm.s:915    .text.aci_updater_hw_version:0000000000000000 aci_updater_hw_version
+
+UNDEFINED SYMBOLS
+hci_send_req
+memcpy

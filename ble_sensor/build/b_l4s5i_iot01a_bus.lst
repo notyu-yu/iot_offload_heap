@@ -1,0 +1,1258 @@
+ARM GAS  /tmp/ccKQqRf5.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"b_l4s5i_iot01a_bus.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c"
+  20              		.section	.text.SPI3_MspInit,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	SPI3_MspInit:
+  27              	.LVL0:
+  28              	.LFB299:
+   1:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /* USER CODE BEGIN Header */
+   2:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+   3:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   ******************************************************************************
+   4:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @file           : b_l4s5i_iot01a_bus.c
+   5:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief          : source file for the BSP BUS IO driver
+   6:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   ******************************************************************************
+   7:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @attention
+   8:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   *
+   9:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * Copyright (c) 2022 STMicroelectronics.
+  10:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * All rights reserved.
+  11:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   *
+  12:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * in the root directory of this software component.
+  14:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   *
+  16:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   ******************************************************************************
+  17:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** */
+  18:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /* USER CODE END Header */
+  19:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  20:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /* Includes ------------------------------------------------------------------*/
+  21:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #include "b_l4s5i_iot01a_bus.h"
+  22:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  23:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** __weak HAL_StatusTypeDef MX_SPI3_Init(SPI_HandleTypeDef* hspi);
+  24:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  25:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @addtogroup BSP
+  26:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  27:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  28:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  29:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @addtogroup B_L4S5I_IOT01A
+  30:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+ARM GAS  /tmp/ccKQqRf5.s 			page 2
+
+
+  31:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  32:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  33:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @defgroup B_L4S5I_IOT01A_BUS B_L4S5I_IOT01A BUS
+  34:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  35:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  36:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  37:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @defgroup B_L4S5I_IOT01A_BUS_Exported_Variables BUS Exported Variables
+  38:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  39:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  40:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  41:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** SPI_HandleTypeDef hspi3;
+  42:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+  43:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @}
+  44:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  45:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  46:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @defgroup B_L4S5I_IOT01A_BUS_Private_Variables BUS Private Variables
+  47:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  48:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  49:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  50:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
+  51:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static uint32_t IsSPI3MspCbValid = 0;
+  52:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+  53:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static uint32_t SPI3InitCounter = 0;
+  54:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  55:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+  56:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @}
+  57:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  58:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  59:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @defgroup B_L4S5I_IOT01A_BUS_Private_FunctionPrototypes  BUS Private Function
+  60:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  61:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  62:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  63:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static void SPI3_MspInit(SPI_HandleTypeDef* hSPI);
+  64:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static void SPI3_MspDeInit(SPI_HandleTypeDef* hSPI);
+  65:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #if (USE_CUBEMX_BSP_V2 == 1)
+  66:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static uint32_t SPI_GetPrescaler( uint32_t clk_src_hz, uint32_t baudrate_mbps );
+  67:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #endif
+  68:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  69:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+  70:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @}
+  71:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  72:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  73:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @defgroup B_L4S5I_IOT01A_LOW_LEVEL_Private_Functions B_L4S5I_IOT01A LOW LEVEL Private Functions
+  74:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  75:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  76:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  77:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /** @defgroup B_L4S5I_IOT01A_BUS_Exported_Functions B_L4S5I_IOT01A_BUS Exported Functions
+  78:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @{
+  79:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  80:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  81:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /* BUS IO driver over SPI Peripheral */
+  82:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /*******************************************************************************
+  83:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****                             BUS OPERATIONS OVER SPI
+  84:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** *******************************************************************************/
+  85:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+  86:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief  Initializes SPI HAL.
+  87:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ARM GAS  /tmp/ccKQqRf5.s 			page 3
+
+
+  88:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+  89:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_SPI3_Init(void)
+  90:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+  91:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+  92:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  93:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi3.Instance  = SPI3;
+  94:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+  95:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if(SPI3InitCounter++ == 0)
+  96:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+  97:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     if (HAL_SPI_GetState(&hspi3) == HAL_SPI_STATE_RESET)
+  98:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+  99:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 0U)
+ 100:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         /* Init the SPI Msp */
+ 101:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         SPI3_MspInit(&hspi3);
+ 102:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #else
+ 103:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         if(IsSPI3MspCbValid == 0U)
+ 104:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         {
+ 105:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             if(BSP_SPI3_RegisterDefaultMspCallbacks() != BSP_ERROR_NONE)
+ 106:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             {
+ 107:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****                 return BSP_ERROR_MSP_FAILURE;
+ 108:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             }
+ 109:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         }
+ 110:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #endif
+ 111:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         if(ret == BSP_ERROR_NONE)
+ 112:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         {
+ 113:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             /* Init the SPI */
+ 114:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             if (MX_SPI3_Init(&hspi3) != HAL_OK)
+ 115:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             {
+ 116:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****                 ret = BSP_ERROR_BUS_FAILURE;
+ 117:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             }
+ 118:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         }
+ 119:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     }
+ 120:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 121:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 122:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return ret;
+ 123:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 124:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 125:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 126:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief  DeInitializes SPI HAL.
+ 127:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval None
+ 128:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ 129:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ 130:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_SPI3_DeInit(void)
+ 131:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 132:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_BUS_FAILURE;
+ 133:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (SPI3InitCounter > 0)
+ 134:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 135:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     if (--SPI3InitCounter == 0)
+ 136:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 137:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 0U)
+ 138:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       SPI3_MspDeInit(&hspi3);
+ 139:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #endif
+ 140:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       /* DeInit the SPI*/
+ 141:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       if (HAL_SPI_DeInit(&hspi3) == HAL_OK)
+ 142:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       {
+ 143:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         ret = BSP_ERROR_NONE;
+ 144:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       }
+ARM GAS  /tmp/ccKQqRf5.s 			page 4
+
+
+ 145:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     }
+ 146:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 147:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return ret;
+ 148:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 149:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 150:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 151:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief  Write Data through SPI BUS.
+ 152:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param  pData: Pointer to data buffer to send
+ 153:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param  Length: Length of data in byte
+ 154:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ 155:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ 156:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_SPI3_Send(uint8_t *pData, uint16_t Length)
+ 157:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 158:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 159:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 160:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if(HAL_SPI_Transmit(&hspi3, pData, Length, BUS_SPI3_POLL_TIMEOUT) != HAL_OK)
+ 161:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 162:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       ret = BSP_ERROR_UNKNOWN_FAILURE;
+ 163:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 164:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return ret;
+ 165:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 166:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 167:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 168:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief  Receive Data from SPI BUS
+ 169:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param  pData: Pointer to data buffer to receive
+ 170:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param  Length: Length of data in byte
+ 171:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ 172:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ 173:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t  BSP_SPI3_Recv(uint8_t *pData, uint16_t Length)
+ 174:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 175:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 176:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 177:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if(HAL_SPI_Receive(&hspi3, pData, Length, BUS_SPI3_POLL_TIMEOUT) != HAL_OK)
+ 178:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 179:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       ret = BSP_ERROR_UNKNOWN_FAILURE;
+ 180:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 181:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return ret;
+ 182:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 183:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 184:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 185:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief  Send and Receive data to/from SPI BUS (Full duplex)
+ 186:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param  pData: Pointer to data buffer to send/receive
+ 187:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param  Length: Length of data in byte
+ 188:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ 189:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ 190:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_SPI3_SendRecv(uint8_t *pTxData, uint8_t *pRxData, uint16_t Length)
+ 191:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 192:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 193:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if(HAL_SPI_TransmitReceive(&hspi3, pTxData, pRxData, Length, BUS_SPI3_POLL_TIMEOUT) != HAL_OK)
+ 195:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 196:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       ret = BSP_ERROR_UNKNOWN_FAILURE;
+ 197:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 198:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return ret;
+ 199:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 200:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 201:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
+ARM GAS  /tmp/ccKQqRf5.s 			page 5
+
+
+ 202:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 203:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief Register Default BSP SPI3 Bus Msp Callbacks
+ 204:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ 205:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ 206:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_SPI3_RegisterDefaultMspCallbacks (void)
+ 207:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 208:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 209:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   __HAL_SPI_RESET_HANDLE_STATE(&hspi3);
+ 210:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 211:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* Register MspInit Callback */
+ 212:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi3, HAL_SPI_MSPINIT_CB_ID, SPI3_MspInit)  != HAL_OK)
+ 213:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 214:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 215:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 216:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 217:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* Register MspDeInit Callback */
+ 218:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi3, HAL_SPI_MSPDEINIT_CB_ID, SPI3_MspDeInit) != HAL_OK)
+ 219:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 220:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 221:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 222:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   IsSPI3MspCbValid = 1;
+ 223:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 224:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return BSP_ERROR_NONE;
+ 225:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 226:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 227:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 228:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief BSP SPI3 Bus Msp Callback registering
+ 229:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @param Callbacks     pointer to SPI3 MspInit/MspDeInit callback functions
+ 230:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval BSP status
+ 231:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ 232:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_SPI3_RegisterMspCallbacks (BSP_SPI_Cb_t *Callbacks)
+ 233:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 234:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* Prevent unused argument(s) compilation warning */
+ 235:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   __HAL_SPI_RESET_HANDLE_STATE(&hspi3);
+ 236:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 237:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****    /* Register MspInit Callback */
+ 238:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi3, HAL_SPI_MSPINIT_CB_ID, Callbacks->pMspInitCb)  != HAL_OK)
+ 239:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 240:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 241:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 242:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 243:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* Register MspDeInit Callback */
+ 244:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_RegisterCallback(&hspi3, HAL_SPI_MSPDEINIT_CB_ID, Callbacks->pMspDeInitCb) != HAL_OK)
+ 245:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 246:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     return BSP_ERROR_PERIPH_FAILURE;
+ 247:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 248:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 249:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   IsSPI3MspCbValid = 1;
+ 250:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 251:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return BSP_ERROR_NONE;
+ 252:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 253:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+ 254:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 255:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /**
+ 256:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @brief  Return system tick in ms
+ 257:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   * @retval Current HAL time base time stamp
+ 258:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   */
+ARM GAS  /tmp/ccKQqRf5.s 			page 6
+
+
+ 259:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** int32_t BSP_GetTick(void) {
+ 260:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return HAL_GetTick();
+ 261:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 262:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 263:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** /* SPI3 init function */
+ 264:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 265:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** __weak HAL_StatusTypeDef MX_SPI3_Init(SPI_HandleTypeDef* hspi)
+ 266:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 267:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   HAL_StatusTypeDef ret = HAL_OK;
+ 268:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 269:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Instance = SPI3;
+ 270:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.Mode = SPI_MODE_MASTER;
+ 271:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.Direction = SPI_DIRECTION_2LINES;
+ 272:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+ 273:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+ 274:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+ 275:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.NSS = SPI_NSS_SOFT;
+ 276:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+ 277:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 278:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
+ 279:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 280:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCPolynomial = 7;
+ 281:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 282:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 283:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_Init(hspi) != HAL_OK)
+ 284:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 285:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     ret = HAL_ERROR;
+ 286:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 287:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 288:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return ret;
+ 289:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 290:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 291:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static void SPI3_MspInit(SPI_HandleTypeDef* spiHandle)
+ 292:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+  29              		.loc 1 292 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 292 1 is_stmt 0 view .LVU1
+  34 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 24
+  37              		.cfi_offset 4, -24
+  38              		.cfi_offset 5, -20
+  39              		.cfi_offset 6, -16
+  40              		.cfi_offset 7, -12
+  41              		.cfi_offset 8, -8
+  42              		.cfi_offset 14, -4
+  43 0004 88B0     		sub	sp, sp, #32
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_offset 56
+ 293:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   GPIO_InitTypeDef GPIO_InitStruct;
+  46              		.loc 1 293 3 is_stmt 1 view .LVU2
+ 294:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE BEGIN SPI3_MspInit 0 */
+ 295:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 296:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE END SPI3_MspInit 0 */
+ 297:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     /* Enable Peripheral clock */
+ARM GAS  /tmp/ccKQqRf5.s 			page 7
+
+
+ 298:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     __HAL_RCC_SPI3_CLK_ENABLE();
+  47              		.loc 1 298 5 view .LVU3
+  48              	.LBB2:
+  49              		.loc 1 298 5 view .LVU4
+  50              		.loc 1 298 5 view .LVU5
+  51 0006 204B     		ldr	r3, .L3
+  52 0008 9A6D     		ldr	r2, [r3, #88]
+  53 000a 42F40042 		orr	r2, r2, #32768
+  54 000e 9A65     		str	r2, [r3, #88]
+  55              		.loc 1 298 5 view .LVU6
+  56 0010 9A6D     		ldr	r2, [r3, #88]
+  57 0012 02F40042 		and	r2, r2, #32768
+  58 0016 0192     		str	r2, [sp, #4]
+  59              		.loc 1 298 5 view .LVU7
+  60 0018 019A     		ldr	r2, [sp, #4]
+  61              	.LBE2:
+  62              		.loc 1 298 5 view .LVU8
+ 299:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 300:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+  63              		.loc 1 300 5 view .LVU9
+  64              	.LBB3:
+  65              		.loc 1 300 5 view .LVU10
+  66              		.loc 1 300 5 view .LVU11
+  67 001a DA6C     		ldr	r2, [r3, #76]
+  68 001c 42F00402 		orr	r2, r2, #4
+  69 0020 DA64     		str	r2, [r3, #76]
+  70              		.loc 1 300 5 view .LVU12
+  71 0022 DB6C     		ldr	r3, [r3, #76]
+  72 0024 03F00403 		and	r3, r3, #4
+  73 0028 0293     		str	r3, [sp, #8]
+  74              		.loc 1 300 5 view .LVU13
+  75 002a 029B     		ldr	r3, [sp, #8]
+  76              	.LBE3:
+  77              		.loc 1 300 5 view .LVU14
+ 301:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     /**SPI3 GPIO Configuration
+ 302:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     PC10     ------> SPI3_SCK
+ 303:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     PC11     ------> SPI3_MISO
+ 304:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     PC12     ------> SPI3_MOSI
+ 305:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     */
+ 306:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Pin = BUS_SPI3_SCK_GPIO_PIN;
+  78              		.loc 1 306 5 view .LVU15
+  79              		.loc 1 306 25 is_stmt 0 view .LVU16
+  80 002c 4FF48063 		mov	r3, #1024
+  81 0030 0393     		str	r3, [sp, #12]
+ 307:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  82              		.loc 1 307 5 is_stmt 1 view .LVU17
+  83              		.loc 1 307 26 is_stmt 0 view .LVU18
+  84 0032 4FF00208 		mov	r8, #2
+  85 0036 CDF81080 		str	r8, [sp, #16]
+ 308:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+  86              		.loc 1 308 5 is_stmt 1 view .LVU19
+  87              		.loc 1 308 26 is_stmt 0 view .LVU20
+  88 003a 0027     		movs	r7, #0
+  89 003c 0597     		str	r7, [sp, #20]
+ 309:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  90              		.loc 1 309 5 is_stmt 1 view .LVU21
+  91              		.loc 1 309 27 is_stmt 0 view .LVU22
+ARM GAS  /tmp/ccKQqRf5.s 			page 8
+
+
+  92 003e 0326     		movs	r6, #3
+  93 0040 0696     		str	r6, [sp, #24]
+ 310:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Alternate = BUS_SPI3_SCK_GPIO_AF;
+  94              		.loc 1 310 5 is_stmt 1 view .LVU23
+  95              		.loc 1 310 31 is_stmt 0 view .LVU24
+  96 0042 0625     		movs	r5, #6
+  97 0044 0795     		str	r5, [sp, #28]
+ 311:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     HAL_GPIO_Init(BUS_SPI3_SCK_GPIO_PORT, &GPIO_InitStruct);
+  98              		.loc 1 311 5 is_stmt 1 view .LVU25
+  99 0046 114C     		ldr	r4, .L3+4
+ 100 0048 03A9     		add	r1, sp, #12
+ 101 004a 2046     		mov	r0, r4
+ 102              	.LVL1:
+ 103              		.loc 1 311 5 is_stmt 0 view .LVU26
+ 104 004c FFF7FEFF 		bl	HAL_GPIO_Init
+ 105              	.LVL2:
+ 312:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 313:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Pin = BUS_SPI3_MISO_GPIO_PIN;
+ 106              		.loc 1 313 5 is_stmt 1 view .LVU27
+ 107              		.loc 1 313 25 is_stmt 0 view .LVU28
+ 108 0050 4FF40063 		mov	r3, #2048
+ 109 0054 0393     		str	r3, [sp, #12]
+ 314:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 110              		.loc 1 314 5 is_stmt 1 view .LVU29
+ 111              		.loc 1 314 26 is_stmt 0 view .LVU30
+ 112 0056 CDF81080 		str	r8, [sp, #16]
+ 315:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 113              		.loc 1 315 5 is_stmt 1 view .LVU31
+ 114              		.loc 1 315 26 is_stmt 0 view .LVU32
+ 115 005a 0597     		str	r7, [sp, #20]
+ 316:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 116              		.loc 1 316 5 is_stmt 1 view .LVU33
+ 117              		.loc 1 316 27 is_stmt 0 view .LVU34
+ 118 005c 0696     		str	r6, [sp, #24]
+ 317:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Alternate = BUS_SPI3_MISO_GPIO_AF;
+ 119              		.loc 1 317 5 is_stmt 1 view .LVU35
+ 120              		.loc 1 317 31 is_stmt 0 view .LVU36
+ 121 005e 0795     		str	r5, [sp, #28]
+ 318:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     HAL_GPIO_Init(BUS_SPI3_MISO_GPIO_PORT, &GPIO_InitStruct);
+ 122              		.loc 1 318 5 is_stmt 1 view .LVU37
+ 123 0060 03A9     		add	r1, sp, #12
+ 124 0062 2046     		mov	r0, r4
+ 125 0064 FFF7FEFF 		bl	HAL_GPIO_Init
+ 126              	.LVL3:
+ 319:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 320:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Pin = BUS_SPI3_MOSI_GPIO_PIN;
+ 127              		.loc 1 320 5 view .LVU38
+ 128              		.loc 1 320 25 is_stmt 0 view .LVU39
+ 129 0068 4FF48053 		mov	r3, #4096
+ 130 006c 0393     		str	r3, [sp, #12]
+ 321:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 131              		.loc 1 321 5 is_stmt 1 view .LVU40
+ 132              		.loc 1 321 26 is_stmt 0 view .LVU41
+ 133 006e CDF81080 		str	r8, [sp, #16]
+ 322:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 134              		.loc 1 322 5 is_stmt 1 view .LVU42
+ 135              		.loc 1 322 26 is_stmt 0 view .LVU43
+ARM GAS  /tmp/ccKQqRf5.s 			page 9
+
+
+ 136 0072 0597     		str	r7, [sp, #20]
+ 323:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 137              		.loc 1 323 5 is_stmt 1 view .LVU44
+ 138              		.loc 1 323 27 is_stmt 0 view .LVU45
+ 139 0074 0696     		str	r6, [sp, #24]
+ 324:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     GPIO_InitStruct.Alternate = BUS_SPI3_MOSI_GPIO_AF;
+ 140              		.loc 1 324 5 is_stmt 1 view .LVU46
+ 141              		.loc 1 324 31 is_stmt 0 view .LVU47
+ 142 0076 0795     		str	r5, [sp, #28]
+ 325:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     HAL_GPIO_Init(BUS_SPI3_MOSI_GPIO_PORT, &GPIO_InitStruct);
+ 143              		.loc 1 325 5 is_stmt 1 view .LVU48
+ 144 0078 03A9     		add	r1, sp, #12
+ 145 007a 2046     		mov	r0, r4
+ 146 007c FFF7FEFF 		bl	HAL_GPIO_Init
+ 147              	.LVL4:
+ 326:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 327:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE BEGIN SPI3_MspInit 1 */
+ 328:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 329:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE END SPI3_MspInit 1 */
+ 330:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 148              		.loc 1 330 1 is_stmt 0 view .LVU49
+ 149 0080 08B0     		add	sp, sp, #32
+ 150              	.LCFI2:
+ 151              		.cfi_def_cfa_offset 24
+ 152              		@ sp needed
+ 153 0082 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 154              	.L4:
+ 155 0086 00BF     		.align	2
+ 156              	.L3:
+ 157 0088 00100240 		.word	1073876992
+ 158 008c 00080048 		.word	1207961600
+ 159              		.cfi_endproc
+ 160              	.LFE299:
+ 162              		.section	.text.SPI3_MspDeInit,"ax",%progbits
+ 163              		.align	1
+ 164              		.syntax unified
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	SPI3_MspDeInit:
+ 169              	.LVL5:
+ 170              	.LFB300:
+ 331:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 332:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** static void SPI3_MspDeInit(SPI_HandleTypeDef* spiHandle)
+ 333:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** {
+ 171              		.loc 1 333 1 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175              		.loc 1 333 1 is_stmt 0 view .LVU51
+ 176 0000 10B5     		push	{r4, lr}
+ 177              	.LCFI3:
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 4, -8
+ 180              		.cfi_offset 14, -4
+ 334:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE BEGIN SPI3_MspDeInit 0 */
+ 335:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 336:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE END SPI3_MspDeInit 0 */
+ARM GAS  /tmp/ccKQqRf5.s 			page 10
+
+
+ 337:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     /* Peripheral clock disable */
+ 338:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     __HAL_RCC_SPI3_CLK_DISABLE();
+ 181              		.loc 1 338 5 is_stmt 1 view .LVU52
+ 182 0002 0B4A     		ldr	r2, .L7
+ 183 0004 936D     		ldr	r3, [r2, #88]
+ 184 0006 23F40043 		bic	r3, r3, #32768
+ 185 000a 9365     		str	r3, [r2, #88]
+ 339:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 340:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     /**SPI3 GPIO Configuration
+ 341:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     PC10     ------> SPI3_SCK
+ 342:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     PC11     ------> SPI3_MISO
+ 343:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     PC12     ------> SPI3_MOSI
+ 344:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     */
+ 345:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     HAL_GPIO_DeInit(BUS_SPI3_SCK_GPIO_PORT, BUS_SPI3_SCK_GPIO_PIN);
+ 186              		.loc 1 345 5 view .LVU53
+ 187 000c 094C     		ldr	r4, .L7+4
+ 188 000e 4FF48061 		mov	r1, #1024
+ 189 0012 2046     		mov	r0, r4
+ 190              	.LVL6:
+ 191              		.loc 1 345 5 is_stmt 0 view .LVU54
+ 192 0014 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 193              	.LVL7:
+ 346:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 347:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     HAL_GPIO_DeInit(BUS_SPI3_MISO_GPIO_PORT, BUS_SPI3_MISO_GPIO_PIN);
+ 194              		.loc 1 347 5 is_stmt 1 view .LVU55
+ 195 0018 4FF40061 		mov	r1, #2048
+ 196 001c 2046     		mov	r0, r4
+ 197 001e FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 198              	.LVL8:
+ 348:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 349:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     HAL_GPIO_DeInit(BUS_SPI3_MOSI_GPIO_PORT, BUS_SPI3_MOSI_GPIO_PIN);
+ 199              		.loc 1 349 5 view .LVU56
+ 200 0022 4FF48051 		mov	r1, #4096
+ 201 0026 2046     		mov	r0, r4
+ 202 0028 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 203              	.LVL9:
+ 350:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 351:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE BEGIN SPI3_MspDeInit 1 */
+ 352:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 353:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   /* USER CODE END SPI3_MspDeInit 1 */
+ 354:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 204              		.loc 1 354 1 is_stmt 0 view .LVU57
+ 205 002c 10BD     		pop	{r4, pc}
+ 206              	.L8:
+ 207 002e 00BF     		.align	2
+ 208              	.L7:
+ 209 0030 00100240 		.word	1073876992
+ 210 0034 00080048 		.word	1207961600
+ 211              		.cfi_endproc
+ 212              	.LFE300:
+ 214              		.section	.text.BSP_SPI3_DeInit,"ax",%progbits
+ 215              		.align	1
+ 216              		.global	BSP_SPI3_DeInit
+ 217              		.syntax unified
+ 218              		.thumb
+ 219              		.thumb_func
+ 221              	BSP_SPI3_DeInit:
+ARM GAS  /tmp/ccKQqRf5.s 			page 11
+
+
+ 222              	.LFB293:
+ 131:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_BUS_FAILURE;
+ 223              		.loc 1 131 1 is_stmt 1 view -0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 0
+ 226              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (SPI3InitCounter > 0)
+ 227              		.loc 1 132 3 view .LVU59
+ 228              	.LVL10:
+ 133:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 229              		.loc 1 133 3 view .LVU60
+ 133:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 230              		.loc 1 133 23 is_stmt 0 view .LVU61
+ 231 0000 0D4B     		ldr	r3, .L19
+ 232 0002 1B68     		ldr	r3, [r3]
+ 133:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 233              		.loc 1 133 6 view .LVU62
+ 234 0004 8BB1     		cbz	r3, .L11
+ 135:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 235              		.loc 1 135 5 is_stmt 1 view .LVU63
+ 135:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 236              		.loc 1 135 9 is_stmt 0 view .LVU64
+ 237 0006 013B     		subs	r3, r3, #1
+ 135:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 238              		.loc 1 135 8 view .LVU65
+ 239 0008 0B4A     		ldr	r2, .L19
+ 240 000a 1360     		str	r3, [r2]
+ 241 000c 83B9     		cbnz	r3, .L12
+ 131:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_BUS_FAILURE;
+ 242              		.loc 1 131 1 view .LVU66
+ 243 000e 10B5     		push	{r4, lr}
+ 244              	.LCFI4:
+ 245              		.cfi_def_cfa_offset 8
+ 246              		.cfi_offset 4, -8
+ 247              		.cfi_offset 14, -4
+ 138:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #endif
+ 248              		.loc 1 138 7 is_stmt 1 view .LVU67
+ 249 0010 0A4C     		ldr	r4, .L19+4
+ 250 0012 2046     		mov	r0, r4
+ 251 0014 FFF7FEFF 		bl	SPI3_MspDeInit
+ 252              	.LVL11:
+ 141:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       {
+ 253              		.loc 1 141 7 view .LVU68
+ 141:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       {
+ 254              		.loc 1 141 11 is_stmt 0 view .LVU69
+ 255 0018 2046     		mov	r0, r4
+ 256 001a FFF7FEFF 		bl	HAL_SPI_DeInit
+ 257              	.LVL12:
+ 141:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       {
+ 258              		.loc 1 141 10 view .LVU70
+ 259 001e 08B9     		cbnz	r0, .L18
+ 143:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****       }
+ 260              		.loc 1 143 13 view .LVU71
+ 261 0020 0020     		movs	r0, #0
+ 262              	.LVL13:
+ 147:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 263              		.loc 1 147 3 is_stmt 1 view .LVU72
+ARM GAS  /tmp/ccKQqRf5.s 			page 12
+
+
+ 264              	.L9:
+ 148:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 265              		.loc 1 148 1 is_stmt 0 view .LVU73
+ 266 0022 10BD     		pop	{r4, pc}
+ 267              	.LVL14:
+ 268              	.L18:
+ 132:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (SPI3InitCounter > 0)
+ 269              		.loc 1 132 11 view .LVU74
+ 270 0024 6FF00700 		mvn	r0, #7
+ 271 0028 FBE7     		b	.L9
+ 272              	.L11:
+ 273              	.LCFI5:
+ 274              		.cfi_def_cfa_offset 0
+ 275              		.cfi_restore 4
+ 276              		.cfi_restore 14
+ 277 002a 6FF00700 		mvn	r0, #7
+ 278 002e 7047     		bx	lr
+ 279              	.L12:
+ 280 0030 6FF00700 		mvn	r0, #7
+ 148:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 281              		.loc 1 148 1 view .LVU75
+ 282 0034 7047     		bx	lr
+ 283              	.L20:
+ 284 0036 00BF     		.align	2
+ 285              	.L19:
+ 286 0038 00000000 		.word	SPI3InitCounter
+ 287 003c 00000000 		.word	hspi3
+ 288              		.cfi_endproc
+ 289              	.LFE293:
+ 291              		.section	.text.BSP_SPI3_Send,"ax",%progbits
+ 292              		.align	1
+ 293              		.global	BSP_SPI3_Send
+ 294              		.syntax unified
+ 295              		.thumb
+ 296              		.thumb_func
+ 298              	BSP_SPI3_Send:
+ 299              	.LVL15:
+ 300              	.LFB294:
+ 157:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 301              		.loc 1 157 1 is_stmt 1 view -0
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 0
+ 304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 305              		.loc 1 157 1 is_stmt 0 view .LVU77
+ 306 0000 08B5     		push	{r3, lr}
+ 307              	.LCFI6:
+ 308              		.cfi_def_cfa_offset 8
+ 309              		.cfi_offset 3, -8
+ 310              		.cfi_offset 14, -4
+ 311 0002 0A46     		mov	r2, r1
+ 158:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 312              		.loc 1 158 3 is_stmt 1 view .LVU78
+ 313              	.LVL16:
+ 160:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 314              		.loc 1 160 3 view .LVU79
+ 160:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ARM GAS  /tmp/ccKQqRf5.s 			page 13
+
+
+ 315              		.loc 1 160 6 is_stmt 0 view .LVU80
+ 316 0004 4FF48053 		mov	r3, #4096
+ 317 0008 0146     		mov	r1, r0
+ 318              	.LVL17:
+ 160:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 319              		.loc 1 160 6 view .LVU81
+ 320 000a 0448     		ldr	r0, .L26
+ 321              	.LVL18:
+ 160:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 322              		.loc 1 160 6 view .LVU82
+ 323 000c FFF7FEFF 		bl	HAL_SPI_Transmit
+ 324              	.LVL19:
+ 160:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 325              		.loc 1 160 5 view .LVU83
+ 326 0010 00B9     		cbnz	r0, .L25
+ 327              	.LVL20:
+ 328              	.L21:
+ 165:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 329              		.loc 1 165 1 view .LVU84
+ 330 0012 08BD     		pop	{r3, pc}
+ 331              	.LVL21:
+ 332              	.L25:
+ 162:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 333              		.loc 1 162 11 view .LVU85
+ 334 0014 6FF00500 		mvn	r0, #5
+ 335              	.LVL22:
+ 164:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 336              		.loc 1 164 3 is_stmt 1 view .LVU86
+ 164:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 337              		.loc 1 164 10 is_stmt 0 view .LVU87
+ 338 0018 FBE7     		b	.L21
+ 339              	.L27:
+ 340 001a 00BF     		.align	2
+ 341              	.L26:
+ 342 001c 00000000 		.word	hspi3
+ 343              		.cfi_endproc
+ 344              	.LFE294:
+ 346              		.section	.text.BSP_SPI3_Recv,"ax",%progbits
+ 347              		.align	1
+ 348              		.global	BSP_SPI3_Recv
+ 349              		.syntax unified
+ 350              		.thumb
+ 351              		.thumb_func
+ 353              	BSP_SPI3_Recv:
+ 354              	.LVL23:
+ 355              	.LFB295:
+ 174:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 356              		.loc 1 174 1 is_stmt 1 view -0
+ 357              		.cfi_startproc
+ 358              		@ args = 0, pretend = 0, frame = 0
+ 359              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 360              		.loc 1 174 1 is_stmt 0 view .LVU89
+ 361 0000 08B5     		push	{r3, lr}
+ 362              	.LCFI7:
+ 363              		.cfi_def_cfa_offset 8
+ 364              		.cfi_offset 3, -8
+ARM GAS  /tmp/ccKQqRf5.s 			page 14
+
+
+ 365              		.cfi_offset 14, -4
+ 366 0002 0A46     		mov	r2, r1
+ 175:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 367              		.loc 1 175 3 is_stmt 1 view .LVU90
+ 368              	.LVL24:
+ 177:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 369              		.loc 1 177 3 view .LVU91
+ 177:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 370              		.loc 1 177 6 is_stmt 0 view .LVU92
+ 371 0004 4FF48053 		mov	r3, #4096
+ 372 0008 0146     		mov	r1, r0
+ 373              	.LVL25:
+ 177:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 374              		.loc 1 177 6 view .LVU93
+ 375 000a 0448     		ldr	r0, .L33
+ 376              	.LVL26:
+ 177:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 377              		.loc 1 177 6 view .LVU94
+ 378 000c FFF7FEFF 		bl	HAL_SPI_Receive
+ 379              	.LVL27:
+ 177:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 380              		.loc 1 177 5 view .LVU95
+ 381 0010 00B9     		cbnz	r0, .L32
+ 382              	.LVL28:
+ 383              	.L28:
+ 182:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 384              		.loc 1 182 1 view .LVU96
+ 385 0012 08BD     		pop	{r3, pc}
+ 386              	.LVL29:
+ 387              	.L32:
+ 179:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 388              		.loc 1 179 11 view .LVU97
+ 389 0014 6FF00500 		mvn	r0, #5
+ 390              	.LVL30:
+ 181:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 391              		.loc 1 181 3 is_stmt 1 view .LVU98
+ 181:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 392              		.loc 1 181 10 is_stmt 0 view .LVU99
+ 393 0018 FBE7     		b	.L28
+ 394              	.L34:
+ 395 001a 00BF     		.align	2
+ 396              	.L33:
+ 397 001c 00000000 		.word	hspi3
+ 398              		.cfi_endproc
+ 399              	.LFE295:
+ 401              		.section	.text.BSP_SPI3_SendRecv,"ax",%progbits
+ 402              		.align	1
+ 403              		.global	BSP_SPI3_SendRecv
+ 404              		.syntax unified
+ 405              		.thumb
+ 406              		.thumb_func
+ 408              	BSP_SPI3_SendRecv:
+ 409              	.LVL31:
+ 410              	.LFB296:
+ 191:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 411              		.loc 1 191 1 is_stmt 1 view -0
+ 412              		.cfi_startproc
+ARM GAS  /tmp/ccKQqRf5.s 			page 15
+
+
+ 413              		@ args = 0, pretend = 0, frame = 0
+ 414              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 415              		.loc 1 191 1 is_stmt 0 view .LVU101
+ 416 0000 00B5     		push	{lr}
+ 417              	.LCFI8:
+ 418              		.cfi_def_cfa_offset 4
+ 419              		.cfi_offset 14, -4
+ 420 0002 83B0     		sub	sp, sp, #12
+ 421              	.LCFI9:
+ 422              		.cfi_def_cfa_offset 16
+ 423 0004 1346     		mov	r3, r2
+ 192:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 424              		.loc 1 192 3 is_stmt 1 view .LVU102
+ 425              	.LVL32:
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 426              		.loc 1 194 3 view .LVU103
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 427              		.loc 1 194 6 is_stmt 0 view .LVU104
+ 428 0006 4FF48052 		mov	r2, #4096
+ 429              	.LVL33:
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 430              		.loc 1 194 6 view .LVU105
+ 431 000a 0092     		str	r2, [sp]
+ 432 000c 0A46     		mov	r2, r1
+ 433 000e 0146     		mov	r1, r0
+ 434              	.LVL34:
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 435              		.loc 1 194 6 view .LVU106
+ 436 0010 0448     		ldr	r0, .L40
+ 437              	.LVL35:
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 438              		.loc 1 194 6 view .LVU107
+ 439 0012 FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+ 440              	.LVL36:
+ 194:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 441              		.loc 1 194 5 view .LVU108
+ 442 0016 10B9     		cbnz	r0, .L39
+ 443              	.LVL37:
+ 444              	.L35:
+ 199:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 445              		.loc 1 199 1 view .LVU109
+ 446 0018 03B0     		add	sp, sp, #12
+ 447              	.LCFI10:
+ 448              		.cfi_remember_state
+ 449              		.cfi_def_cfa_offset 4
+ 450              		@ sp needed
+ 451 001a 5DF804FB 		ldr	pc, [sp], #4
+ 452              	.LVL38:
+ 453              	.L39:
+ 454              	.LCFI11:
+ 455              		.cfi_restore_state
+ 196:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 456              		.loc 1 196 11 view .LVU110
+ 457 001e 6FF00500 		mvn	r0, #5
+ 458              	.LVL39:
+ 198:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ARM GAS  /tmp/ccKQqRf5.s 			page 16
+
+
+ 459              		.loc 1 198 3 is_stmt 1 view .LVU111
+ 198:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 460              		.loc 1 198 10 is_stmt 0 view .LVU112
+ 461 0022 F9E7     		b	.L35
+ 462              	.L41:
+ 463              		.align	2
+ 464              	.L40:
+ 465 0024 00000000 		.word	hspi3
+ 466              		.cfi_endproc
+ 467              	.LFE296:
+ 469              		.section	.text.BSP_GetTick,"ax",%progbits
+ 470              		.align	1
+ 471              		.global	BSP_GetTick
+ 472              		.syntax unified
+ 473              		.thumb
+ 474              		.thumb_func
+ 476              	BSP_GetTick:
+ 477              	.LFB297:
+ 259:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   return HAL_GetTick();
+ 478              		.loc 1 259 27 is_stmt 1 view -0
+ 479              		.cfi_startproc
+ 480              		@ args = 0, pretend = 0, frame = 0
+ 481              		@ frame_needed = 0, uses_anonymous_args = 0
+ 482 0000 08B5     		push	{r3, lr}
+ 483              	.LCFI12:
+ 484              		.cfi_def_cfa_offset 8
+ 485              		.cfi_offset 3, -8
+ 486              		.cfi_offset 14, -4
+ 260:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 487              		.loc 1 260 3 view .LVU114
+ 260:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 488              		.loc 1 260 10 is_stmt 0 view .LVU115
+ 489 0002 FFF7FEFF 		bl	HAL_GetTick
+ 490              	.LVL40:
+ 261:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 491              		.loc 1 261 1 view .LVU116
+ 492 0006 08BD     		pop	{r3, pc}
+ 493              		.cfi_endproc
+ 494              	.LFE297:
+ 496              		.section	.text.MX_SPI3_Init,"ax",%progbits
+ 497              		.align	1
+ 498              		.weak	MX_SPI3_Init
+ 499              		.syntax unified
+ 500              		.thumb
+ 501              		.thumb_func
+ 503              	MX_SPI3_Init:
+ 504              	.LVL41:
+ 505              	.LFB298:
+ 266:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   HAL_StatusTypeDef ret = HAL_OK;
+ 506              		.loc 1 266 1 is_stmt 1 view -0
+ 507              		.cfi_startproc
+ 508              		@ args = 0, pretend = 0, frame = 0
+ 509              		@ frame_needed = 0, uses_anonymous_args = 0
+ 266:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   HAL_StatusTypeDef ret = HAL_OK;
+ 510              		.loc 1 266 1 is_stmt 0 view .LVU118
+ 511 0000 08B5     		push	{r3, lr}
+ 512              	.LCFI13:
+ARM GAS  /tmp/ccKQqRf5.s 			page 17
+
+
+ 513              		.cfi_def_cfa_offset 8
+ 514              		.cfi_offset 3, -8
+ 515              		.cfi_offset 14, -4
+ 267:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 516              		.loc 1 267 3 is_stmt 1 view .LVU119
+ 517              	.LVL42:
+ 269:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.Mode = SPI_MODE_MASTER;
+ 518              		.loc 1 269 3 view .LVU120
+ 269:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.Mode = SPI_MODE_MASTER;
+ 519              		.loc 1 269 18 is_stmt 0 view .LVU121
+ 520 0002 0F4A     		ldr	r2, .L48
+ 521 0004 0260     		str	r2, [r0]
+ 270:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.Direction = SPI_DIRECTION_2LINES;
+ 522              		.loc 1 270 3 is_stmt 1 view .LVU122
+ 270:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.Direction = SPI_DIRECTION_2LINES;
+ 523              		.loc 1 270 19 is_stmt 0 view .LVU123
+ 524 0006 4FF48272 		mov	r2, #260
+ 525 000a 4260     		str	r2, [r0, #4]
+ 271:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+ 526              		.loc 1 271 3 is_stmt 1 view .LVU124
+ 271:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+ 527              		.loc 1 271 24 is_stmt 0 view .LVU125
+ 528 000c 0022     		movs	r2, #0
+ 529 000e 8260     		str	r2, [r0, #8]
+ 272:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+ 530              		.loc 1 272 3 is_stmt 1 view .LVU126
+ 272:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+ 531              		.loc 1 272 23 is_stmt 0 view .LVU127
+ 532 0010 4FF4E061 		mov	r1, #1792
+ 533 0014 C160     		str	r1, [r0, #12]
+ 273:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+ 534              		.loc 1 273 3 is_stmt 1 view .LVU128
+ 273:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+ 535              		.loc 1 273 26 is_stmt 0 view .LVU129
+ 536 0016 0261     		str	r2, [r0, #16]
+ 274:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.NSS = SPI_NSS_SOFT;
+ 537              		.loc 1 274 3 is_stmt 1 view .LVU130
+ 274:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.NSS = SPI_NSS_SOFT;
+ 538              		.loc 1 274 23 is_stmt 0 view .LVU131
+ 539 0018 4261     		str	r2, [r0, #20]
+ 275:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+ 540              		.loc 1 275 3 is_stmt 1 view .LVU132
+ 275:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+ 541              		.loc 1 275 18 is_stmt 0 view .LVU133
+ 542 001a 4FF40071 		mov	r1, #512
+ 543 001e 8161     		str	r1, [r0, #24]
+ 276:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 544              		.loc 1 276 3 is_stmt 1 view .LVU134
+ 276:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 545              		.loc 1 276 32 is_stmt 0 view .LVU135
+ 546 0020 1821     		movs	r1, #24
+ 547 0022 C161     		str	r1, [r0, #28]
+ 277:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
+ 548              		.loc 1 277 3 is_stmt 1 view .LVU136
+ 277:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
+ 549              		.loc 1 277 23 is_stmt 0 view .LVU137
+ 550 0024 0262     		str	r2, [r0, #32]
+ARM GAS  /tmp/ccKQqRf5.s 			page 18
+
+
+ 278:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 551              		.loc 1 278 3 is_stmt 1 view .LVU138
+ 278:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 552              		.loc 1 278 21 is_stmt 0 view .LVU139
+ 553 0026 4262     		str	r2, [r0, #36]
+ 279:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCPolynomial = 7;
+ 554              		.loc 1 279 3 is_stmt 1 view .LVU140
+ 279:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCPolynomial = 7;
+ 555              		.loc 1 279 29 is_stmt 0 view .LVU141
+ 556 0028 8262     		str	r2, [r0, #40]
+ 280:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 557              		.loc 1 280 3 is_stmt 1 view .LVU142
+ 280:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 558              		.loc 1 280 28 is_stmt 0 view .LVU143
+ 559 002a 0721     		movs	r1, #7
+ 560 002c C162     		str	r1, [r0, #44]
+ 281:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 561              		.loc 1 281 3 is_stmt 1 view .LVU144
+ 281:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   hspi->Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 562              		.loc 1 281 24 is_stmt 0 view .LVU145
+ 563 002e 0263     		str	r2, [r0, #48]
+ 282:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_Init(hspi) != HAL_OK)
+ 564              		.loc 1 282 3 is_stmt 1 view .LVU146
+ 282:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   if (HAL_SPI_Init(hspi) != HAL_OK)
+ 565              		.loc 1 282 23 is_stmt 0 view .LVU147
+ 566 0030 0822     		movs	r2, #8
+ 567 0032 4263     		str	r2, [r0, #52]
+ 283:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 568              		.loc 1 283 3 is_stmt 1 view .LVU148
+ 283:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 569              		.loc 1 283 7 is_stmt 0 view .LVU149
+ 570 0034 FFF7FEFF 		bl	HAL_SPI_Init
+ 571              	.LVL43:
+ 283:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 572              		.loc 1 283 6 view .LVU150
+ 573 0038 00B1     		cbz	r0, .L45
+ 285:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   }
+ 574              		.loc 1 285 9 view .LVU151
+ 575 003a 0120     		movs	r0, #1
+ 576              	.L45:
+ 577              	.LVL44:
+ 288:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 578              		.loc 1 288 3 is_stmt 1 view .LVU152
+ 289:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 579              		.loc 1 289 1 is_stmt 0 view .LVU153
+ 580 003c 08BD     		pop	{r3, pc}
+ 581              	.L49:
+ 582 003e 00BF     		.align	2
+ 583              	.L48:
+ 584 0040 003C0040 		.word	1073757184
+ 585              		.cfi_endproc
+ 586              	.LFE298:
+ 588              		.section	.text.BSP_SPI3_Init,"ax",%progbits
+ 589              		.align	1
+ 590              		.global	BSP_SPI3_Init
+ 591              		.syntax unified
+ 592              		.thumb
+ARM GAS  /tmp/ccKQqRf5.s 			page 19
+
+
+ 593              		.thumb_func
+ 595              	BSP_SPI3_Init:
+ 596              	.LFB292:
+  90:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 597              		.loc 1 90 1 is_stmt 1 view -0
+ 598              		.cfi_startproc
+ 599              		@ args = 0, pretend = 0, frame = 0
+ 600              		@ frame_needed = 0, uses_anonymous_args = 0
+  91:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 601              		.loc 1 91 3 view .LVU155
+ 602              	.LVL45:
+  93:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 603              		.loc 1 93 3 view .LVU156
+  93:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 604              		.loc 1 93 19 is_stmt 0 view .LVU157
+ 605 0000 0E4B     		ldr	r3, .L61
+ 606 0002 0F4A     		ldr	r2, .L61+4
+ 607 0004 1A60     		str	r2, [r3]
+  95:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 608              		.loc 1 95 3 is_stmt 1 view .LVU158
+  95:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 609              		.loc 1 95 21 is_stmt 0 view .LVU159
+ 610 0006 0F4A     		ldr	r2, .L61+8
+ 611 0008 1368     		ldr	r3, [r2]
+ 612 000a 591C     		adds	r1, r3, #1
+ 613 000c 1160     		str	r1, [r2]
+  95:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   {
+ 614              		.loc 1 95 5 view .LVU160
+ 615 000e 0BB1     		cbz	r3, .L59
+  91:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 616              		.loc 1 91 11 view .LVU161
+ 617 0010 0020     		movs	r0, #0
+ 123:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 618              		.loc 1 123 1 view .LVU162
+ 619 0012 7047     		bx	lr
+ 620              	.L59:
+  90:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****   int32_t ret = BSP_ERROR_NONE;
+ 621              		.loc 1 90 1 view .LVU163
+ 622 0014 10B5     		push	{r4, lr}
+ 623              	.LCFI14:
+ 624              		.cfi_def_cfa_offset 8
+ 625              		.cfi_offset 4, -8
+ 626              		.cfi_offset 14, -4
+  97:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 627              		.loc 1 97 5 is_stmt 1 view .LVU164
+  97:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 628              		.loc 1 97 9 is_stmt 0 view .LVU165
+ 629 0016 0948     		ldr	r0, .L61
+ 630 0018 FFF7FEFF 		bl	HAL_SPI_GetState
+ 631              	.LVL46:
+  97:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****     {
+ 632              		.loc 1 97 8 view .LVU166
+ 633 001c 08B1     		cbz	r0, .L60
+  91:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 634              		.loc 1 91 11 view .LVU167
+ 635 001e 0020     		movs	r0, #0
+ 636              	.LVL47:
+ARM GAS  /tmp/ccKQqRf5.s 			page 20
+
+
+ 637              	.L50:
+ 123:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** 
+ 638              		.loc 1 123 1 view .LVU168
+ 639 0020 10BD     		pop	{r4, pc}
+ 640              	.LVL48:
+ 641              	.L60:
+ 101:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** #else
+ 642              		.loc 1 101 9 is_stmt 1 view .LVU169
+ 643 0022 064C     		ldr	r4, .L61
+ 644 0024 2046     		mov	r0, r4
+ 645 0026 FFF7FEFF 		bl	SPI3_MspInit
+ 646              	.LVL49:
+ 111:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****         {
+ 647              		.loc 1 111 9 view .LVU170
+ 114:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             {
+ 648              		.loc 1 114 13 view .LVU171
+ 114:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             {
+ 649              		.loc 1 114 17 is_stmt 0 view .LVU172
+ 650 002a 2046     		mov	r0, r4
+ 651 002c FFF7FEFF 		bl	MX_SPI3_Init
+ 652              	.LVL50:
+ 114:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             {
+ 653              		.loc 1 114 16 view .LVU173
+ 654 0030 0028     		cmp	r0, #0
+ 655 0032 F5D0     		beq	.L50
+ 116:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c ****             }
+ 656              		.loc 1 116 21 view .LVU174
+ 657 0034 6FF00700 		mvn	r0, #7
+ 658              	.LVL51:
+ 122:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 659              		.loc 1 122 3 is_stmt 1 view .LVU175
+ 122:Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.c **** }
+ 660              		.loc 1 122 10 is_stmt 0 view .LVU176
+ 661 0038 F2E7     		b	.L50
+ 662              	.L62:
+ 663 003a 00BF     		.align	2
+ 664              	.L61:
+ 665 003c 00000000 		.word	hspi3
+ 666 0040 003C0040 		.word	1073757184
+ 667 0044 00000000 		.word	SPI3InitCounter
+ 668              		.cfi_endproc
+ 669              	.LFE292:
+ 671              		.section	.bss.SPI3InitCounter,"aw",%nobits
+ 672              		.align	2
+ 675              	SPI3InitCounter:
+ 676 0000 00000000 		.space	4
+ 677              		.global	hspi3
+ 678              		.section	.bss.hspi3,"aw",%nobits
+ 679              		.align	2
+ 682              	hspi3:
+ 683 0000 00000000 		.space	100
+ 683      00000000 
+ 683      00000000 
+ 683      00000000 
+ 683      00000000 
+ 684              		.text
+ 685              	.Letext0:
+ARM GAS  /tmp/ccKQqRf5.s 			page 21
+
+
+ 686              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 687              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 688              		.file 4 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4s5xx.h"
+ 689              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 690              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 691              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 692              		.file 8 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 693              		.file 9 "Drivers/BSP/B-L4S5I-IOT01A/b_l4s5i_iot01a_bus.h"
+ 694              		.file 10 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ARM GAS  /tmp/ccKQqRf5.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 b_l4s5i_iot01a_bus.c
+     /tmp/ccKQqRf5.s:21     .text.SPI3_MspInit:0000000000000000 $t
+     /tmp/ccKQqRf5.s:26     .text.SPI3_MspInit:0000000000000000 SPI3_MspInit
+     /tmp/ccKQqRf5.s:157    .text.SPI3_MspInit:0000000000000088 $d
+     /tmp/ccKQqRf5.s:163    .text.SPI3_MspDeInit:0000000000000000 $t
+     /tmp/ccKQqRf5.s:168    .text.SPI3_MspDeInit:0000000000000000 SPI3_MspDeInit
+     /tmp/ccKQqRf5.s:209    .text.SPI3_MspDeInit:0000000000000030 $d
+     /tmp/ccKQqRf5.s:215    .text.BSP_SPI3_DeInit:0000000000000000 $t
+     /tmp/ccKQqRf5.s:221    .text.BSP_SPI3_DeInit:0000000000000000 BSP_SPI3_DeInit
+     /tmp/ccKQqRf5.s:286    .text.BSP_SPI3_DeInit:0000000000000038 $d
+     /tmp/ccKQqRf5.s:675    .bss.SPI3InitCounter:0000000000000000 SPI3InitCounter
+     /tmp/ccKQqRf5.s:682    .bss.hspi3:0000000000000000 hspi3
+     /tmp/ccKQqRf5.s:292    .text.BSP_SPI3_Send:0000000000000000 $t
+     /tmp/ccKQqRf5.s:298    .text.BSP_SPI3_Send:0000000000000000 BSP_SPI3_Send
+     /tmp/ccKQqRf5.s:342    .text.BSP_SPI3_Send:000000000000001c $d
+     /tmp/ccKQqRf5.s:347    .text.BSP_SPI3_Recv:0000000000000000 $t
+     /tmp/ccKQqRf5.s:353    .text.BSP_SPI3_Recv:0000000000000000 BSP_SPI3_Recv
+     /tmp/ccKQqRf5.s:397    .text.BSP_SPI3_Recv:000000000000001c $d
+     /tmp/ccKQqRf5.s:402    .text.BSP_SPI3_SendRecv:0000000000000000 $t
+     /tmp/ccKQqRf5.s:408    .text.BSP_SPI3_SendRecv:0000000000000000 BSP_SPI3_SendRecv
+     /tmp/ccKQqRf5.s:465    .text.BSP_SPI3_SendRecv:0000000000000024 $d
+     /tmp/ccKQqRf5.s:470    .text.BSP_GetTick:0000000000000000 $t
+     /tmp/ccKQqRf5.s:476    .text.BSP_GetTick:0000000000000000 BSP_GetTick
+     /tmp/ccKQqRf5.s:497    .text.MX_SPI3_Init:0000000000000000 $t
+     /tmp/ccKQqRf5.s:503    .text.MX_SPI3_Init:0000000000000000 MX_SPI3_Init
+     /tmp/ccKQqRf5.s:584    .text.MX_SPI3_Init:0000000000000040 $d
+     /tmp/ccKQqRf5.s:589    .text.BSP_SPI3_Init:0000000000000000 $t
+     /tmp/ccKQqRf5.s:595    .text.BSP_SPI3_Init:0000000000000000 BSP_SPI3_Init
+     /tmp/ccKQqRf5.s:665    .text.BSP_SPI3_Init:000000000000003c $d
+     /tmp/ccKQqRf5.s:672    .bss.SPI3InitCounter:0000000000000000 $d
+     /tmp/ccKQqRf5.s:679    .bss.hspi3:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GPIO_DeInit
+HAL_SPI_DeInit
+HAL_SPI_Transmit
+HAL_SPI_Receive
+HAL_SPI_TransmitReceive
+HAL_GetTick
+HAL_SPI_Init
+HAL_SPI_GetState
